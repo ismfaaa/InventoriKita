@@ -13,7 +13,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-[#f8faf2]">
-        <div class="min-h-screen">
+        <div class="min-h-screen flex flex-col">
             @include('layouts.navigation')
 
             @if (isset($header))
@@ -24,8 +24,16 @@
                 </header>
             @endif
 
-            <main class="pb-20 sm:pb-0"> {{ $slot }}
+            <main class="flex-grow pb-10"> 
+                {{ $slot }}
             </main>
+
+            <footer class="py-12 text-center bg-transparent">
+                <div class="h-[1px] w-16 bg-[#588133] mx-auto mb-6 rounded-full opacity-20"></div>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest font-medium">
+                    &copy; {{ date('Y') }} InventoriKita.
+                </p>
+            </footer>
         </div>
     </body>
 </html>
