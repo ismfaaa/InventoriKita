@@ -32,4 +32,16 @@ Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
 });
 
+// ======================== ADMIN ========================
+// Tambah aset inventaris
+Route::get('/inventaris/tambah', function () {
+    return view('admin.create'); 
+})->name('inventaris.create');
+
+// Edit aset inventaris
+Route::get('/inventaris/edit', function () {
+    return view('admin.edit');
+})->name('inventaris.edit');
+
+
 require __DIR__.'/auth.php';
