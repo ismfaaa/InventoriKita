@@ -33,6 +33,9 @@ Route::middleware(['auth','stakeholder'])->group(function () {
 });
 
 // ======================== ADMIN ========================
+//Manajemen Status Realtime
+// Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+
 // Tambah aset inventaris
 Route::get('/inventaris/tambah', function () {
     return view('admin.create'); 
