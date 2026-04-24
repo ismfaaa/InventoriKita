@@ -7,20 +7,14 @@ use Illuminate\Http\Request;
 
 class KategoriController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    // public function index()
+    // {
+    //     $kategoris = Kategori::all();
+    //     return view('admin.inventaris.index', compact('kategoris'));
+    // }   
     public function create()
     {
-        //
+        return view('admin.kategori.create');
     }
 
     /**
@@ -28,7 +22,15 @@ class KategoriController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_kategori'=> 'required|string|max:255|unique:kategoris,nama_kategori',
+        ]);
+
+        Kategori::create([
+            'nama_kategori' => $request->nama_kategori,
+        ]);
+
+        return redirect()->route('inventaris.index')->with('success', 'Kategori berhasil ditambahkan');
     }
 
     /**
@@ -50,16 +52,28 @@ class KategoriController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Kategori $kategori)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nama_kategori' => 'required|string|max:255|unique:kategoris,nama_kategori,' . $id,
+        ]);
+
+        $kategori = Kategori::findOrFail($id);
+        $kategori->update([
+            'nama_kategori' => $request->nama_kategori,
+        ]);
+
+        return redirect()->route('inventaris.index')->with('success', 'Kategori berhasil diperbarui');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Kategori $kategori)
+    public function destroy($id)
     {
-        //
+        $kategori = Kategori::findOrFail($id);
+        $kategori->delete();
+
+        return redirect()->route('inventaris.index')->with('success', 'Kategori berhasil dihapus');
     }
 }

@@ -27,7 +27,15 @@
             <div class="space-y-4">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="block w-full px-6 py-4 bg-[#588133] text-white font-bold rounded-2xl shadow-lg hover:bg-[#466629] transition-all">
+                    @php
+                        // menentukan route home berdasarkan role user yang sedang login
+                        $homeRoute = match(auth()->user()->role) {
+                            'admin' => 'admin.dashboard',
+                            'stakeholder' => 'stakeholder.index',
+                            default => 'pengguna.index',
+                        };
+                    @endphp
+                        <a href="{{ route($homeRoute) }}" class="block w-full px-6 py-4 bg-[#588133] text-white font-bold rounded-2xl shadow-lg hover:bg-[#466629] transition-all">
                             Masuk ke Dashboard
                         </a>
                     @else
