@@ -18,7 +18,6 @@
     </div>
 
     @php
-    // Letakkan di paling atas supaya data siap digunakan oleh elemen di bawahnya
     $stats = \DB::table('dashboard_stats')->where('id', 1)->first();
     @endphp
 
