@@ -17,6 +17,11 @@
         </div>
     </div>
 
+    @php
+    // Letakkan di paling atas supaya data siap digunakan oleh elemen di bawahnya
+    $stats = \DB::table('dashboard_stats')->where('id', 1)->first();
+    @endphp
+
     <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="bg-gradient-to-br from-[#588133] to-[#99AF69] rounded-3xl p-6 text-white shadow-lg mb-8">
             <h3 class="text-xl font-bold">Halo, {{ Auth::user()->name }}! </h3>
@@ -25,11 +30,11 @@
             <div class="grid grid-cols-2 gap-4 mt-6">
                 <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
                     <p class="text-xs uppercase font-bold opacity-80">Barang Tersedia</p>
-                    <p class="text-2xl font-black">108</p>
+                    <p class="text-2xl font-black">{{ $stats->barang_tersedia ?? 0 }}</p>
                 </div>
                 <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
                     <p class="text-xs uppercase font-bold opacity-80">Sedang Dipinjam</p>
-                    <p class="text-2xl font-black">12</p>
+                    <p class="text-2xl font-black">{{ $stats->sedang_dipinjam ?? 0 }}</p>
                 </div>
             </div>
         </div>
