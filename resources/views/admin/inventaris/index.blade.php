@@ -89,10 +89,14 @@
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-lg text-gray-800">Daftar Barang Inventaris</h3>
                 <div class="relative w-64">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    </span>
-                    <input type="text" placeholder="Cari barang..." class="w-full pl-9 pr-4 py-2 text-xs border-gray-200 rounded-xl focus:ring-[#588133] focus:border-[#588133]">
+                    <form action="{{ route('inventaris.index') }}" method="GET">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </span>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari barang..." class="w-full pl-9 pr-4 py-2 text-xs border-gray-200 rounded-xl focus:ring-[#588133] focus:border-[#588133]" onkeypress="if(event.key === 'Enter') this.form.submit()">
+                    </form>
                 </div>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-3xl border border-gray-100">
