@@ -10,7 +10,16 @@
                 </button>
 
                 <div class="shrink-0 flex items-center gap-3">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
+                    @php
+                        // menentukan route home berdasarkan role user yang sedang login
+                        $homeRoute = match(auth()->user()->role) {
+                            'admin' => 'admin.dashboard',
+                            'stakeholder' => 'stakeholder.index',
+                            default => 'pengguna.index',
+                        };
+                    @endphp
+
+                    <a href="{{ route($homeRoute) }}" class="flex items-center gap-2">
                         <span class="font-bold text-xl text-[#588133] tracking-tight">
                             Inventori<span class="text-[#99AF69]">Kita</span>
                         </span>

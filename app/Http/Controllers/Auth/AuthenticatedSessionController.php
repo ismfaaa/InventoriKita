@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         // Cek role user dan arahkan ke dashboard masing-masing
         if ($request->user()->role === 'admin') {
-            return redirect()->intended(route('admin.index'));
+            return redirect()->intended(route('admin.dashboard'));
         } elseif ($request->user()->role === 'stakeholder') {
             return redirect()->intended(route('stakeholder.index'));
         }

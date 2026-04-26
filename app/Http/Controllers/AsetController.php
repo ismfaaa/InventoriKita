@@ -2,16 +2,29 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use App\Models\Kategori;
+use App\Models\Aset;
 use Illuminate\Http\Request;
 
 class AsetController extends Controller
 {
-    public function index(){
-        return view('admin.index');
+    public function index(Request $request)
+    {
+        $kategoris = Kategori::all();
+        
+        $search = $request->query('search');
+
+        $asets = Aset::when($search, function ($query, $search) {
+            return $query->where('nama_aset', 'like', '%' . $search . '%')
+                        ->orWhere('kode_aset', 'like', '%' . $search . '%');
+        })->get(); 
+
+        return view('admin.inventaris.index', compact('asets', 'kategoris'));
     }
 
     public function create(){
-        return view('admin.create');
+        $kategoris = Kategori::all();
+        return view('admin.inventaris.create', compact('kategoris'));
     }
 
     public function store(Request $request){
@@ -24,7 +37,7 @@ class AsetController extends Controller
         ]);
 
         // Simpan data aset ke database (contoh menggunakan model Aset)
-        // Aset::create($validatedData);
+        Aset::create($validatedData);
 
         // Redirect atau tampilkan pesan sukses
         return redirect()->route('inventaris.index')->with('success', 'Aset berhasil ditambahkan!');
