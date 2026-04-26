@@ -57,34 +57,41 @@
         </div>
     </div>
 
+    
     <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="flex gap-2 overflow-x-auto pb-4 mb-4 no-scrollbar">
-            <button class="bg-[#588133] text-white px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap">Semua</button>
-            <button class="bg-white text-gray-600 px-4 py-2 rounded-full text-xs font-bold border border-gray-200 whitespace-nowrap">Kamera</button>
-            <button class="bg-white text-gray-600 px-4 py-2 rounded-full text-xs font-bold border border-gray-200 whitespace-nowrap">Audio</button>
-            <button class="bg-white text-gray-600 px-4 py-2 rounded-full text-xs font-bold border border-gray-200 whitespace-nowrap">Lighting</button>
+        @foreach ($kategoris as $kategori)
+            <button class="bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap hover:bg-[#588133] hover:text-white hover:border-[#588133] transition-colors duration-300">
+                {{ $kategori->nama_kategori }}
+            </button>
+        @endforeach     
         </div>
+    
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-24">
-            @for ($i = 1; $i <= 8; $i++)
+            @foreach ($asets as $aset)
             <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col h-full">
-                <div class="aspect-square bg-gray-100 flex items-center justify-center relative">
-                    <svg class="w-12 h-12 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/>
-                    </svg>
+                <div class="aspect-square overflow-hidden bg-gray-100 flex items-center justify-center relative">
+                    @if ($aset->foto)
+                        <img src="{{ Storage::url($aset->foto) }}" alt="{{ $aset->nama_aset }}" class="w-full h-full object-cover">
+                    @else
+                        <svg class="w-12 h-12 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/>
+                        </svg>
+                    @endif
                     <span class="absolute top-2 right-2 bg-[#f1f5e9] text-[#588133] text-[10px] font-black px-2 py-1 rounded-lg">TERSEDIA</span>
                 </div>
 
                 <div class="p-4 flex flex-col flex-grow">
-                    <h3 class="font-bold text-gray-800 text-sm line-clamp-2">Kamera Mirrorless Sony A6400 (Body Only)</h3>
-                    <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Stok: 5 unit</p>
+                    <h3 class="font-bold text-gray-800 text-sm line-clamp-2">{{ $aset->nama_aset }}</h3>
+                    <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest font-bold">{{ $aset->lokasi }}</p>
                     
                     <button class="mt-4 w-full bg-[#f1f5e9] text-[#588133] py-2 rounded-xl text-xs font-bold hover:bg-[#588133] hover:text-white transition-all duration-300">
                         Detail Barang
                     </button>
                 </div>
             </div>
-            @endfor
+            @endforeach
         </div>
     </div>
     </div>

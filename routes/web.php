@@ -19,8 +19,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth','pengguna'])->group(function () {
-    Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
+    Route::get('/InventoriKita', [PenggunaController::class, 'index'])->name('pengguna.index');
+    // Route::get('/InventoriKita/Dashboard', [AsetController::class, 'penggunaindex'])->name('pengguna.dashboard');
 });
+
 
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -31,9 +33,9 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::get('/Manajemen-inventaris/create', [AsetController::class, 'create'])->name('inventaris.create');
     Route::post('/Manajemen-inventaris', [AsetController::class, 'store'])->name('inventaris.store');
 
-    Route::get('/Manajemen-inventaris/edit', [AsetController::class, 'edit'])->name('inventaris.edit');
-    Route::put('/Manajemen-inventaris', [AsetController::class, 'update'])->name('inventaris.update');
-    Route::delete('/Manajemen-inventaris', [AsetController::class, 'destroy'])->name('inventaris.destroy');
+    Route::get('/Manajemen-inventaris/{id}/edit', [AsetController::class, 'edit'])->name('inventaris.edit');
+    Route::put('/Manajemen-inventaris/{id}', [AsetController::class, 'update'])->name('inventaris.update');
+    Route::delete('/Manajemen-inventaris/{id}', [AsetController::class, 'destroy'])->name('inventaris.destroy');
 
     // ============================= MANAJEMEN KATEGORI =============================
     Route::get('/Manajemen-kategori', [KategoriController::class, 'index'])->name('kategori.index');
