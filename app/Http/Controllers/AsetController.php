@@ -8,9 +8,17 @@ use Illuminate\Http\Request;
 
 class AsetController extends Controller
 {
-    public function index(){
+    public function index(Request $request)
+    {
         $kategoris = Kategori::all();
-        $asets = Aset::all(); 
+        
+        $search = $request->query('search');
+
+        $asets = Aset::when($search, function ($query, $search) {
+            return $query->where('nama_aset', 'like', '%' . $search . '%')
+                        ->orWhere('kode_aset', 'like', '%' . $search . '%');
+        })->get(); 
+
         return view('admin.inventaris.index', compact('asets', 'kategoris'));
     }
 
