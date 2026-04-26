@@ -44,7 +44,18 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::put('/Manajemen-kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/Manajemen-kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
     
-
+    // ============================= MANAJEMEN DASHBOARD =============================
+    Route::post('/admin/update-stats', function (\Illuminate\Http\Request $request) {
+        \Illuminate\Support\Facades\DB::table('dashboard_stats')->updateOrInsert(
+            ['id' => 1],
+            [
+                'barang_tersedia' => $request->barang_tersedia,
+                'sedang_dipinjam' => $request->sedang_dipinjam,
+                'updated_at' => now(),
+            ]
+        );
+        return back()->with('success', 'Dashboard berhasil diupdate!');
+    })->name('admin.update_stats');
 });
 
 
