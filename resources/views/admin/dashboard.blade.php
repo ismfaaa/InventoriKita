@@ -19,10 +19,17 @@
             </div>
         </div>
     </div>
-
+    
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h3 class="font-bold text-2xl text-[#588133] leading-tight">
+                {{ __('Manajemen Dashboard Real-Time') }}
+            </h3>
+        </div>    
+    </x-slot>
     <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="bg-gradient-to-br from-[#588133] to-[#99AF69] rounded-3xl p-6 text-white shadow-lg mb-8">
-            <h3 class="text-xl font-bold">Manajemen Dashboard Real-time</h3>
+            <h5 class="text-xl font-bold">Dashboard Status</h5>
             
             <div class="grid grid-cols-2 gap-4 mt-6">
                 <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
