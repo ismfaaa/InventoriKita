@@ -46,13 +46,20 @@
             <p class="text-sm text-gray-500 mt-1">Pilih barang yang ingin Anda pinjam hari ini.</p>
             
             <div class="mt-6 relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </span>
-                <input type="text" placeholder="Cari alat multimedia, kabel, dll..." 
-                    class="block w-full pl-10 pr-4 py-3 border-none bg-[#f1f5e9] rounded-2xl focus:ring-2 focus:ring-[#588133] text-sm">
+                <form action="{{ route('pengguna.index') }}" method="GET">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </span>
+                    
+                    <input type="text" 
+                        name="search" 
+                        value="{{ request('search') }}" 
+                        placeholder="Cari alat multimedia, kabel, dll..." 
+                        class="block w-full pl-10 pr-4 py-3 border-none bg-[#f1f5e9] rounded-2xl focus:ring-2 focus:ring-[#588133] text-sm"
+                        onkeypress="if(event.key === 'Enter') this.form.submit()">
+                </form>
             </div>
         </div>
     </div>
@@ -60,12 +67,19 @@
     
     <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="flex gap-2 overflow-x-auto pb-4 mb-4 no-scrollbar">
-        @foreach ($kategoris as $kategori)
-            <button class="bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap hover:bg-[#588133] hover:text-white hover:border-[#588133] transition-colors duration-300">
-                {{ $kategori->nama_kategori }}
-            </button>
-        @endforeach     
+            <a href="{{ route('pengguna.index') }}" 
+            class="{{ !request('category') ? 'bg-[#588133] text-white border-[#588133]' : 'bg-white text-gray-600 border-gray-200' }} px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap hover:bg-[#588133] hover:text-white transition-colors duration-300 border">
+                Semua
+            </a>
+
+            @foreach ($kategoris as $kategori)
+                <a href="{{ route('pengguna.index', ['category' => $kategori->id, 'search' => request('search')]) }}" 
+                class="{{ request('category') == $kategori->id ? 'bg-[#588133] text-white border-[#588133]' : 'bg-white text-gray-600 border-gray-200' }} px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap hover:bg-[#588133] hover:text-white transition-colors duration-300 border">
+                    {{ $kategori->nama_kategori }}
+                </a>
+            @endforeach     
         </div>
+    </div>
     
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-24">

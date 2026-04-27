@@ -111,15 +111,52 @@
         <section>
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-lg text-gray-800">Daftar Barang Inventaris</h3>
-                <div class="relative w-64">
-                    <form action="{{ route('inventaris.index') }}" method="GET">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                <div class="flex items-center gap-3">
+                    <div class="relative w-64">
+                        <form action="{{ route('inventaris.index') }}" method="GET">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                            </span>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari barang..." 
+                                class="w-full pl-9 pr-4 py-2 text-xs border-gray-200 rounded-xl focus:ring-[#588133] focus:border-[#588133]" 
+                                onkeypress="if(event.key === 'Enter') this.form.submit()">
+                            
+                            @if(request('category'))
+                                <input type="hidden" name="category" value="{{ request('category') }}">
+                            @endif
+                        </form>
+                    </div>
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" type="button" 
+                            class="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition shadow-sm">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                             </svg>
-                        </span>
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari barang..." class="w-full pl-9 pr-4 py-2 text-xs border-gray-200 rounded-xl focus:ring-[#588133] focus:border-[#588133]" onkeypress="if(event.key === 'Enter') this.form.submit()">
-                    </form>
+                            {{ request('category') ? $kategoris->where('id', request('category'))->first()->nama_kategori : 'Filter Kategori' }}
+                        </button>
+
+                        <div x-show="open" @click.away="open = false" 
+                            class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 overflow-hidden"
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="transform opacity-0 scale-95">
+                            
+                            <a href="{{ route('inventaris.index', ['search' => request('search')]) }}" 
+                                class="block px-4 py-2 text-xs text-gray-700 hover:bg-[#f1f5e9] hover:text-[#588133]">
+                                Semua Kategori
+                            </a>
+                            
+                            <hr class="border-gray-50">
+
+                            @foreach ($kategoris as $kategori)
+                                <a href="{{ route('inventaris.index', ['category' => $kategori->id, 'search' => request('search')]) }}" 
+                                    class="block px-4 py-2 text-xs {{ request('category') == $kategori->id ? 'bg-[#f1f5e9] text-[#588133] font-bold' : 'text-gray-700' }} hover:bg-[#f1f5e9] hover:text-[#588133]">
+                                    {{ $kategori->nama_kategori }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-3xl border border-gray-100">

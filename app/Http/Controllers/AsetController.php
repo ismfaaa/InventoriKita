@@ -15,11 +15,17 @@ class AsetController extends Controller
         $kategoris = Kategori::all();
         
         $search = $request->query('search');
+        $category = $request->query('category');
 
-        $asets = Aset::when($search, function ($query, $search) {
+        $asets = Aset::query()
+        ->when($search, function ($query, $search) {
             return $query->where('nama_aset', 'like', '%' . $search . '%')
-                        ->orWhere('kode_aset', 'like', '%' . $search . '%');
-        })->get(); 
+                         ->orWhere('kode_aset', 'like', '%' . $search . '%');
+        })
+        ->when($category, function ($query, $category) {
+            return $query->where('kategori_id', $category);
+        })
+        ->get(); 
 
         return view('admin.inventaris.index', compact('asets', 'kategoris'));
     }
