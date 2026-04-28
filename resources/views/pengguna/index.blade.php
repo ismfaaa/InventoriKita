@@ -1,4 +1,5 @@
 <x-app-layout>
+    {{-- cekk --}}
     <div x-data="{ showSidebar: false }" @open-sidebar.window="showSidebar = true">
         <div x-show="showSidebar" class="fixed inset-0 z-50 flex" role="dialog">
             <div x-show="showSidebar" @click="showSidebar = false" class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
