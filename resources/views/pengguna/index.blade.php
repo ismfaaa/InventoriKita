@@ -18,9 +18,9 @@
         </div>
     </div>
 
-    @php
+    {{-- @php
     $stats = \DB::table('dashboard_stats')->where('id', 1)->first();
-    @endphp
+    @endphp --}}
 
     <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="bg-gradient-to-br from-[#588133] to-[#99AF69] rounded-3xl p-6 text-white shadow-lg mb-8">

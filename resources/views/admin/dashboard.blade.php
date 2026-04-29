@@ -31,7 +31,8 @@
 
     <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <form action="{{ route('admin.update_stats') }}" method="POST">
-            @csrf <div class="bg-gradient-to-br from-[#588133] to-[#99AF69] rounded-3xl p-6 text-white shadow-lg mb-8">
+            @csrf 
+            <div class="bg-gradient-to-br from-[#588133] to-[#99AF69] rounded-3xl p-6 text-white shadow-lg mb-8">
                 <h3 class="text-xl font-bold">Manajemen Dashboard Real-time</h3>
                 
                 <div class="grid grid-cols-2 gap-4 mt-6">

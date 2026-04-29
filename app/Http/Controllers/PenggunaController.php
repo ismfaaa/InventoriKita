@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Kategori;
 use App\Models\Aset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PenggunaController extends Controller
 {
@@ -12,6 +13,7 @@ class PenggunaController extends Controller
         $search = $request->query('search');
         $category = $request->query('category');
 
+        $stats = DB::table('dashboard_stats')->where('id', 1)->first();
         $kategoris = Kategori::all();
 
         $asets = Aset::query()
@@ -24,6 +26,6 @@ class PenggunaController extends Controller
         })
         ->get();
 
-        return view('pengguna.index', compact('asets', 'kategoris'));
+        return view('pengguna.index', compact('asets', 'kategoris', 'stats'));
     }
 }

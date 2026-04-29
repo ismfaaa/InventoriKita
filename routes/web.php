@@ -21,6 +21,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita', [PenggunaController::class, 'index'])->name('pengguna.index');
     // Route::get('/InventoriKita/Dashboard', [AsetController::class, 'penggunaindex'])->name('pengguna.dashboard');
+    // ============================= PEMINJAMAN =============================
+    
 });
 
 
