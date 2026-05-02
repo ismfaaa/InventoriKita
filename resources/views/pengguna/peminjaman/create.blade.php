@@ -14,8 +14,7 @@
 
     <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-3xl border border-gray-100 p-8">
-            
-            {{-- Tampilkan Error Validasi Global --}}
+
             @if ($errors->any())
                 <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl">
                     <div class="flex items-start">
@@ -39,7 +38,7 @@
             <form action="{{ route('peminjaman.store') }}" method="POST">
                 @csrf
                 
-                {{-- Pilih Aset --}}
+                
                 <div class="mb-6">
                     <label for="aset_id" class="block font-medium text-sm text-gray-700 mb-2">Pilih Barang / Aset <span class="text-red-500">*</span></label>
                     <select id="aset_id" name="aset_id" required 
@@ -54,14 +53,14 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    {{-- Tanggal Pinjam --}}
+                    {{-- 2. Tanggal Pinjam (tanggal_pinjam) --}}
                     <div>
                         <label for="tanggal_pinjam" class="block font-medium text-sm text-gray-700 mb-2">Tanggal Pinjam <span class="text-red-500">*</span></label>
                         <input type="date" id="tanggal_pinjam" name="tanggal_pinjam" value="{{ old('tanggal_pinjam', date('Y-m-d')) }}" 
                             class="w-full border-gray-300 rounded-xl shadow-sm focus:border-[#588133] focus:ring focus:ring-[#588133] focus:ring-opacity-50 text-gray-600" required>
                     </div>
 
-                    {{-- Tanggal Kembali --}}
+                    {{-- 3. Tanggal Kembali (tanggal_kembali) --}}
                     <div>
                         <label for="tanggal_kembali" class="block font-medium text-sm text-gray-700 mb-2">Tanggal Kembali <span class="text-red-500">*</span></label>
                         <input type="date" id="tanggal_kembali" name="tanggal_kembali" value="{{ old('tanggal_kembali') }}" 
@@ -69,19 +68,21 @@
                     </div>
                 </div>
 
-                {{-- Status Info (Read Only) --}}
+                
                 <div class="mb-8">
-                    <label class="block font-medium text-sm text-gray-700 mb-2">Status Awal</label>
+                    <label class="block font-medium text-sm text-gray-700 mb-2">Informasi Status</label>
                     <div class="w-full bg-[#f1f5e9] text-[#588133] px-4 py-2 rounded-xl text-sm font-semibold border border-[#e2e8f0]">
-                        Menunggu Persetujuan (Pending)
+                        Menunggu Persetujuan
                     </div>
-                    {{-- Hidden inputs untuk data otomatis --}}
+
+        
                     <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                     <input type="hidden" name="status_peminjaman" value="pending">
+                    <input type="hidden" name="status_ketersediaan" value="tersedia">
                 </div>
 
                 <div class="flex items-center justify-end gap-4 border-t border-gray-100 pt-6">
-                    <a href="{{ route('peminjaman.index') }}" class="text-gray-500 hover:text-gray-700 text-sm font-medium transition duration-150">
+                    <a href="{{ route('pengguna.index') }}" class="text-gray-500 hover:text-gray-700 text-sm font-medium transition duration-150">
                         Batal
                     </a>
                     <button type="submit" class="bg-[#588133] text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-[#466629] transition duration-150 shadow-sm">
