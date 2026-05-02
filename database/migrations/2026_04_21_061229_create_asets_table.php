@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('kode_aset')->unique();
             $table->string('nama_aset');
             $table->string('lokasi');
-            $table->foreignId('kategoris_id')->constrained('kategoris')->onDelete('cascade');
+            $table->foreignId('kategori_id')->constrained('kategoris')->onDelete('cascade');
             $table->timestamps();
         });
     }
