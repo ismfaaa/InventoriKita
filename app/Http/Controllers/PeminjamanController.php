@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
+// use App\Models\Kategori;
+// use App\Models\Aset;
+// use Illuminate\Http\Request;
 
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
@@ -9,9 +13,25 @@ use App\Models\Peminjaman;
 class PeminjamanController extends Controller
 {
     public function index()
-{
-    // Logika menampilkan daftar peminjaman
-    return view('pengguna.peminjaman.index');
+    {
+        $user = auth()->user();
+
+        // UNTUK ADMIN
+        if ($user->role === 'admin') {
+            
+            return view('admin.peminjaman.index');
+        } 
+        
+        // UNTUK PENGGUNA
+        elseif ($user->role === 'pengguna') {
+            return view('pengguna.peminjaman.index');
+        } 
+        
+        else {
+            abort(403, 'Unauthorized');
+        }
+    
+    }
 }
 
 public function create()
@@ -22,7 +42,7 @@ public function create()
 }
 
 public function store(Request $request)
-{
+
 {
     $validated = $request->validate([
         'aset_id' => 'required',
@@ -40,5 +60,5 @@ public function store(Request $request)
 
     return redirect()->route('peminjaman.index')->with('success', 'Data berhasil disimpan!');
 }
-}
+
 }
