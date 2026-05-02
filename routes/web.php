@@ -20,17 +20,49 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita', [PenggunaController::class, 'index'])->name('pengguna.index');
-    // Route::get('/InventoriKita/Dashboard', [AsetController::class, 'penggunaindex'])->name('pengguna.dashboard');
-    // ============================= PEMINJAMAN =============================
     
-});
+    // ============================= PEMINJAMAN =============================
+    Route::get('/InventoriKita/peminjaman', function () {
+        return view('pengguna.peminjaman.index');
+    })->name('pengguna.peminjaman.index');
 
+    Route::get('/InventoriKita/peminjaman/tambah', function () {
+        $asets = \App\Models\Aset::all(); 
+        return view('pengguna.peminjaman.create', compact('asets'));
+    })->name('pengguna.peminjaman.create');
+
+    Route::get('/InventoriKita/peminjaman/{id}', function ($id) {
+        return view('pengguna.peminjaman.show', ['id' => $id]);
+    })->name('pengguna.peminjaman.show');
+
+    Route::post('/InventoriKita/peminjaman/simpan', function () {
+        return redirect()->route('pengguna.peminjaman.index')->with('success', 'Berhasil dikirim');
+    })->name('pengguna.peminjaman.store');
+
+    // ============================= PELAPORAN  =============================
+    Route::get('/InventoriKita/lapor-kerusakan', function () {
+        $asets = \App\Models\Aset::all(); 
+        return view('pengguna.pelaporan.create'); 
+    })->name('pengguna.lapor.create');
+});
 
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 
-    // ============================= MANAJEMEN INVENTARIS =============================
+    // ============================= MANAJEMEN PEMINJAMAN (PERBAIKAN DISINI) =============================
+    Route::get('/admin/peminjaman', function () {
+        // Kita ambil data peminjaman agar variabel $peminjamans tersedia di Blade
+        // Menggunakan try-catch agar jika tabel belum ada, tetap tidak error
+        try {
+            $peminjamans = \App\Models\Peminjaman::with(['user', 'aset'])->get();
+        } catch (\Exception $e) {
+            $peminjamans = collect(); // Kirim koleksi kosong jika tabel belum ada
+        }
+        
+        return view('admin.peminjaman.index', compact('peminjamans'));
+    })->name('admin.peminjaman.index');
 
+    // ============================= MANAJEMEN INVENTARIS =============================
     Route::get('/Manajemen-inventaris', [AsetController::class, 'index'])->name('inventaris.index');
     Route::get('/Manajemen-inventaris/create', [AsetController::class, 'create'])->name('inventaris.create');
     Route::post('/Manajemen-inventaris', [AsetController::class, 'store'])->name('inventaris.store');
@@ -62,11 +94,8 @@ Route::middleware(['auth','admin'])->group(function () {
     })->name('admin.update_stats');
 });
 
-
 Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
 });
-
-
 
 require __DIR__.'/auth.php';
