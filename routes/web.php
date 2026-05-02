@@ -6,6 +6,7 @@ use App\Http\Controllers\StakeholderController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AsetController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PeminjamanController; //new
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -66,6 +67,8 @@ Route::middleware(['auth','admin'])->group(function () {
 Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
 });
+
+    
 
 
 
