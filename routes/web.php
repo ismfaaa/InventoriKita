@@ -6,9 +6,11 @@ use App\Http\Controllers\StakeholderController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AsetController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PeminjamanController; //new
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+
     return view('welcome');
 });
 
@@ -22,6 +24,7 @@ Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita', [PenggunaController::class, 'index'])->name('pengguna.index');
     // Route::get('/InventoriKita/Dashboard', [AsetController::class, 'penggunaindex'])->name('pengguna.dashboard');
     // ============================= PEMINJAMAN =============================
+    Route::resource('peminjaman', PeminjamanController::class,);
     
 });
 
@@ -66,6 +69,8 @@ Route::middleware(['auth','admin'])->group(function () {
 Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
 });
+
+    
 
 
 
