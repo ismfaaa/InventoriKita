@@ -6,9 +6,11 @@ use App\Http\Controllers\StakeholderController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AsetController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PeminjamanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+
     return view('welcome');
 });
 
@@ -20,6 +22,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita', [PenggunaController::class, 'index'])->name('pengguna.index');
+    // Route::get('/InventoriKita/Dashboard', [AsetController::class, 'penggunaindex'])->name('pengguna.dashboard');
+    // ============================= PEMINJAMAN =============================
+    Route::get('/InventoriKita/Peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
+    Route::resource('peminjaman', PeminjamanController::class,);
     
     // ============================= PEMINJAMAN =============================
     Route::get('/InventoriKita/peminjaman', function () {
@@ -92,6 +98,9 @@ Route::middleware(['auth','admin'])->group(function () {
         );
         return back()->with('success', 'Dashboard berhasil diupdate!');
     })->name('admin.update_stats');
+
+    // ============================= MANAJEMEN PEMINJAMAN =============================
+    Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('manajemen.peminjaman');  
 });
 
 Route::middleware(['auth','stakeholder'])->group(function () {
