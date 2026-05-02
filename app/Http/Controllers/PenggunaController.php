@@ -24,7 +24,7 @@ class PenggunaController extends Controller
         ->when($category, function ($query, $category) {
             return $query->where('kategori_id', $category);
         })
-        ->get();
+        ->paginate();
 
         return view('pengguna.index', compact('asets', 'kategoris', 'stats'));
     }

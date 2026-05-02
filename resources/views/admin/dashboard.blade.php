@@ -1,6 +1,11 @@
 <x-app-layout>
     @php
-        $stats = \DB::table('dashboard_stats')->where('id', 1)->first();
+        // Ambil data stats, jika tidak ada (null), kita buat objek kosong agar tidak error saat diakses
+        $stats = \DB::table('dashboard_stats')->where('id', 1)->first() ?? (object)['barang_tersedia' => 0, 'sedang_dipinjam' => 0];
+        
+        // Pastikan variabel asets tersedia sebagai array kosong jika tidak dikirim dari controller
+        // Ini untuk mencegah error count() jika layout utama membutuhkannya
+        $asets = $asets ?? []; 
     @endphp
 
     @include('layouts.sidebar')
@@ -23,7 +28,7 @@
                     <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
                         <p class="text-xs uppercase font-bold opacity-80">Barang Tersedia</p>
                         <input type="number" name="barang_tersedia" 
-                               value="{{ $stats->barang_tersedia ?? 0 }}" 
+                               value="{{ $stats->barang_tersedia }}" 
                                min="0"
                                oninput="if(this.value < 0) this.value = 0;"
                                class="bg-transparent text-3xl font-bold opacity-80 w-full focus:outline-none border-b-2 border-white/30 focus:border-white">
@@ -32,7 +37,7 @@
                     <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
                         <p class="text-xs uppercase font-bold opacity-80">Sedang Dipinjam</p>
                         <input type="number" name="sedang_dipinjam" 
-                               value="{{ $stats->sedang_dipinjam ?? 0 }}" 
+                               value="{{ $stats->sedang_dipinjam }}" 
                                min="0"
                                oninput="if(this.value < 0) this.value = 0;"
                                class="bg-transparent text-3xl font-bold opacity-80 w-full focus:outline-none border-b-2 border-white/30 focus:border-white">
