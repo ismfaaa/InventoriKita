@@ -10,6 +10,7 @@ use App\Http\Controllers\PeminjamanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+
     return view('welcome');
 });
 
@@ -24,6 +25,7 @@ Route::middleware(['auth','pengguna'])->group(function () {
     // Route::get('/InventoriKita/Dashboard', [AsetController::class, 'penggunaindex'])->name('pengguna.dashboard');
     // ============================= PEMINJAMAN =============================
     Route::get('/InventoriKita/Peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
+    Route::resource('peminjaman', PeminjamanController::class,);
     
 });
 
@@ -71,6 +73,8 @@ Route::middleware(['auth','admin'])->group(function () {
 Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
 });
+
+    
 
 
 
