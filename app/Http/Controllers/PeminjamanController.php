@@ -66,4 +66,26 @@ class PeminjamanController extends Controller
         return redirect()->route('peminjaman.index')->with('success', 'Data berhasil disimpan!');
     }
 
+    // UPDATE STATUS PEMINJAMAN
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:disetujui,ditolak,selesai',
+        ]);
+
+        $peminjaman = Peminjaman::findOrFail($id);
+        
+        $peminjaman->status_peminjaman = $request->status;
+
+        if ($request->status === 'disetujui') {
+            $peminjaman->status_ketersediaan = 'dipinjam';
+        } elseif ($request->status === 'selesai' || $request->status === 'ditolak') {
+            $peminjaman->status_ketersediaan = 'tersedia';
+        }
+
+        $peminjaman->save();
+
+        return redirect()->back()->with('success', 'Status peminjaman berhasil diperbarui!');
+    }
+
 }
