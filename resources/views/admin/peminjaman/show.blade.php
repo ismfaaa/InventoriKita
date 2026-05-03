@@ -13,6 +13,7 @@
     <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
+            {{-- SIDEBAR STATUS --}}
             <div class="space-y-6">
                 <div class="bg-white rounded-[35px] p-8 shadow-sm border border-[#e5edda] text-center">
                     <div class="w-20 h-20 bg-[#f1f5e9] rounded-full flex items-center justify-center mx-auto mb-4">
@@ -36,7 +37,9 @@
                 </div>
             </div>
 
+            {{-- DETAIL CONTENT --}}
             <div class="md:col-span-2 space-y-6">
+                {{-- INFORMASI PEMINJAM --}}
                 <div class="bg-white rounded-[35px] p-8 shadow-sm border border-[#e5edda]">
                     <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
                         <span class="w-2 h-6 bg-[#588133] rounded-full"></span>
@@ -51,39 +54,58 @@
                             <p class="text-[10px] uppercase font-black text-gray-400 tracking-wider">Email/ID</p>
                             <p class="text-sm font-bold text-gray-700">{{ $peminjaman->user->email }}</p>
                         </div>
-                        <div>
+                        <div class="col-span-2">
                             <p class="text-[10px] uppercase font-black text-gray-400 tracking-wider">Keperluan</p>
-                            <p class="text-sm text-gray-600 mt-1">{{ $peminjaman->keperluan ?? 'Untuk kegiatan operasional kantor' }}</p>
+                            <p class="text-sm text-gray-600 mt-1 p-4 bg-gray-50 rounded-2xl border border-gray-100 italic">"{{ $peminjaman->keperluan ?? 'Untuk kegiatan operasional kantor' }}"</p>
                         </div>
                     </div>
                 </div>
 
+                {{-- INFORMASI ASET --}}
                 <div class="bg-white rounded-[35px] p-8 shadow-sm border border-[#e5edda]">
                     <h3 class="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
                         <span class="w-2 h-6 bg-[#99AF69] rounded-full"></span>
-                        Informasi Aset
+                        Informasi Aset & Waktu
                     </h3>
-                    <div class="flex gap-6 items-start">
-                        <div class="w-32 h-32 rounded-[25px] bg-gray-100 overflow-hidden border border-gray-50">
-                             @if($peminjaman->aset->foto)
-                                <img src="{{ Storage::url($peminjaman->aset->foto) }}" class="w-full h-full object-cover">
-                             @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-300 italic text-[10px]">No Photo</div>
-                             @endif
-                        </div>
-                        <div class="flex-1 space-y-4">
+                    <div class="flex flex-col gap-8">
+                        {{-- Nama & Foto Aset --}}
+                        <div class="flex gap-6 items-center">
+                            <div class="w-24 h-24 rounded-[25px] bg-gray-100 overflow-hidden border border-gray-100 shrink-0 shadow-inner">
+                                @if($peminjaman->aset->foto)
+                                    <img src="{{ Storage::url($peminjaman->aset->foto) }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-gray-300 italic text-[10px]">No Photo</div>
+                                @endif
+                            </div>
                             <div>
                                 <p class="text-[10px] uppercase font-black text-gray-400 tracking-wider">Nama Aset</p>
-                                <p class="text-sm font-bold text-gray-700">{{ $peminjaman->aset->nama_aset }}</p>
+                                <p class="text-lg font-bold text-gray-800">{{ $peminjaman->aset->nama_aset }}</p>
+                                <p class="text-xs font-bold text-[#588133] mt-1 flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    {{ $peminjaman->aset->lokasi }}
+                                </p>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p class="text-[10px] uppercase font-black text-gray-400 tracking-wider">Lokasi</p>
-                                    <p class="text-xs font-bold text-[#588133]">{{ $peminjaman->aset->lokasi }}</p>
+                        </div>
+
+                        {{-- TANGGAL DIPISAH (SESUAI REQUEST) --}}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-5 bg-blue-50/50 rounded-3xl border border-blue-100 flex items-center gap-4">
+                                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-sm">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] uppercase font-black text-gray-400 tracking-wider">Durasi</p>
-                                    <p class="text-xs font-bold text-gray-700">{{ $peminjaman->tanggal_mulai }} s/d {{ $peminjaman->tanggal_selesai }}</p>
+                                    <p class="text-[10px] uppercase font-black text-blue-400 tracking-widest leading-none mb-1">Tanggal Mulai</p>
+                                    <p class="text-sm font-black text-blue-900">{{ \Carbon\Carbon::parse($peminjaman->tanggal_mulai)->isoFormat('D MMMM YYYY') }}</p>
+                                </div>
+                            </div>
+
+                            <div class="p-5 bg-orange-50/50 rounded-3xl border border-orange-100 flex items-center gap-4">
+                                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-orange-600 shadow-sm">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase font-black text-orange-400 tracking-widest leading-none mb-1">Target Kembali</p>
+                                    <p class="text-sm font-black text-orange-900">{{ \Carbon\Carbon::parse($peminjaman->tanggal_selesai)->isoFormat('D MMMM YYYY') }}</p>
                                 </div>
                             </div>
                         </div>
