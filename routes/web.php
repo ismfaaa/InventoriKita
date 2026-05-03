@@ -28,6 +28,10 @@ Route::middleware(['auth','pengguna'])->group(function () {
     // Route::resource('peminjaman', PeminjamanController::class,);
     
     // ============================= PEMINJAMAN =============================
+    // NEW route [fira]
+    Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('pengguna.peminjaman.index');
+    Route::post('/Manajemen-peminjaman', [PeminjamanController::class, 'store'])->name('pengguna.peminjaman.store');
+
     Route::get('/InventoriKita/peminjaman', function () {
         return view('pengguna.peminjaman.index');
     })->name('pengguna.peminjaman.index');
@@ -93,7 +97,8 @@ Route::middleware(['auth','admin'])->group(function () {
     })->name('admin.update_stats');
 
     // ============================= MANAJEMEN PEMINJAMAN =============================
-    Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('manajemen.peminjaman.index');
+    // ini baru di komen
+    // Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('manajemen.peminjaman.index');
     
     Route::patch('/Manajemen-peminjaman/{id}/update-status', [PeminjamanController::class, 'updateStatus'])->name('admin.peminjaman.updateStatus');
 });
