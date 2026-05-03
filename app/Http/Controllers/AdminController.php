@@ -6,25 +6,28 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Aset;
-// 1. Tambahkan import model Peminjaman jika kamu sudah punya modelnya
-// use App\Models\Peminjaman; 
+use App\Models\Peminjaman;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        // Ambil data stats
+        // 1. Ambil data statistik dashboard
         $stats = DB::table('dashboard_stats')->where('id', 1)->first();
 
-        // Ambil data aset
+        // 2. Ambil data aset
         $asets = Aset::all(); 
 
-        // 2. Ambil data peminjaman agar count($peminjamans) tidak error
-        // Jika kamu belum punya tabel peminjaman, kita buat array kosong dulu agar tidak error
-        $peminjamans = DB::table('peminjamans')->get(); // Pastikan nama tabelnya benar
+        // 3. Ambil data peminjaman untuk dihitung (count) di dashboard
+        try {
+            $peminjamans = Peminjaman::all();
+        } catch (\Exception $e) {
+            $peminjamans = collect(); // Kirim koleksi kosong jika tabel belum ada
+        }
 
-        // 3. Kirim SEMUA variabel ke view
+        // 4. Kirim SEMUA variabel ke view dashboard
         return view('admin.dashboard', compact('stats', 'asets', 'peminjamans'));
+    
     }
 
     public function updateStats(Request $request)

@@ -24,8 +24,8 @@ Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita', [PenggunaController::class, 'index'])->name('pengguna.index');
     // Route::get('/InventoriKita/Dashboard', [AsetController::class, 'penggunaindex'])->name('pengguna.dashboard');
     // ============================= PEMINJAMAN =============================
-    Route::get('/InventoriKita/Peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
-    Route::resource('peminjaman', PeminjamanController::class,);
+    // Route::get('/InventoriKita/Peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
+    // Route::resource('peminjaman', PeminjamanController::class,);
     
     // ============================= PEMINJAMAN =============================
     Route::get('/InventoriKita/peminjaman', function () {
@@ -54,19 +54,6 @@ Route::middleware(['auth','pengguna'])->group(function () {
 
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-
-    // ============================= MANAJEMEN PEMINJAMAN (PERBAIKAN DISINI) =============================
-    Route::get('/admin/peminjaman', function () {
-        // Kita ambil data peminjaman agar variabel $peminjamans tersedia di Blade
-        // Menggunakan try-catch agar jika tabel belum ada, tetap tidak error
-        try {
-            $peminjamans = \App\Models\Peminjaman::with(['user', 'aset'])->get();
-        } catch (\Exception $e) {
-            $peminjamans = collect(); // Kirim koleksi kosong jika tabel belum ada
-        }
-        
-        return view('admin.peminjaman.index', compact('peminjamans'));
-    })->name('admin.peminjaman.index');
 
     // ============================= MANAJEMEN INVENTARIS =============================
     Route::get('/Manajemen-inventaris', [AsetController::class, 'index'])->name('inventaris.index');
@@ -100,7 +87,7 @@ Route::middleware(['auth','admin'])->group(function () {
     })->name('admin.update_stats');
 
     // ============================= MANAJEMEN PEMINJAMAN =============================
-    Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('manajemen.peminjaman');  
+    Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('manajemen.peminjaman.index');  
 });
 
 Route::middleware(['auth','stakeholder'])->group(function () {

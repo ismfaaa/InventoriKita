@@ -1,4 +1,5 @@
 <x-app-layout>
+    @include('layouts.sidebar')
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-[#588133] leading-tight">
             {{ __('Manajemen Peminjaman') }}

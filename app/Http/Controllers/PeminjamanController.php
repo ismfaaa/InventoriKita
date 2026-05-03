@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 // use App\Models\Kategori;
-// use App\Models\Aset;
-// use Illuminate\Http\Request;
-
+use App\Models\Aset;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 
@@ -16,15 +14,22 @@ class PeminjamanController extends Controller
     {
         $user = auth()->user();
 
-        // UNTUK ADMIN
+        // PEMINJAMAN UNTUK ADMIN
         if ($user->role === 'admin') {
-            
-            return view('admin.peminjaman.index');
-        } 
+            try {
+                // Ambil data peminjaman lengkap dengan data user dan aset
+                $peminjamans = Peminjaman::with(['user', 'aset'])->get();
+            } catch (\Exception $e) {
+                $peminjamans = collect(); 
+            }
+            // Langsung lempar ke view peminjaman.index
+            return view('admin.peminjaman.index', compact('peminjamans'));
+        }
         
         // UNTUK PENGGUNA
         elseif ($user->role === 'pengguna') {
-            return view('pengguna.peminjaman.index');
+            $asets = Aset::all();
+            return view('pengguna.peminjaman.index',compact('asets'));
         } 
         
         else {
@@ -32,33 +37,33 @@ class PeminjamanController extends Controller
         }
     
     }
-}
 
-public function create()
-{
-    // Mengambil data aset untuk dropdown di form
-    $asets = \App\Models\Aset::all(); 
-    return view('pengguna.peminjaman.create', compact('asets'));
-}
 
-public function store(Request $request)
+    public function create()
+    {
+        // Mengambil data aset untuk dropdown di form
+        $asets = Aset::all(); 
+        return view('pengguna.peminjaman.create', compact('asets'));
+    }
 
-{
-    $validated = $request->validate([
-        'aset_id' => 'required',
-        'tanggal_pinjam' => 'required|date',
-        'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
-        'user_id' => 'required',
-        'status_peminjaman' => 'required',
-        'status_ketersediaan' => 'required',
-    ]);
+    public function store(Request $request)
 
-    $validated['status_peminjaman'] = 'diproses'; 
-    $validated['status_ketersediaan'] = 'tersedia';
+    {
+        $validated = $request->validate([
+            'aset_id' => 'required',
+            'tanggal_pinjam' => 'required|date',
+            'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
+            'user_id' => 'required',
+            'status_peminjaman' => 'required',
+            'status_ketersediaan' => 'required',
+        ]);
 
-    Peminjaman::create($validated);
+        $validated['status_peminjaman'] = 'diproses'; 
+        $validated['status_ketersediaan'] = 'tersedia';
 
-    return redirect()->route('peminjaman.index')->with('success', 'Data berhasil disimpan!');
-}
+        Peminjaman::create($validated);
+
+        return redirect()->route('peminjaman.index')->with('success', 'Data berhasil disimpan!');
+    }
 
 }
