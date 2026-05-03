@@ -25,6 +25,11 @@ Route::middleware(['auth','pengguna'])->group(function () {
     
 });
 
+// FAQ Route
+Route::get('/faq', function () {
+    return view('pages.faq');
+})->name('faq');
+
 
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
