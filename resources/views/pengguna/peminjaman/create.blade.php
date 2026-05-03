@@ -1,4 +1,5 @@
 <x-app-layout>
+    @include('layouts.sidebar')
     <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
         <a href="{{ route('pengguna.peminjaman.index') }}" class="inline-flex items-center text-sm text-gray-400 hover:text-[#588133] mb-6 transition-colors">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
