@@ -1,24 +1,6 @@
 <x-app-layout>
 
-    <div>
-        <div x-data="{ showSidebar: false }" @open-sidebar.window="showSidebar = true">
-        <div x-show="showSidebar" class="fixed inset-0 z-50 flex" role="dialog">
-            <div x-show="showSidebar" @click="showSidebar = false" class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-            
-            <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-xl">
-                <div class="p-6 border-b flex justify-between items-center">
-                    <h2 class="text-lg font-bold text-[#588133]">Menu Utama</h2>
-                    <button @click="showSidebar = false" class="text-gray-500 text-2xl">&times;</button>
-                </div>
-                <div class="flex-1 overflow-y-auto p-4 space-y-2">
-                    <a href="{{ route('admin.dashboard') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dashboard</a>
-                    <a href="{{ route('inventaris.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Inventaris</a>
-                    {{-- <a href="{{ route('peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Peminjaman</a>
-                    <a href="{{ route('usulan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Usulan dan Pengadaan</a> --}}
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('layouts.sidebar')
 
     <x-slot name="header">
         <div class="flex justify-between items-center">
@@ -67,21 +49,8 @@
                             
                             <td class="p-1 font-medium text-gray-800">
                                 <span x-show="!editing">{{ $kategori->nama_kategori }}</span>
-
-                                <form x-show="editing" action="{{ route('kategori.update', $kategori->id) }}" method="POST" class="flex gap-2 items-center" style="display: none;">
-                                    @csrf 
-                                    @method('PUT')
-                                    <input type="text" name="nama_kategori" value="{{ old('nama_kategori', $kategori->nama_kategori) }}" 
-                                        class="border-gray-300 rounded-lg text-sm px-3 py-1 w-full focus:ring-[#588133] focus:border-[#588133]" required>
-                                    
-                                    <button type="submit" class="bg-green-500 text-white p-1.5 rounded-lg hover:bg-green-600 transition shadow-sm" title="Simpan">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                    </button>
-            
-                                    <button type="button" @click="editing = false" class="bg-gray-400 text-white p-1.5 rounded-lg hover:bg-gray-500 transition shadow-sm" title="Batal">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                                    </button>
-                                </form>
+                                @include('admin.kategori.edit')
+                                
                             </td>
                             
                             {{-- icon edit & delete kategori --}}
@@ -90,13 +59,8 @@
                                     <button type="button" @click="editing = true" class="text-yellow-500 p-2 hover:bg-yellow-50 rounded-lg transition" title="Edit">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </button>
+                                    @include('admin.kategori.delete')
                                     
-                                    <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" onsubmit="return confirm('Hapus kategori ini?')">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="text-red-500 p-2 hover:bg-red-50 rounded-lg transition" title="Hapus">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>

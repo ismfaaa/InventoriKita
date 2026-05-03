@@ -1,4 +1,5 @@
 <x-app-layout>
+    @include('layouts.sidebar')
     <x-slot name="header">
         <div class="flex items-center gap-4">
             <a href="{{ route('inventaris.index') }}" class="text-gray-400 hover:text-[#588133] transition">

@@ -1,20 +1,21 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Peminjaman extends Model
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class Pengadaan extends Model
 {
     use HasFactory;
-    protected $table = 'peminjamans';
+
     protected $fillable = [
-        'status_peminjaman',
-        'status_ketersediaan',
         'user_id',
         'aset_id',
-        'tanggal_pinjam',
-        'tanggal_kembali',
+        'status_pengadaan',
+        'feedback_pengadaan',
+        'estimasi_biaya',
+        'tanggal_pengadaan',
     ];
 
     public function user()
