@@ -98,9 +98,11 @@ Route::middleware(['auth','admin'])->group(function () {
 
     // ============================= MANAJEMEN PEMINJAMAN =============================
     // ini baru di komen
-    // Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('manajemen.peminjaman.index');
+    Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('manajemen.peminjaman.index');
     
     Route::patch('/Manajemen-peminjaman/{id}/update-status', [PeminjamanController::class, 'updateStatus'])->name('admin.peminjaman.updateStatus');
+
+    Route::get('/Manajemen-peminjaman/{id}', [PeminjamanController::class, 'show'])->name('admin.peminjaman.show');
 });
 
 Route::middleware(['auth','stakeholder'])->group(function () {
