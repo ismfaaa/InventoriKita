@@ -15,6 +15,9 @@ class Pengguna
      */
     public function handle(Request $request, Closure $next): Response
     {   
+        if (!auth()->check()) {
+        return redirect()->route('login');
+    }
         if (auth()->user()->role=='pengguna'){
             return $next($request);
         }
