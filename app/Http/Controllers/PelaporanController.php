@@ -20,7 +20,7 @@ class PelaporanController extends Controller
      */
     public function create()
     {
-        //
+        return view('pengguna.pelaporan.create'); //
     }
 
     /**
