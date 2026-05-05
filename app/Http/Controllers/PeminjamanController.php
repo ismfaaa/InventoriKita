@@ -22,7 +22,7 @@ class PeminjamanController extends Controller
             } catch (\Exception $e) {
                 $peminjamans = collect(); 
             }
-            // Langsung lempar ke view peminjaman.index
+            // Langsung lempsar ke view peminjaman.index
             return view('admin.peminjaman.index', compact('peminjamans'));
         }
         

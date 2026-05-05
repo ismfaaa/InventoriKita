@@ -12,7 +12,7 @@
                 </div>
                 <div class="flex-1 overflow-y-auto p-4 space-y-2">
                     <a href="{{ route('pengguna.peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Form Peminjaman Baru</a>
-                    <a href="{{ route('pengguna.lapor.create') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Lapor Kerusakan Alat</a>
+                    <a href="{{ route('pengguna.lapor.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Lapor Kerusakan Alat</a>
                     <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Digital Logbook</a>
                     <a href="{{ route('faq') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">FAQ</a>
                     
