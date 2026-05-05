@@ -20,7 +20,6 @@
 
         <div>
             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Nama Aset</label>
-            {{-- Menambahkan id="aset_select" --}}
             <select name="aset_id" id="aset_select" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133] transition-all">
                 <option value="" disabled selected>-- Pilih Barang --</option>
                 @foreach($asets as $aset)
@@ -55,12 +54,11 @@
             <input type="date" name="tanggal_kembali" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133]">
         </div>
 
-        {{-- Input Status (Default & Tersembunyi agar Validasi Controller Lolos) --}}
+        {{-- Input Status (Default & Tersembunyi) --}}
         <input type="hidden" name="user_id" value="{{ Auth::id() }}">
         <input type="hidden" name="status_peminjaman" value="pending">
         <input type="hidden" name="status_ketersediaan" value="tersedia">
 
-        {{-- Jika ingin menampilkan statusnya ke pengguna tapi tidak bisa diubah (opsional) --}}
         <div class="md:col-span-2">
             <div class="flex gap-4 mt-4">
                 <div class="flex-1">
@@ -82,7 +80,6 @@
     </div>
     </form>
 
-<!-- untuk otomatis ngisi kode dan kategori -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const selectAset = document.getElementById('aset_select');
@@ -90,11 +87,9 @@
         const inputKategori = document.getElementById('kategori_aset');
 
         selectAset.addEventListener('change', function() {
-            // Mengambil data dari atribut data- di dalam option yang dipilih
             const selectedOption = this.options[this.selectedIndex];
             const kode = selectedOption.getAttribute('data-kode');
             const kategori = selectedOption.getAttribute('data-kategori');
-            // Menampilkan nilainya ke input pengguna
             inputKode.value = kode ? kode : '';
             inputKategori.value = kategori ? kategori : '';
         });

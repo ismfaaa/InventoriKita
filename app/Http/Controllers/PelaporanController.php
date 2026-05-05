@@ -2,33 +2,78 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Aset;
 use App\Models\Pelaporan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PelaporanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $user = Auth::user();
+
+        if ($user->role === 'admin') {
+            $pelaporans = Pelaporan::with(['aset', 'user'])->get();
+            return view('admin.pelaporan.index', compact('pelaporans'));
+        } 
+        
+        elseif ($user->role === 'pengguna') {
+            $pelaporans = Pelaporan::where('user_id', $user->id)->with('aset')->get();
+            return view('pengguna.pelaporan.index', compact('pelaporans'));
+        } 
+        
+        else {
+            abort(403, 'Unauthorized');
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form input laporan baru.
      */
     public function create()
     {
-        return view('pengguna.pelaporan.create'); //
+        $asets = Aset::all();
+        return view('pengguna.pelaporan.create', compact('asets'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan data pelaporan ke database.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'aset_id'           => 'required|exists:asets,id',
+            'tingkat_kerusakan' => 'required|in:ringan,sedang,berat',
+            'lokasi'            => 'required|string|max:255',
+            'deskripsi'         => 'required|string',
+            'foto'              => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+    $laporanAda = Pelaporan::where('aset_id', $request->aset_id)
+        ->whereIn('status_pelaporan', ['diproses']) 
+        ->first();
+
+    if ($laporanAda) {
+        return redirect()->back()
+            ->withInput() 
+            ->with('error_kritis', 'Aset ini sudah dilaporkan sebelumnya dan sedang dalam penanganan.');
+    }
+
+        $data = $request->all();
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('pelaporan', 'public');
+            $data['foto'] = $path;
+        }
+
+        $data['user_id'] = Auth::id();
+        $data['status_pelaporan'] = 'diproses';
+        $data['tanggal_pelaporan'] = now();
+
+        Pelaporan::create($data);
+
+        return redirect()->route('pengguna.lapor.index')->with('status_berhasil', 'Laporan kerusakan berhasil dikirim!');
     }
 
     /**
