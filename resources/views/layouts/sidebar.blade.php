@@ -15,7 +15,6 @@
                     <a href="{{ route('pengguna.lapor.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Lapor Kerusakan Alat</a>
                     <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Digital Logbook</a>
                     <a href="{{ route('faq') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">FAQ</a>
-                    
                 </div>
             </div>
         </div>

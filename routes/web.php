@@ -78,6 +78,8 @@ Route::get('/faq', function () {
 })->name('faq');
 
 
+
+
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 
