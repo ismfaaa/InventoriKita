@@ -1,80 +1,96 @@
 <x-app-layout>
-    <div x-data="{ showSidebar: false }" @open-sidebar.window="showSidebar = true">
-        <div x-show="showSidebar" class="fixed inset-0 z-50 flex" role="dialog">
-            <div x-show="showSidebar" @click="showSidebar = false" class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-            
-            <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-xl">
-                <div class="p-6 border-b flex justify-between items-center">
-                    <h2 class="text-lg font-bold text-[#588133]">Menu Utama</h2>
-                    <button @click="showSidebar = false" class="text-gray-500 text-2xl">&times;</button>
-                </div>
-                <div class="flex-1 overflow-y-auto p-4 space-y-2">
-                    <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Form Peminjaman Baru</a>
-                    <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Form Pengembalian Alat</a>
-                    <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Lapor Kerusakan Alat</a>
-                    <a href="{{ route('faq') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">FAQ</a>
-                </div>
+    @include('layouts.sidebar')
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Pusat Bantuan & FAQ') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                
+                            
+                            <div class="mb-10">
+                                <h3 class="text-xl font-bold mb-6 text-gray-800 border-b pb-2">FAQ (Pertanyaan Umum)</h3>
+                                
+                                <div class="space-y-8">
+                                    
+                                    <div>
+                                        <h2 class="font-bold text-lg text-gray-700 mb-4 flex items-center">
+                                            Prosedur Peminjaman
+                                        </h2>
+                                        <div class="space-y-4">
+                                            <div x-data="{ open: false }" class="bg-gray-50 rounded-lg border-l-4 border-[#588133] transition-all">
+                                                <button @click="open = !open" class="w-full text-left p-4 focus:outline-none">
+                                                    <div class="flex justify-between items-center">
+                                                        <span class="font-semibold text-[#588133]">Bagaimana cara meminjam aset?</span>
+                                                        <svg :class="{'rotate-180': open}" class="w-5 h-5 text-[#588133] transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                    </div>
+                                                </button>
+                                                <div x-show="open" x-cloak class="px-4 pb-4 text-gray-600 border-t border-gray-200 pt-2 mx-4">
+                                                    Pilih aset di katalog, lalu klik "Pinjam" dan isi formulir peminjaman.
+                                                </div>
+                                            </div>
+
+                                            <div x-data="{ open: false }" class="bg-gray-50 rounded-lg border-l-4 border-[#588133] transition-all">
+                                                <button @click="open = !open" class="w-full text-left p-4 focus:outline-none">
+                                                    <div class="flex justify-between items-center">
+                                                        <span class="font-semibold text-[#588133]">Kenapa status masih pending?</span>
+                                                        <svg :class="{'rotate-180': open}" class="w-5 h-5 text-[#588133] transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                    </div>
+                                                </button>
+                                                <div x-show="open" x-cloak class="px-4 pb-4 text-gray-600 border-t border-gray-200 pt-2 mx-4">
+                                                    Pengajuan sedang menunggu persetujuan admin (maksimal 24 jam).
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h2 class="font-bold text-lg text-gray-700 mb-4 flex items-center">
+                                            Masalah Akun
+                                        </h2>
+                                        <div class="space-y-4">
+                                            <div x-data="{ open: false }" class="bg-gray-50 rounded-lg border-l-4 border-[#588133] transition-all">
+                                                <button @click="open = !open" class="w-full text-left p-4 focus:outline-none">
+                                                    <div class="flex justify-between items-center">
+                                                        <span class="font-semibold text-[#588133]">Saya tidak bisa login, kenapa?</span>
+                                                        <svg :class="{'rotate-180': open}" class="w-5 h-5 text-[#588133] transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                    </div>
+                                                </button>
+                                                <div x-show="open" x-cloak class="px-4 pb-4 text-gray-600 border-t border-gray-200 pt-2 mx-4">
+                                                    Pastikan email dan password benar. Jika lupa password, gunakan fitur reset.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h2 class="font-bold text-lg text-gray-700 mb-4 flex items-center">
+                                            Pelaporan Kerusakan
+                                        </h2>
+                                        <div class="space-y-4">
+                                            <div x-data="{ open: false }" class="bg-gray-50 rounded-lg border-l-4 border-[#588133] transition-all">
+                                                <button @click="open = !open" class="w-full text-left p-4 focus:outline-none">
+                                                    <div class="flex justify-between items-center">
+                                                        <span class="font-semibold text-[#588133]">Bagaimana cara melaporkan kerusakan?</span>
+                                                        <svg :class="{'rotate-180': open}" class="w-5 h-5 text-[#588133] transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                                    </div>
+                                                </button>
+                                                <div x-show="open" x-cloak class="px-4 pb-4 text-gray-600 border-t border-gray-200 pt-2 mx-4">
+                                                    Masuk ke menu laporan kerusakan, isi form dan upload foto bukti.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                @include('pages.hubungi-kami')
             </div>
         </div>
     </div>
 
-    <div class="py-8 px-4 max-w-4xl mx-auto">
-
-        <h1 class="text-2xl font-bold text-[#588133] mb-6">FAQ (Pertanyaan Umum)</h1>
-
-        <!-- KATEGORI: PEMINJAMAN -->
-        <h2 class="font-semibold text-lg text-gray-700 mb-3">Prosedur Peminjaman</h2>
-        <div class="space-y-3 mb-6">
-
-            <div x-data="{ open: false }" class="border rounded-xl">
-                <button @click="open = !open" class="w-full text-left px-4 py-3 font-semibold">
-                    Bagaimana cara meminjam aset?
-                </button>
-                <div x-show="open" class="px-4 pb-3 text-sm text-gray-600">
-                    Pilih aset di katalog, lalu klik "Pinjam" dan isi formulir peminjaman.
-                </div>
-            </div>
-
-            <div x-data="{ open: false }" class="border rounded-xl">
-                <button @click="open = !open" class="w-full text-left px-4 py-3 font-semibold">
-                    Kenapa status masih pending?
-                </button>
-                <div x-show="open" class="px-4 pb-3 text-sm text-gray-600">
-                    Pengajuan sedang menunggu persetujuan admin (maksimal 24 jam).
-                </div>
-            </div>
-
-        </div>
-
-        <!-- KATEGORI: AKUN -->
-        <h2 class="font-semibold text-lg text-gray-700 mb-3">Masalah Akun</h2>
-        <div class="space-y-3 mb-6">
-
-            <div x-data="{ open: false }" class="border rounded-xl">
-                <button @click="open = !open" class="w-full text-left px-4 py-3 font-semibold">
-                    Saya tidak bisa login, kenapa?
-                </button>
-                <div x-show="open" class="px-4 pb-3 text-sm text-gray-600">
-                    Pastikan email dan password benar. Jika lupa password, gunakan fitur reset.
-                </div>
-            </div>
-
-        </div>
-
-        <!-- KATEGORI: KERUSAKAN -->
-        <h2 class="font-semibold text-lg text-gray-700 mb-3">Pelaporan Kerusakan</h2>
-        <div class="space-y-3">
-
-            <div x-data="{ open: false }" class="border rounded-xl">
-                <button @click="open = !open" class="w-full text-left px-4 py-3 font-semibold">
-                    Bagaimana cara melaporkan kerusakan?
-                </button>
-                <div x-show="open" class="px-4 pb-3 text-sm text-gray-600">
-                    Masuk ke menu laporan kerusakan, isi form dan upload foto bukti.
-                </div>
-            </div>
-
-        </div>
-
-    </div>
 </x-app-layout>
