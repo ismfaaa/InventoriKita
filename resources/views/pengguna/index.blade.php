@@ -115,7 +115,6 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
 
-        /* Custom Warna Pagination */
         .pagination-matcha nav span[aria-current="page"] span {
             background-color: #588133 !important;
             border-color: #588133 !important;

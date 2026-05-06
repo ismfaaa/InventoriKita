@@ -4,11 +4,14 @@
     <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
         <div class="mb-8">
             <h3 class="text-2xl font-bold text-gray-800">Lapor Kerusakan Aset</h3>
-            <p class="text-sm text-gray-500">Mohon isi detail kerusakan dengan benar agar segera ditindaklanjuti.</p>
+            <p class="text-sm text-gray-500">Mohon isi detail kerusakan dengan benar supaya dapat segera ditindaklanjuti.</p>
         </div>
 
         <form action="{{ route('pengguna.lapor.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 bg-white p-8 rounded-[30px] shadow-sm border border-[#e5edda]">
             @csrf
+            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+            <input type="hidden" name="status_pelaporan" value="diproses">
+            <input type="hidden" name="tanggal_pelaporan" value="{{ date('Y-m-d') }}">
 
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Pilih Aset yang Rusak</label>
@@ -33,14 +36,14 @@
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Lokasi Aset</label>
-                    <input type="text" name="lokasi_aset" placeholder="Contoh: Lab Komputer 1" required
+                    <input type="text" name="lokasi" placeholder="Contoh: Lab Komputer 1" required
                            class="w-full rounded-2xl border-[#e5edda] focus:border-[#588133]">
                 </div>
             </div>
 
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Deskripsi Kerusakan</label>
-                <textarea name="deskripsi_kerusakan" rows="4" placeholder="Jelaskan detail kendala teknis..." required
+                <textarea name="deskripsi" rows="4" placeholder="Jelaskan detail kerusakan" required
                           class="w-full rounded-2xl border-[#e5edda] focus:border-[#588133]"></textarea>
             </div>
 
@@ -54,7 +57,7 @@
                         <div class="flex text-sm text-gray-600">
                             <label class="relative cursor-pointer bg-white rounded-md font-bold text-[#588133] hover:text-[#466629]">
                                 <span>Unggah file</span>
-                                <input name="foto_bukti" type="file" class="sr-only" required>
+                                <input name="foto" type="file" class="sr-only" required>
                             </label>
                         </div>
                         <p class="text-xs text-gray-500">PNG, JPG, JPEG hingga 2MB</p>
@@ -70,7 +73,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Berhasil Terkirim
         @if(session('status_berhasil'))
             Swal.fire({
                 icon: 'success',
@@ -80,7 +82,6 @@
             });
         @endif
 
-        // Peringatan Aset Sudah Dilaporkan (AC 4)
         @if(session('error_kritis'))
             Swal.fire({
                 icon: 'warning',

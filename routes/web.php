@@ -44,43 +44,20 @@ Route::middleware(['auth','pengguna'])->group(function () {
         return redirect()->route('pengguna.peminjaman.index')->with('success', 'Berhasil dikirim');
     })->name('pengguna.peminjaman.store_alt');
 
-    // ============================= PELAPORAN =============================
-    // 1. Menampilkan halaman Riwayat Laporan
+   // ============================= PELAPORAN =============================
     Route::get('/InventoriKita/lapor-kerusakan', [PelaporanController::class, 'index'])->name('pengguna.lapor.index');
-
-    // 2. Menampilkan Form Input Laporan
     Route::get('/InventoriKita/lapor-kerusakan/baru', [PelaporanController::class, 'create'])->name('pengguna.lapor.create');
-
-    // 3. Proses Simpan ke Database & Upload Gambar
     Route::post('/InventoriKita/lapor-kerusakan/simpan', [PelaporanController::class, 'store'])->name('pengguna.lapor.store');
 
-    // 1. Route untuk nampilin halaman Riwayat (Index)
-    // Route::get('/InventoriKita/lapor-kerusakan', function () {
-    //     return view('pengguna.pelaporan.index');
-    // })->name('pengguna.lapor.index');
+    }); 
 
-    // // 2. Route untuk nampilin Form (Create)
-    // Route::get('/InventoriKita/lapor-kerusakan/baru', function () {
-    //     $asets = \App\Models\Aset::all(); 
-    //     return view('pengguna.pelaporan.create', compact('asets'));
-    // })->name('pengguna.lapor.create');
-
-    // // 3. Route untuk proses simpan data (Store)
-    // Route::post('/InventoriKita/lapor-kerusakan/simpan', function () {
-    //     return redirect()->route('pengguna.lapor.index')->with('status_berhasil', 'Laporan berhasil dikirim!');
-    // })->name('pengguna.lapor.store'); 
-
-}); 
-
-// FAQ Route
-Route::get('/faq', function () {
-    return view('pages.faq');
-})->name('faq');
+    // FAQ Route
+    Route::get('/faq', function () {
+        return view('pages.faq');
+    })->name('faq');
 
 
-
-
-Route::middleware(['auth','admin'])->group(function () {
+    Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 
     // ============================= MANAJEMEN INVENTARIS =============================
