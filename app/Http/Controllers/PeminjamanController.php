@@ -29,7 +29,11 @@ class PeminjamanController extends Controller
         // UNTUK PENGGUNA
         elseif ($user->role === 'pengguna') {
             $asets = Aset::all();
-            return view('pengguna.peminjaman.index',compact('asets'));
+            $peminjamans = Peminjaman::where('user_id', $user->id)
+                                ->with('aset')
+                                ->latest()
+                                ->get();
+            return view('pengguna.peminjaman.index',compact('asets', 'peminjamans'));
         } 
         
         else {
