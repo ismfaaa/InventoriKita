@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Aset;
 use App\Models\Pelaporan;
 use Illuminate\Http\Request;
@@ -32,6 +33,7 @@ class PelaporanController extends Controller
      * Menampilkan form input laporan baru.
      */
     public function create()
+    
     {
         $asets = Aset::all();
         return view('pengguna.pelaporan.create', compact('asets'));
@@ -77,7 +79,7 @@ class PelaporanController extends Controller
     }
 
     /**
-     * Display the specified resource.
+
      */
     public function show(Pelaporan $pelaporan)
     {

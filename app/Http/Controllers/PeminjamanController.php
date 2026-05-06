@@ -21,13 +21,18 @@ class PeminjamanController extends Controller
             } catch (\Exception $e) {
                 $peminjamans = collect(); 
             }
+            // Langsung lempsar ke view peminjaman.index
             return view('admin.peminjaman.index', compact('peminjamans'));
         }
         
         // UNTUK PENGGUNA
         elseif ($user->role === 'pengguna') {
             $asets = Aset::all();
-            return view('pengguna.peminjaman.index',compact('asets'));
+            $peminjamans = Peminjaman::where('user_id', $user->id)
+                                ->with('aset')
+                                ->latest()
+                                ->get();
+            return view('pengguna.peminjaman.index',compact('asets', 'peminjamans'));
         } 
         
         else {
