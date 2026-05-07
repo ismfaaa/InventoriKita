@@ -36,12 +36,12 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
-                        @forelse($laporans ?? [] as $laporan)
+                        @forelse($pelaporans as $laporan)
                         <tr class="hover:bg-[#fcfdfa] transition-colors">
                             <td class="p-5">
                                 <div class="flex flex-col">
                                     <span class="text-sm font-bold text-gray-700">{{ $laporan->aset->nama_aset ?? 'Aset Tidak Diketahui' }}</span>
-                                    <span class="text-[10px] text-gray-400 font-medium italic">{{ $laporan->lokasi_aset }}</span>
+                                    <span class="text-[10px] text-gray-400 font-medium italic">{{ $laporan->lokasi }}</span>
                                 </div>
                             </td>
 
@@ -63,9 +63,9 @@
                             </td>
 
                             <td class="p-5">
-                                @if($laporan->foto_bukti)
+                                @if($laporan->foto)
                                     <div class="w-10 h-10 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                                        <img src="{{ asset('storage/' . $laporan->foto_bukti) }}" class="w-full h-full object-cover shadow-sm" alt="Bukti Kerusakan">
+                                        <img src="{{ asset('storage/' . $laporan->foto) }}" class="w-full h-full object-cover shadow-sm" alt="Bukti Kerusakan">
                                     </div>
                                 @else
                                     <span class="text-[10px] text-gray-300 italic">No Photo</span>
@@ -75,13 +75,14 @@
                             <td class="p-5 text-center">
                                 @php
                                     $statusColor = [
-                                        'pending' => 'bg-gray-100 text-gray-600',
-                                        'proses' => 'bg-amber-100 text-amber-700',
-                                        'selesai' => 'bg-[#f1f5e9] text-[#588133]'
-                                    ][$laporan->status] ?? 'bg-gray-100 text-gray-600';
+                                        'diproses'   => 'bg-amber-100 text-amber-700',
+                                        'verifikasi' => 'bg-blue-100 text-blue-700',
+                                        'feedback'   => 'bg-purple-100 text-purple-700',
+                                        'selesai'    => 'bg-[#f1f5e9] text-[#588133]'
+                                    ][$laporan->status_pelaporan] ?? 'bg-gray-100 text-gray-600';
                                 @endphp
                                 <span class="{{ $statusColor }} px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight">
-                                    {{ $laporan->status ?? 'Diterima' }}
+                                    {{ $laporan->status_pelaporan }}
                                 </span>
                             </td>
                         </tr>

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('aset_id')->constrained()->onDelete('cascade');
             $table->enum('status_pelaporan', ['diproses', 'verifikasi', 'feedback', 'selesai'])->default('diproses');
             $table->enum('feedback', ['diperbaiki', 'diganti', 'dihilangkan'])->nullable();
-            $table->enum('tingkat_kerusakan', ['rusak ringan', 'rusak berat']);
+            $table->enum('tingkat_kerusakan', ['ringan', 'sedang', 'berat']);
             $table->text('deskripsi');
             $table->string('foto')->nullable();
             $table->string('lokasi')->nullable();

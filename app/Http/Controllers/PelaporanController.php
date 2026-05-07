@@ -20,8 +20,9 @@ class PelaporanController extends Controller
         } 
         
         elseif ($user->role === 'pengguna') {
+            $asets = Aset::all();
             $pelaporans = Pelaporan::where('user_id', $user->id)->with('aset')->get();
-            return view('pengguna.pelaporan.index', compact('pelaporans'));
+            return view('pengguna.pelaporan.index', compact('pelaporans', 'asets'));
         } 
         
         else {
@@ -78,9 +79,25 @@ class PelaporanController extends Controller
         return redirect()->route('pengguna.lapor.index')->with('status_berhasil', 'Laporan kerusakan berhasil dikirim!');
     }
 
-    /**
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status_pelaporan' => 'required|in:diproses,verifikasi,feedback,selesai',
+            'feedback' => 'nullable|in:diperbaiki,diganti,dihilangkan',
+        ]);
 
-     */
+        $laporan = Pelaporan::findOrFail($id);
+        $laporan->status_pelaporan = $request->status_pelaporan;
+
+        if ($request->has('feedback')) {
+            $laporan->feedback = $request->feedback;
+        }
+
+        $laporan->save();
+
+        return redirect()->route('manajemen.pelaporan.index')->with('success', 'Status laporan berhasil diperbarui!');
+    }
+
     public function show(Pelaporan $pelaporan)
     {
         //
