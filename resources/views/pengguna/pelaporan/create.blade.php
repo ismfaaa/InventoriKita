@@ -6,6 +6,11 @@
             <h3 class="text-2xl font-bold text-gray-800">Lapor Kerusakan Aset</h3>
             <p class="text-sm text-gray-500">Mohon isi detail kerusakan dengan benar supaya dapat segera ditindaklanjuti.</p>
         </div>
+            @if ($errors->any())
+                <div class="bg-red-100 text-red-600 p-4 rounded-2xl mb-4">
+                    <ul> @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach </ul>
+                </div>
+            @endif
 
         <form action="{{ route('pengguna.lapor.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 bg-white p-8 rounded-[30px] shadow-sm border border-[#e5edda]">
             @csrf
@@ -18,7 +23,9 @@
                 <select name="aset_id" required class="w-full rounded-2xl border-[#e5edda] focus:border-[#588133] focus:ring-[#588133] transition-all">
                     <option value="" disabled selected>Pilih Aset...</option>
                     @foreach($asets as $aset)
-                        <option value="{{ $aset->id }}">{{ $aset->kode_aset }} - {{ $aset->nama_aset }}</option>
+                        <option value="{{ $aset->id }}" {{ old('aset_id') == $aset->id ? 'selected' : '' }}>
+                            {{ $aset->kode_aset }} - {{ $aset->nama_aset }}
+                        </option>
                     @endforeach
                 </select>
                 @error('aset_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
@@ -28,9 +35,9 @@
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Tingkat Kerusakan</label>
                     <select name="tingkat_kerusakan" required class="w-full rounded-2xl border-[#e5edda] focus:border-[#588133]">
-                        <option value="ringan">Ringan (Masih bisa dipakai)</option>
-                        <option value="sedang">Sedang (Perlu perbaikan segera)</option>
-                        <option value="berat">Berat (Tidak bisa dipakai/Mati total)</option>
+                        <option value="ringan" {{ old('tingkat_kerusakan') == 'ringan' ? 'selected' : '' }}>Ringan (Masih bisa dipakai)</option>
+                        <option value="sedang" {{ old('tingkat_kerusakan') == 'sedang' ? 'selected' : '' }}>Sedang (Perlu perbaikan segera)</option>
+                        <option value="berat" {{ old('tingkat_kerusakan') == 'berat' ? 'selected' : '' }}>Berat (Tidak bisa dipakai/Mati total)</option>
                     </select>
                 </div>
 
@@ -44,7 +51,7 @@
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Deskripsi Kerusakan</label>
                 <textarea name="deskripsi" rows="4" placeholder="Jelaskan detail kerusakan" required
-                          class="w-full rounded-2xl border-[#e5edda] focus:border-[#588133]"></textarea>
+                          class="w-full rounded-2xl border-[#e5edda] focus:border-[#588133]">{{ old('deskripsi') }}</textarea>
             </div>
 
             <div>
@@ -58,9 +65,12 @@
                             <label class="relative cursor-pointer bg-white rounded-md font-bold text-[#588133] hover:text-[#466629]">
                                 <span>Unggah file</span>
                                 <input name="foto" type="file" class="sr-only" required>
+                                @error('foto') 
+                                    <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span> 
+                                @enderror
                             </label>
                         </div>
-                        <p class="text-xs text-gray-500">PNG, JPG, JPEG hingga 2MB</p>
+                        <p class="text-xs text-gray-500">PNG, JPG, JPEG hingga 10MB</p>
                     </div>
                 </div>
             </div>

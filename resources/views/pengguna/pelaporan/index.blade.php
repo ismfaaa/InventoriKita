@@ -33,6 +33,7 @@
                             <th class="p-5 font-black">Tanggal Lapor</th>
                             <th class="p-5 font-black">Bukti</th>
                             <th class="p-5 font-black text-center">Status</th>
+                            <th class="p-5 font-black">Feedback</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
@@ -85,6 +86,29 @@
                                     {{ $laporan->status_pelaporan }}
                                 </span>
                             </td>
+                            <td class="p-5">
+                                @if($laporan->feedback)
+                                    @php
+                                        // Deskripsi default menyesuaikan jenis feedback
+                                        $deskripsiFeedback = [
+                                            'diperbaiki'  => 'Aset sedang dalam proses perbaikan oleh teknisi dan akan segera dikembalikan ke lokasi semula jika sudah selesai.',
+                                            'diganti'     => 'Aset dinyatakan rusak berat dan akan diganti dengan unit yang baru',
+                                            'dihilangkan' => 'Aset dihapus dari sistem inventaris karena hilang atau sudah tidak dapat diperbaiki/dimanfaatkan lagi.'
+                                        ][$laporan->feedback] ?? 'Tindakan lanjutan sedang diproses.';
+                                    @endphp
+
+                                    <button type="button" 
+                                            onclick="lihatDetailFeedback('{{ ucfirst($laporan->feedback) }}', '{{ $deskripsiFeedback }}')"
+                                            class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-200 text-gray-600 rounded-xl text-[10px] font-black uppercase hover:bg-gray-100 transition-all">
+                                        {{ $laporan->feedback }}
+                                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </button>
+                                @else
+                                    <span class="text-[10px] text-gray-300 italic">- Belum ada -</span>
+                                @endif
+                            </td>
                         </tr>
                         @empty
                         <tr>
@@ -107,8 +131,24 @@
         </div>
     </div>
 
-    @if(session('status_berhasil'))
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function lihatDetailFeedback(judul, deskripsi) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Tindak Lanjut: ' + judul,
+                text: deskripsi,
+                confirmButtonColor: '#588133',
+                customClass: {
+                    popup: 'rounded-[30px]',
+                    confirmButton: 'rounded-xl px-6 py-2'
+                }
+            });
+        }
+    </script>
+
+    @if(session('status_berhasil'))
     <script>
         Swal.fire({
             icon: 'success',
@@ -122,4 +162,5 @@
         });
     </script>
     @endif
+
 </x-app-layout>

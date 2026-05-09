@@ -50,7 +50,7 @@ class PelaporanController extends Controller
             'tingkat_kerusakan' => 'required|in:ringan,sedang,berat',
             'lokasi'            => 'required|string|max:255',
             'deskripsi'         => 'required|string',
-            'foto'              => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'foto'              => 'required|image|mimes:jpeg,png,jpg|max:10240',
         ]);
 
     $laporanAda = Pelaporan::where('aset_id', $request->aset_id)
