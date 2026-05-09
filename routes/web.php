@@ -117,4 +117,12 @@ Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
 });
 
+// ============================= EKSPOR DATA =============================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/export', [App\Http\Controllers\ExportController::class, 'index'])->name('export.index');
+    Route::get('/export/pelaporan/pdf', [App\Http\Controllers\ExportController::class, 'exportPelaporanPdf'])->name('export.pelaporan.pdf');
+    Route::get('/export/pengadaan/pdf', [App\Http\Controllers\ExportController::class, 'exportPengadaanPdf'])->name('export.pengadaan.pdf');
+    Route::get('/export/aset/pdf', [App\Http\Controllers\ExportController::class, 'exportAsetPdf'])->name('export.aset.pdf');
+});
+
 require __DIR__.'/auth.php';

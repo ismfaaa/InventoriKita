@@ -37,6 +37,7 @@
                         <a href="{{ route('manajemen.peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Peminjaman</a>
                         <a href="{{ route('manajemen.pelaporan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Pelaporan</a>
                         <a href="{{ route('pengadaan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Usulan Pengadaan</a>
+                        <a href="{{ route('export.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Ekspor Data</a>
                     </div>
                 </div>
             </div>
@@ -57,6 +58,7 @@
                     <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Form Peminjaman Baru</a>
                     <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Form Pengembalian Alat</a>
                     <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Lapor Kerusakan Alat</a>
+                    <a href="{{ route('export.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Ekspor Data</a>
                 </div>
             </div>
         </div>
