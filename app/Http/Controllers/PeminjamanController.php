@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 // use App\Models\Kategori;
 use App\Models\Aset;
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 
 
+
 class PeminjamanController extends Controller
 {
     public function index()
     {
+        
         $user = auth()->user();
 
         // PEMINJAMAN UNTUK ADMIN
