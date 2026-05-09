@@ -34,6 +34,7 @@
                         <a href="{{ route('admin.dashboard') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dashboard</a>
                         <a href="{{ route('inventaris.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Inventaris</a>
                         <a href="{{ route('manajemen.peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Peminjaman</a>
+                        <a href="{{ route('pengadaan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Usulan Pengadaan</a>
                     </div>
                 </div>
             </div>

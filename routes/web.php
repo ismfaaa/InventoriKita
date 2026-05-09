@@ -8,6 +8,7 @@ use App\Http\Controllers\AsetController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PelaporanController;
+use App\Http\Controllers\PengadaanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -97,6 +98,12 @@ Route::middleware(['auth','pengguna'])->group(function () {
     Route::patch('/Manajemen-peminjaman/{id}/update-status', [PeminjamanController::class, 'updateStatus'])->name('admin.peminjaman.updateStatus');
 
     Route::get('/Manajemen-peminjaman/{id}', [PeminjamanController::class, 'show'])->name('admin.peminjaman.show');
+});
+// ============================= USULAN PENGADAAN =============================
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/pengadaan/usulan', [PengadaanController::class, 'index'])->name('pengadaan.index');
+    Route::get('/pengadaan/usulan/baru', [PengadaanController::class, 'create'])->name('pengadaan.create');
+    Route::post('/pengadaan/simpan', [PengadaanController::class, 'store'])->name('pengadaan.store');
 });
 
 Route::middleware(['auth','stakeholder'])->group(function () {
