@@ -21,6 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// ::::::::::::::::::::::::::::::::: PENGGUNA :::::::::::::::::::::::::::::::::
 Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita', [PenggunaController::class, 'index'])->name('pengguna.index');
     
@@ -37,10 +38,7 @@ Route::middleware(['auth','pengguna'])->group(function () {
         return view('pengguna.peminjaman.create', compact('asets'));
     })->name('pengguna.peminjaman.create');
 
-    Route::get('/InventoriKita/peminjaman/{id}', function ($id) {
-        return view('pengguna.peminjaman.show', ['id' => $id]);
-    })->name('pengguna.peminjaman.show');
-
+    Route::get('/InventoriKita/peminjaman/{id}', [PeminjamanController::class, 'show'])->name('pengguna.peminjaman.show');
     Route::post('/InventoriKita/peminjaman/simpan', function () {
         return redirect()->route('pengguna.peminjaman.index')->with('success', 'Berhasil dikirim');
     })->name('pengguna.peminjaman.store_alt');
@@ -50,15 +48,19 @@ Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita/lapor-kerusakan/baru', [PelaporanController::class, 'create'])->name('pengguna.lapor.create');
     Route::post('/InventoriKita/lapor-kerusakan/simpan', [PelaporanController::class, 'store'])->name('pengguna.lapor.store');
 
-    }); 
+}); 
 
-    // FAQ Route
+// :::::::::::::::::::::::::::::::::::::: PAGES :::::::::::::::::::::::::::::::
+
+    // ============================ FAQ ==================================
     Route::get('/faq', function () {
         return view('pages.faq');
     })->name('faq');
 
 
-    Route::middleware(['auth','admin'])->group(function () {
+// ::::::::::::::::::::::::::::::::::: ADMIN :::::::::::::::::::::::::::::::::::
+
+Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 
     // ============================= MANAJEMEN INVENTARIS =============================
@@ -94,10 +96,14 @@ Route::middleware(['auth','pengguna'])->group(function () {
 
     // ============================= MANAJEMEN PEMINJAMAN =============================
     Route::get('/Manajemen-peminjaman-admin', [PeminjamanController::class, 'index'])->name('manajemen.peminjaman.index');
-    
     Route::patch('/Manajemen-peminjaman/{id}/update-status', [PeminjamanController::class, 'updateStatus'])->name('admin.peminjaman.updateStatus');
-
     Route::get('/Manajemen-peminjaman/{id}', [PeminjamanController::class, 'show'])->name('admin.peminjaman.show');
+
+    // ============================= MANAJEMEN PELAPORAN =============================
+    Route::get('/Manajemen-pelaporan', [PelaporanController::class, 'index'])->name('manajemen.pelaporan.index');
+    Route::patch('/Manajemen-pelaporan/{id}/update-status', [PelaporanController::class, 'updateStatus'])->name('admin.pelaporan.updateStatus');
+    Route::get('/Manajemen-pelaporan/{id}', [PelaporanController::class, 'show'])->name('manajemen.pelaporan.show');
+    
 });
 // ============================= USULAN PENGADAAN =============================
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -106,6 +112,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/pengadaan/simpan', [PengadaanController::class, 'store'])->name('pengadaan.store');
 });
 
+// :::::::::::::::::::::::::::::: STAKEHOLDER :::::::::::::::::::::::::::::::::::::::
 Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
 });

@@ -33,15 +33,16 @@
                             <th class="p-5 font-black">Tanggal Lapor</th>
                             <th class="p-5 font-black">Bukti</th>
                             <th class="p-5 font-black text-center">Status</th>
+                            <th class="p-5 font-black text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
-                        @forelse($laporans ?? [] as $laporan)
+                        @forelse($pelaporans as $laporan)
                         <tr class="hover:bg-[#fcfdfa] transition-colors">
                             <td class="p-5">
                                 <div class="flex flex-col">
                                     <span class="text-sm font-bold text-gray-700">{{ $laporan->aset->nama_aset ?? 'Aset Tidak Diketahui' }}</span>
-                                    <span class="text-[10px] text-gray-400 font-medium italic">{{ $laporan->lokasi_aset }}</span>
+                                    <span class="text-[10px] text-gray-400 font-medium italic">{{ $laporan->lokasi }}</span>
                                 </div>
                             </td>
 
@@ -63,27 +64,54 @@
                             </td>
 
                             <td class="p-5">
-                                @if($laporan->foto_bukti)
+                                @if($laporan->foto)
                                     <div class="w-10 h-10 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                                        <img src="{{ asset('storage/' . $laporan->foto_bukti) }}" class="w-full h-full object-cover shadow-sm" alt="Bukti Kerusakan">
+                                        <img src="{{ asset('storage/' . $laporan->foto) }}" class="w-full h-full object-cover shadow-sm" alt="Bukti Kerusakan">
                                     </div>
                                 @else
                                     <span class="text-[10px] text-gray-300 italic">No Photo</span>
                                 @endif
                             </td>
-
                             <td class="p-5 text-center">
                                 @php
                                     $statusColor = [
-                                        'pending' => 'bg-gray-100 text-gray-600',
-                                        'proses' => 'bg-amber-100 text-amber-700',
-                                        'selesai' => 'bg-[#f1f5e9] text-[#588133]'
-                                    ][$laporan->status] ?? 'bg-gray-100 text-gray-600';
+                                        'diproses' => 'bg-yellow-50 text-yellow-600',
+                                        'verifikasi' => 'bg-blue-50 text-blue-600',
+                                        'feedback' => 'bg-orange-50 text-orange-600',
+                                        'selesai' => 'bg-green-50 text-green-600'
+                                    ][$laporan->status_pelaporan] ?? 'bg-gray-50 text-gray-600';
                                 @endphp
-                                <span class="{{ $statusColor }} px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight">
-                                    {{ $laporan->status ?? 'Diterima' }}
+                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase {{ $statusColor }}">
+                                    {{ $laporan->status_pelaporan }}
                                 </span>
+                            </td>                           
+
+                            
+
+                            {{-- Kolom Aksi (Dropdown Update Status) --}}
+                            <td class="p-5">
+                                <form action="{{ route('admin.pelaporan.updateStatus', $laporan->id) }}" method="POST" class="flex items-center gap-2 m-0" onsubmit="konfirmasiUpdate(event, this)">
+                                    @csrf 
+                                    @method('PATCH')
+                                    
+                                    <select name="status_pelaporan" class="text-xs border-gray-200 text-gray-600 rounded-lg shadow-sm focus:border-[#588133] focus:ring-[#588133] py-1.5 pl-3 pr-8 cursor-pointer"
+                                    {{ $laporan->status_pelaporan == 'selesai' ? 'disabled' : '' }}>
+                                        <option value="diproses" {{ $laporan->status_pelaporan == 'diproses' ? 'selected' : '' }}>Diproses</option>
+                                        <option value="verifikasi" {{ $laporan->status_pelaporan == 'verifikasi' ? 'selected' : '' }}>Verifikasi</option>
+                                        <option value="feedback" {{ $laporan->status_pelaporan == 'feedback' ? 'selected' : '' }}>Feedback</option>
+                                        <option value="selesai" {{ $laporan->status_pelaporan == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                    </select>
+
+                                    <button type="submit" class="bg-[#588133] hover:bg-[#466629] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-tight transition-colors shadow-sm flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                        </svg>
+                                        Update
+                                    </button>
+                                </form>
                             </td>
+                                                                       
+                            
                         </tr>
                         @empty
                         <tr>
@@ -106,13 +134,15 @@
         </div>
     </div>
 
-    @if(session('status_berhasil'))
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- Satu script untuk semua pesan sukses --}}
+    @if(session('status_berhasil') || session('success'))
+    
     <script>
         Swal.fire({
             icon: 'success',
             title: 'Berhasil!',
-            text: "{{ session('status_berhasil') }}",
+            text: "{{ session('status_berhasil') ?? session('success') }}",
             confirmButtonColor: '#588133',
             customClass: {
                 popup: 'rounded-[30px]',
@@ -121,4 +151,30 @@
         });
     </script>
     @endif
+
+    <script>
+    function konfirmasiUpdate(event, formElement) {
+        event.preventDefault(); // Menahan form agar tidak langsung terkirim
+
+        Swal.fire({
+            title: 'Konfirmasi Perubahan',
+            text: "Apakah Anda yakin ingin memperbarui status laporan ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#588133',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Perbarui!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                popup: 'rounded-[30px]',
+                confirmButton: 'rounded-xl px-4 py-2',
+                cancelButton: 'rounded-xl px-4 py-2'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                formElement.submit(); 
+            }
+        });
+    }
+</script>   
 </x-app-layout>

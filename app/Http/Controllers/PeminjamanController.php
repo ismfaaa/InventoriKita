@@ -89,4 +89,9 @@ class PeminjamanController extends Controller
         return redirect()->back()->with('success', 'Status peminjaman berhasil diperbarui!');
     }
 
+    public function show($id)
+    {
+        $peminjamans = Peminjaman::with('aset')->findOrFail($id);
+        return view('pengguna.peminjaman.show', compact('peminjamans'));
+    }
 }

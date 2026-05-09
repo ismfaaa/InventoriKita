@@ -35,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
-                        @forelse($peminjamans ?? [] as $item)
+                        @forelse($peminjamans as $item)
                         <tr class="hover:bg-[#fcfdfa] transition-colors">
                             <td class="p-5">
                                 <div class="flex items-center gap-3">
