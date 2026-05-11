@@ -134,8 +134,6 @@ Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder-feedback-pengadaan', [PengadaanController::class, 'index'])->name('feedback.pengadaan.index');
     Route::patch('/stakeholder-feedback-pengadaan/{id}/update-status', [PengadaanController::class, 'updateStatus'])->name('feedback.pengadaan.updateStatus');
 
-    // ============================= FEEDBACK ASET ==================================
-    Route::get('/stakeholder-feedback-aset', [WidgetController::class, 'index'])->name('widget.aset.index');
 });
 
 require __DIR__.'/auth.php';
