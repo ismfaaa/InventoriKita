@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Kategori extends Model
 {
     use HasFactory;
-    
     protected $fillable = ['nama_kategori'];
 
     public function Aset()

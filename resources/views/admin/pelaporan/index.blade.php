@@ -34,6 +34,7 @@
                             <th class="p-5 font-black">Bukti</th>
                             <th class="p-5 font-black text-center">Status</th>
                             <th class="p-5 font-black text-center">Aksi</th>
+                            <th class="p-5 font-black">Feedback</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
@@ -109,6 +110,14 @@
                                         Update
                                     </button>
                                 </form>
+                            </td>
+
+                            <td class="p-5">
+                                @if($laporan->feedback)
+                                    <span class="text-[10px] text-gray-500 italic">{{ $laporan->feedback }}</span>
+                                @else
+                                    <span class="text-[10px] text-gray-300 italic"></span>
+                                @endif
                             </td>
                                                                        
                             

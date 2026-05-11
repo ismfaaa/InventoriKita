@@ -9,6 +9,8 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\PengadaanController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\WidgetController;
 use App\Http\Controllers\LogbookController;
 use Illuminate\Support\Facades\Route;
 
@@ -107,9 +109,7 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::patch('/Manajemen-pelaporan/{id}/update-status', [PelaporanController::class, 'updateStatus'])->name('admin.pelaporan.updateStatus');
     Route::get('/Manajemen-pelaporan/{id}', [PelaporanController::class, 'show'])->name('manajemen.pelaporan.show');
     
-});
-// ============================= USULAN PENGADAAN =============================
-Route::middleware(['auth', 'admin'])->group(function () {
+    // ============================= USULAN PENGADAAN =============================
     Route::get('/pengadaan/usulan', [PengadaanController::class, 'index'])->name('pengadaan.index');
     Route::get('/pengadaan/usulan/baru', [PengadaanController::class, 'create'])->name('pengadaan.create');
     Route::post('/pengadaan/simpan', [PengadaanController::class, 'store'])->name('pengadaan.store');
@@ -118,14 +118,24 @@ Route::middleware(['auth', 'admin'])->group(function () {
 // :::::::::::::::::::::::::::::: STAKEHOLDER :::::::::::::::::::::::::::::::::::::::
 Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
-});
 
 // ============================= EKSPOR DATA =============================
-Route::middleware(['auth'])->group(function () {
-    Route::get('/export', [App\Http\Controllers\ExportController::class, 'index'])->name('export.index');
-    Route::get('/export/pelaporan/pdf', [App\Http\Controllers\ExportController::class, 'exportPelaporanPdf'])->name('export.pelaporan.pdf');
-    Route::get('/export/pengadaan/pdf', [App\Http\Controllers\ExportController::class, 'exportPengadaanPdf'])->name('export.pengadaan.pdf');
-    Route::get('/export/aset/pdf', [App\Http\Controllers\ExportController::class, 'exportAsetPdf'])->name('export.aset.pdf');
+    Route::get('/export', [ExportController::class, 'index'])->name('export.index');
+    Route::get('/export/pelaporan/pdf', [ExportController::class, 'exportPelaporanPdf'])->name('export.pelaporan.pdf');
+    Route::get('/export/pengadaan/pdf', [ExportController::class, 'exportPengadaanPdf'])->name('export.pengadaan.pdf');
+    Route::get('/export/aset/pdf', [ExportController::class, 'exportAsetPdf'])->name('export.aset.pdf');
+
+    // ============================= FEEDBACK PELAPORAN =============================
+    Route::get('/stakeholder-feedback-pelaporan', [PelaporanController::class, 'index'])->name('feedback.pelaporan.index');
+    Route::get('/stakeholder-feedback-pelaporan/{id}', [PelaporanController::class, 'show'])->name('stakeholder.pelaporan.show');
+    Route::patch('/stakeholder-feedback-pelaporan/{id}/update-status', [PelaporanController::class, 'updateStatus'])->name('feedback.pelaporan.updateStatus');
+
+    // ============================= FEEDBACK PENGADAAN =============================
+    Route::get('/stakeholder-feedback-pengadaan', [PengadaanController::class, 'index'])->name('feedback.pengadaan.index');
+    Route::patch('/stakeholder-feedback-pengadaan/{id}/update-status', [PengadaanController::class, 'updateStatus'])->name('feedback.pengadaan.updateStatus');
+
+    // ============================= FEEDBACK ASET ==================================
+    Route::get('/stakeholder-feedback-aset', [WidgetController::class, 'index'])->name('widget.aset.index');
 });
 
 require __DIR__.'/auth.php';
