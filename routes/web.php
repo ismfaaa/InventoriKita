@@ -9,6 +9,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\PengadaanController;
+use App\Http\Controllers\LogbookController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -47,6 +48,8 @@ Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita/lapor-kerusakan', [PelaporanController::class, 'index'])->name('pengguna.lapor.index');
     Route::get('/InventoriKita/lapor-kerusakan/baru', [PelaporanController::class, 'create'])->name('pengguna.lapor.create');
     Route::post('/InventoriKita/lapor-kerusakan/simpan', [PelaporanController::class, 'store'])->name('pengguna.lapor.store');
+    //============================= DIGITAL LOGBOOK =============================
+    Route::get('/InventoriKita/Digital-Logbook', [LogbookController::class, 'index'])->name('pengguna.logbook.index');
 
 }); 
 
