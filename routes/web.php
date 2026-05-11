@@ -10,6 +10,7 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\PengadaanController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\WidgetController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -125,9 +126,13 @@ Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder-feedback-pelaporan', [PelaporanController::class, 'index'])->name('feedback.pelaporan.index');
     Route::get('/stakeholder-feedback-pelaporan/{id}', [PelaporanController::class, 'show'])->name('stakeholder.pelaporan.show');
     Route::patch('/stakeholder-feedback-pelaporan/{id}/update-status', [PelaporanController::class, 'updateStatus'])->name('feedback.pelaporan.updateStatus');
+
     // ============================= FEEDBACK PENGADAAN =============================
     Route::get('/stakeholder-feedback-pengadaan', [PengadaanController::class, 'index'])->name('feedback.pengadaan.index');
     Route::patch('/stakeholder-feedback-pengadaan/{id}/update-status', [PengadaanController::class, 'updateStatus'])->name('feedback.pengadaan.updateStatus');
+
+    // ============================= FEEDBACK ASET ==================================
+    Route::get('/stakeholder-feedback-aset', [WidgetController::class, 'index'])->name('widget.aset.index');
 });
 
 require __DIR__.'/auth.php';

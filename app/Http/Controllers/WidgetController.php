@@ -1,17 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Controllers\Controller;
-use App\Models\Pelaporan;
 use App\Models\Pengadaan;
-// use Illuminate\Http\Request;
+use App\Models\Pelaporan;
+use Illuminate\Http\Request;
 
-class StakeholderController extends Controller
+class WidgetController extends Controller
 {
     public function index()
     {
         $totalPending = Pengadaan::where('status_pengadaan', 'pending')->count();
-        
         $pelaporans = Pelaporan::all();
 
         $totalTerverifikasi = $pelaporans->where('status', 'verifikasi')->count();
@@ -19,6 +17,6 @@ class StakeholderController extends Controller
         $totalSedang = $pelaporans->where('status', 'verifikasi')->where('tingkat_kerusakan', 'sedang')->count();
         $totalRingan = $pelaporans->where('status', 'verifikasi')->where('tingkat_kerusakan', 'ringan')->count();
 
-        return view('stakeholder.index', compact('totalPending', 'totalTerverifikasi', 'totalBerat', 'totalSedang', 'totalRingan'));
+        return view('stakeholder.widget', compact('totalPending', 'totalTerverifikasi', 'totalBerat', 'totalSedang', 'totalRingan'));
     }
 }
