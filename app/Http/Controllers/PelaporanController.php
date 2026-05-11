@@ -25,14 +25,17 @@ class PelaporanController extends Controller
             return view('pengguna.pelaporan.index', compact('pelaporans', 'asets'));
         } 
         
+        elseif ($user->role === 'stakeholder') {
+            $pelaporans = Pelaporan::with(['aset', 'user'])->get();
+            return view('stakeholder.pelaporan.index', compact('pelaporans'));
+        }
+        
         else {
             abort(403, 'Unauthorized');
         }
     }
 
-    /**
-     * Menampilkan form input laporan baru.
-     */
+ 
     public function create()
     
     {
@@ -40,9 +43,7 @@ class PelaporanController extends Controller
         return view('pengguna.pelaporan.create', compact('asets'));
     }
 
-    /**
-     * Menyimpan data pelaporan ke database.
-     */
+  
     public function store(Request $request)
     {
         $request->validate([
@@ -94,13 +95,19 @@ class PelaporanController extends Controller
         }
 
         $laporan->save();
+        $user = Auth::user();
 
+        if ($user->role === 'stakeholder') {
+            return redirect()->route('feedback.pelaporan.index')->with('success', 'Feedback berhasil diberikan!');
+        }
         return redirect()->route('manajemen.pelaporan.index')->with('success', 'Status laporan berhasil diperbarui!');
     }
 
-    public function show(Pelaporan $pelaporan)
+    public function show($id)
     {
-        //
+        $laporan = Pelaporan::with(['aset', 'user'])->findOrFail($id);
+
+        return view('stakeholder.pelaporan.show', compact('laporan'));
     }
 
     /**
