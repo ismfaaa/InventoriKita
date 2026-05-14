@@ -120,9 +120,21 @@ Route::middleware(['auth','stakeholder'])->group(function () {
 // ============================= EKSPOR DATA =============================
 Route::middleware(['auth'])->group(function () {
     Route::get('/export', [App\Http\Controllers\ExportController::class, 'index'])->name('export.index');
+    
+    // Pelaporan
     Route::get('/export/pelaporan/pdf', [App\Http\Controllers\ExportController::class, 'exportPelaporanPdf'])->name('export.pelaporan.pdf');
+    Route::get('/export/pelaporan/excel', [App\Http\Controllers\ExportController::class, 'exportPelaporanExcel'])->name('export.pelaporan.excel');
+    Route::get('/export/pelaporan/csv', [App\Http\Controllers\ExportController::class, 'exportPelaporanCsv'])->name('export.pelaporan.csv');
+    
+    // Pengadaan
     Route::get('/export/pengadaan/pdf', [App\Http\Controllers\ExportController::class, 'exportPengadaanPdf'])->name('export.pengadaan.pdf');
+    Route::get('/export/pengadaan/excel', [App\Http\Controllers\ExportController::class, 'exportPengadaanExcel'])->name('export.pengadaan.excel');
+    Route::get('/export/pengadaan/csv', [App\Http\Controllers\ExportController::class, 'exportPengadaanCsv'])->name('export.pengadaan.csv');
+    
+    // Aset
     Route::get('/export/aset/pdf', [App\Http\Controllers\ExportController::class, 'exportAsetPdf'])->name('export.aset.pdf');
+    Route::get('/export/aset/excel', [App\Http\Controllers\ExportController::class, 'exportAsetExcel'])->name('export.aset.excel');
+    Route::get('/export/aset/csv', [App\Http\Controllers\ExportController::class, 'exportAsetCsv'])->name('export.aset.csv');
 });
 
 require __DIR__.'/auth.php';
