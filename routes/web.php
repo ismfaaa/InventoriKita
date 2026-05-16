@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\StakeholderController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AsetController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PeminjamanController;
@@ -58,9 +59,7 @@ Route::middleware(['auth','pengguna'])->group(function () {
 // :::::::::::::::::::::::::::::::::::::: PAGES :::::::::::::::::::::::::::::::
 
     // ============================ FAQ ==================================
-    Route::get('/faq', function () {
-        return view('pages.faq');
-    })->name('faq');
+    Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
 
 // ::::::::::::::::::::::::::::::::::: ADMIN :::::::::::::::::::::::::::::::::::
@@ -113,6 +112,14 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::get('/pengadaan/usulan', [PengadaanController::class, 'index'])->name('pengadaan.index');
     Route::get('/pengadaan/usulan/baru', [PengadaanController::class, 'create'])->name('pengadaan.create');
     Route::post('/pengadaan/simpan', [PengadaanController::class, 'store'])->name('pengadaan.store');
+
+    // ============================= MANAJEMEN FAQ =============================
+    Route::get('/admin/faq', [FaqController::class, 'adminIndex'])->name('admin.faq.index');
+    Route::get('/admin/faq/create', [FaqController::class, 'create'])->name('admin.faq.create');
+    Route::post('/admin/faq', [FaqController::class, 'store'])->name('admin.faq.store');
+    Route::get('/admin/faq/{faq}/edit', [FaqController::class, 'edit'])->name('admin.faq.edit');
+    Route::put('/admin/faq/{faq}', [FaqController::class, 'update'])->name('admin.faq.update');
+    Route::delete('/admin/faq/{faq}', [FaqController::class, 'destroy'])->name('admin.faq.destroy');
 });
 
 // :::::::::::::::::::::::::::::: STAKEHOLDER :::::::::::::::::::::::::::::::::::::::
