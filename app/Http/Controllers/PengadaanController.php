@@ -14,12 +14,12 @@ class PengadaanController extends Controller
     {
         $user = Auth::user();
         if ($user->role === 'admin') {
-            $pengadaans = Pengadaan::with(['aset', 'user'])->get();
+            $pengadaans = Pengadaan::with(['aset', 'user'])->latest()->paginate(5);
             return view('admin.usulan.index', compact('pengadaans'));
         } 
         
         if ($user->role === 'stakeholder') {
-            $pengadaans = Pengadaan::with(['aset', 'user'])->get();
+            $pengadaans = Pengadaan::with(['aset', 'user'])->latest()->paginate(5);
             return view('stakeholder.pengadaan.index', compact('pengadaans'));
         }
         else {
