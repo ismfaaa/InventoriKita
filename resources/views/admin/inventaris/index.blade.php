@@ -26,6 +26,7 @@
             </div>
         @endif
 
+        {{-- ================= SECTION DAFTAR KATEGORI ================= --}}
         <section>
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-lg text-gray-800">Daftar Kategori</h3>
@@ -41,29 +42,22 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        {{-- Looping untuk menampilkan semua data kategori --}}
                         @forelse ($kategoris as $key => $kategori)
-                        {{-- Alphine js => [editing:    false] --}}
                             <tr x-data="{ editing: false }" class="hover:bg-gray-50 transition">
-                            <td class="p-1 text-center text-gray-500 text-sm">{{ $key + 1 }}</td>
-                            
-                            <td class="p-1 font-medium text-gray-800">
-                                <span x-show="!editing">{{ $kategori->nama_kategori }}</span>
-                                @include('admin.kategori.edit')
-                                
-                            </td>
-                            
-                            {{-- icon edit & delete kategori --}}
-                            <td class="p-4">
-                                <div class="flex justify-center gap-2">
-                                    <button type="button" @click="editing = true" class="text-yellow-500 p-2 hover:bg-yellow-50 rounded-lg transition" title="Edit">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    </button>
-                                    @include('admin.kategori.delete')
-                                    
-                                </div>
-                            </td>
-                        </tr>
+                                <td class="p-1 text-center text-gray-500 text-sm">{{ $key + 1 }}</td>
+                                <td class="p-1 font-medium text-gray-800">
+                                    <span x-show="!editing">{{ $kategori->nama_kategori }}</span>
+                                    @include('admin.kategori.edit')
+                                </td>
+                                <td class="p-4">
+                                    <div class="flex justify-center gap-2">
+                                        <button type="button" @click="editing = true" class="text-yellow-500 p-2 hover:bg-yellow-50 rounded-lg transition" title="Edit">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        </button>
+                                        @include('admin.kategori.delete')
+                                    </div>
+                                </td>
+                            </tr>
                         @empty
                             <tr><td colspan="3" class="p-8 text-center text-gray-400">Belum ada kategori.</td></tr>
                         @endforelse
@@ -72,10 +66,13 @@
             </div>
         </section>
 
+        {{-- ================= SECTION BARANG INVENTARIS ================= --}}
         <section>
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-lg text-gray-800">Daftar Barang Inventaris</h3>
                 <div class="flex items-center gap-3">
+                    
+                    {{-- FITUR PENCARIAN --}}
                     <div class="relative w-64">
                         <form action="{{ route('inventaris.index') }}" method="GET">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -85,13 +82,15 @@
                             </span>
                             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari barang..." 
                                 class="w-full pl-9 pr-4 py-2 text-xs border-gray-200 rounded-xl focus:ring-[#588133] focus:border-[#588133]" 
-                                onkeypress="if(event.key === 'Enter') this.form.submit()">
+                                onkeydown="if(event.key === 'Enter') { this.form.submit(); return false; }">
                             
                             @if(request('category'))
                                 <input type="hidden" name="category" value="{{ request('category') }}">
                             @endif
                         </form>
                     </div>
+
+                    {{-- FITUR FILTER KATEGORI --}}
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" type="button" 
                             class="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition shadow-sm">
@@ -104,7 +103,8 @@
                         <div x-show="open" @click.away="open = false" 
                             class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 overflow-hidden"
                             x-transition:enter="transition ease-out duration-100"
-                            x-transition:enter-start="transform opacity-0 scale-95">
+                            x-transition:enter-start="transform opacity-0 scale-95"
+                            x-cloak>
                             
                             <a href="{{ route('inventaris.index', ['search' => request('search')]) }}" 
                                 class="block px-4 py-2 text-xs text-gray-700 hover:bg-[#f1f5e9] hover:text-[#588133]">
@@ -121,8 +121,11 @@
                             @endforeach
                         </div>
                     </div>
+
                 </div>
             </div>
+
+            {{-- TABEL BARANG INVENTARIS --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-3xl border border-gray-100">
                 <table class="w-full text-left border-collapse">
                     <thead class="bg-[#f1f5e9] text-[#588133]">
@@ -140,12 +143,8 @@
                             <tr x-data="{ showEditModal: false }" class="hover:bg-gray-50 transition">
                                 <td class="p-4">
                                     @if($aset->foto)
-                                    {{-- Jika foto ada, tampilkan gambar dari storage --}}
-                                    <img src="{{ asset('storage/' . $aset->foto) }}" 
-                                        alt="Foto {{ $aset->nama_aset }}" 
-                                        class="w-10 h-10 rounded-lg object-cover border border-gray-200">
-                                    @else
-                                        {{-- Jika foto tidak ada, tampilkan placeholder bawaan --}}
+                                        <img src="{{ asset('storage/' . $aset->foto) }}" alt="Foto {{ $aset->nama_aset }}" class="w-10 h-10 rounded-lg object-cover border border-gray-200">
+                                    @uses
                                         <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-300">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/>
@@ -162,7 +161,8 @@
                                 <td class="p-4">
                                     <div class="flex justify-center gap-2">
                                         <button type="button" @click="showEditModal = true" class="text-yellow-500 p-2 hover:bg-yellow-50 rounded-lg transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        </button>
                                         <form action="{{ route('inventaris.destroy', $aset->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
@@ -171,17 +171,37 @@
                                             </button>
                                         </form>
                                     </div>
-                                    {{-- Modal Edit Barang --}}
-                                @include('admin.inventaris.edit', ['aset' => $aset, 'kategoris' => $kategoris])
-                            
+                                    @include('admin.inventaris.edit', ['aset' => $aset, 'kategoris' => $kategoris])
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5" class="p-8 text-center text-gray-400">Belum ada barang inventaris.</td></tr>
+                            <tr><td colspan="6" class="p-8 text-center text-gray-400">Belum ada barang inventaris.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+
+            <div class="mt-6 pagination-matcha">
+                {{ $asets->appends(request()->query())->links() }}
+            </div>
         </section>
+
     </div>
+
+    <style>
+        [x-cloak] { display: none !important; }
+        .pagination-matcha nav span[aria-current="page"] span {
+            background-color: #588133 !important;
+            border-color: #588133 !important;
+            color: white !important;
+            border-radius: 12px;
+        }
+        .pagination-matcha nav a {
+            border-radius: 12px;
+            color: #588133 !important;
+        }
+        .pagination-matcha nav a:hover {
+            background-color: #f1f5e9 !important;
+        }
+    </style>
 </x-app-layout>

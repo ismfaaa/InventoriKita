@@ -25,7 +25,7 @@ class AsetController extends Controller
         ->when($category, function ($query, $category) {
             return $query->where('kategori_id', $category);
         })
-        ->paginate(); 
+        ->paginate(5); 
 
         return view('admin.inventaris.index', compact('asets', 'kategoris'));
     }
@@ -60,8 +60,8 @@ class AsetController extends Controller
         ]);
             
 
-        // Redirect atau tampilkan pesan sukses
-        return redirect()->route('inventaris.index')->with('success', 'Aset berhasil ditambahkan!');
+        // DIUBAH: Mengganti 'success' menjadi 'status' agar terbaca di view Blade kamu
+        return redirect()->route('inventaris.index')->with('status', 'Aset berhasil ditambahkan!');
     }
 
     public function edit($id){
@@ -98,7 +98,8 @@ class AsetController extends Controller
         $aset->lokasi      = $request->lokasi;
         $aset->save(); 
 
-        return redirect()->route('inventaris.index')->with('success', 'Data aset berhasil diperbarui!');
+        // DIUBAH: Mengganti 'success' menjadi 'status' agar terbaca di view Blade kamu
+        return redirect()->route('inventaris.index')->with('status', 'Data aset berhasil diperbarui!');
     }
 
     // Fungsi untuk Hapus Barang
@@ -107,6 +108,7 @@ class AsetController extends Controller
         $aset = Aset::findOrFail($id);
         $aset->delete();
 
-        return redirect()->route('inventaris.index')->with('success', 'Aset berhasil dihapus dari sistem!');
+        // DIUBAH: Mengganti 'success' menjadi 'status' agar terbaca di view Blade kamu
+        return redirect()->route('inventaris.index')->with('status', 'Aset berhasil dihapus dari sistem!');
     }
 }

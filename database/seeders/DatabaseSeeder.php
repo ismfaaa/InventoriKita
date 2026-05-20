@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        // Jalankan seeder dengan urutan yang tepat
         $this->call([
             UserSeeder::class,
             KategoriSeeder::class,
