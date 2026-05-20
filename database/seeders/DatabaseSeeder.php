@@ -15,11 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // User::factory(10)->create();
+
         // Jalankan seeder dengan urutan yang tepat
         $this->call([
             UserSeeder::class,
             KategoriSeeder::class,
             AsetSeeder::class,
+            PelaporanSeeder::class,
         ]);
     }
 }
