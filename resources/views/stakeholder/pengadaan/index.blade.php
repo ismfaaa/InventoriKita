@@ -125,9 +125,28 @@
                 </form>
             </div>
         </div>
+         <div class="mt-2 mb-15 pagination-matcha">
+            {{ $pengadaans->appends(request()->query())->links() }}
+        </div> 
     </div>
-
     <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        [x-cloak] { display: none !important; }
+
+        .pagination-matcha nav span[aria-current="page"] span {
+            background-color: #588133 !important;
+            border-color: #588133 !important;
+            color: white !important;
+            border-radius: 12px;
+        }
+        .pagination-matcha nav a {
+            border-radius: 12px;
+            color: #588133 !important;
+        }
+        .pagination-matcha nav a:hover {
+            background-color: #f1f5e9 !important;
+        }
         [x-cloak] { display: none !important; }
     </style>
 </x-app-layout>
