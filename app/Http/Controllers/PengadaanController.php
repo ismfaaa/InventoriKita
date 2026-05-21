@@ -10,24 +10,36 @@ use Illuminate\Support\Facades\Auth;
 class PengadaanController extends Controller
 {
   
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+
+        // 1. Buat query dasar TANPA paginate() dulu
+        $query = Pengadaan::with(['aset', 'user'])->latest();
+
+        // 2. Filter pencarian
+        if ($request->has('search') && $request->search != '') {
+            $query->whereHas('aset', function($q) use ($request) {
+                $q->where('nama_aset', 'like', '%' . $request->search . '%');
+            })->orWhereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // 3. Eksekusi pagination dan masukkan ke variabel $pengadaans (Hapus Pengadaan::all())
+        $pengadaans = $query->paginate(5);
+
+        // 4. Pengondisian View berdasarkan Role
         if ($user->role === 'admin') {
-            $pengadaans = Pengadaan::with(['aset', 'user'])->latest()->paginate(5);
             return view('admin.usulan.index', compact('pengadaans'));
         } 
         
         if ($user->role === 'stakeholder') {
-            $pengadaans = Pengadaan::with(['aset', 'user'])->latest()->paginate(5);
             return view('stakeholder.pengadaan.index', compact('pengadaans'));
         }
-        else {
-            abort(403, 'Unauthorized');
-        }
-
+        
+        abort(403, 'Unauthorized');
     }
-
     /**
      * Menampilkan halaman formulir
      */

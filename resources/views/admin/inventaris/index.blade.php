@@ -4,7 +4,7 @@
 
     {{-- ================= HEADER: JUDUL & ALAT ================= --}}
     <x-slot name="header">
-        <div class="px-2 sm:px-6 lg:px-8 max-w-full mx-auto flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+        <div class="px-2 sm:px-6n lg:px-8 max-w-full mx-auto flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
             
             <h3 class="font-bold text-2xl text-[#588133] leading-tight shrink-0">
                 {{ __('Manajemen Inventaris') }}
