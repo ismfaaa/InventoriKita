@@ -14,16 +14,19 @@
     </head>
     <body class="font-sans antialiased bg-[#f8faf2]">
         <div class="min-h-screen flex flex-col">
-            <div class="sticky top-0 z-50 w-full shadow-sm">
+            <<div class="sticky top-0 z-50 w-full shadow-sm">
+                
                 @include('layouts.navigation')
 
                 @if (isset($header))
-                    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-[#e5edda]">
+                    
+                    <header class="bg-white border-b border-[#e5edda] relative z-10">
                         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                             {{ $header }}
                         </div>
                     </header>
                 @endif
+
             </div>
 
             <main class="flex-grow pb-10"> 
