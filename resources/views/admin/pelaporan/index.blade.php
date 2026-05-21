@@ -2,26 +2,129 @@
     @include('layouts.sidebar')
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-[#588133] leading-tight">
-            {{ __('Riwayat Laporan Kerusakan') }}
-        </h2>
+        {{-- Kita jadikan header sebagai Flex Container dan inisialisasi Alpine.js --}}
+        <div x-data="{ showFilter: false }" class="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
+            
+            {{-- KIRI: Judul Halaman --}}
+            <h2 class="font-semibold text-xl text-[#588133] leading-tight shrink-0">
+                {{ __('Riwayat Laporan Kerusakan') }}
+            </h2>
+
+            {{-- KANAN: Form Search, Filter, & Tombol Buat Laporan --}}
+            <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                
+                <form method="GET" action="{{ url()->current() }}" class="flex w-full sm:w-auto gap-2 m-0">
+                    
+                    {{-- Input Search --}}
+                    <div class="relative w-full sm:w-56 lg:w-64">
+                        <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" name="search" placeholder="Cari aset atau lokasi..." value="{{ request('search') }}" 
+                            class="w-full pl-9 pr-4 py-2 border border-[#e5edda] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#588133] focus:border-[#588133] text-sm shadow-sm transition-all"
+                            onkeydown="if(event.key === 'Enter') { this.form.submit(); return false; }">
+                        
+                        @if(request('status_pelaporan')) <input type="hidden" name="status_pelaporan" value="{{ request('status_pelaporan') }}"> @endif
+                        @if(request('tingkat_kerusakan')) <input type="hidden" name="tingkat_kerusakan" value="{{ request('tingkat_kerusakan') }}"> @endif
+                    </div>
+                    
+                    {{-- Tombol Filter --}}
+                    <button type="button" @click="showFilter = !showFilter" 
+                            class="bg-white border border-[#e5edda] text-[#588133] hover:bg-[#f1f5e9] px-3 py-2 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        <span class="hidden sm:inline">Filter</span>
+                    </button>
+                </form>
+
+                {{-- Tombol Buat Laporan --}}
+                <a href="{{ route('pengguna.lapor.create') }}" 
+                   class="bg-[#588133] hover:bg-[#466629] text-white px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2 group w-full sm:w-auto shrink-0">
+                    <svg class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Buat Baru
+                </a>
+            </div>
+
+            {{-- MENU FILTER DROPDOWN (Melayang / Pop-up) --}}
+            <div x-show="showFilter" 
+                 @click.away="showFilter = false"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 translate-y-[-10px] scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-[-10px] scale-95"
+                 class="absolute right-0 top-full mt-3 w-full sm:w-[450px] p-5 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 grid grid-cols-1 sm:grid-cols-2 gap-4" 
+                 style="display: none;" x-cloak>
+                 
+                 {{-- Filter Status --}}
+                 <div>
+                    <label class="text-xs font-bold text-gray-700 mb-2 block">Status Penanganan</label>
+                    <form method="GET" action="{{ url()->current() }}">
+                        @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+                        @if(request('tingkat_kerusakan')) <input type="hidden" name="tingkat_kerusakan" value="{{ request('tingkat_kerusakan') }}"> @endif
+                        
+                        <select name="status_pelaporan" onchange="this.form.submit()" class="w-full px-4 py-2 border border-[#e5edda] rounded-xl focus:ring-[#588133] focus:border-[#588133] text-sm cursor-pointer shadow-sm">
+                            <option value="">Semua Status</option>
+                            <option value="diproses" {{ request('status_pelaporan') == 'diproses' ? 'selected' : '' }}>Diproses</option>
+                            <option value="verifikasi" {{ request('status_pelaporan') == 'verifikasi' ? 'selected' : '' }}>Verifikasi</option>
+                            <option value="feedback" {{ request('status_pelaporan') == 'feedback' ? 'selected' : '' }}>Feedback</option>
+                            <option value="selesai" {{ request('status_pelaporan') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                        </select>
+                    </form>
+                </div>
+
+                {{-- Filter Tingkat --}}
+                <div>
+                    <label class="text-xs font-bold text-gray-700 mb-2 block">Tingkat Kerusakan</label>
+                    <form method="GET" action="{{ url()->current() }}">
+                        @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+                        @if(request('status_pelaporan')) <input type="hidden" name="status_pelaporan" value="{{ request('status_pelaporan') }}"> @endif
+                        
+                        <select name="tingkat_kerusakan" onchange="this.form.submit()" class="w-full px-4 py-2 border border-[#e5edda] rounded-xl focus:ring-[#588133] focus:border-[#588133] text-sm cursor-pointer shadow-sm">
+                            <option value="">Semua Tingkat</option>
+                            <option value="ringan" {{ request('tingkat_kerusakan') == 'ringan' ? 'selected' : '' }}>Ringan</option>
+                            <option value="sedang" {{ request('tingkat_kerusakan') == 'sedang' ? 'selected' : '' }}>Sedang</option>
+                            <option value="berat" {{ request('tingkat_kerusakan') == 'berat' ? 'selected' : '' }}>Berat</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+        </div>
     </x-slot>
 
+    {{-- KONTEN UTAMA --}}
     <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-                <h3 class="text-2xl font-bold text-gray-800">Laporan Saya</h3>
-                <p class="text-sm text-gray-500">Pantau status penanganan kerusakan aset yang Anda laporkan secara real-time.</p>
-            </div>
-            
-            <a href="{{ route('pengguna.lapor.create') }}" 
-               class="bg-[#588133] hover:bg-[#466629] text-white px-6 py-3 rounded-2xl font-bold text-sm transition-all shadow-lg shadow-[#588133]/20 flex items-center gap-2 group">
-                <svg class="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                Buat Laporan Baru
-            </a>
+        
+        {{-- INDIKATOR FILTER AKTIF (Tampil kalau ada filter yg dipakai) --}}
+        @if(request('search') || request('status_pelaporan') || request('tingkat_kerusakan'))
+        <div class="flex flex-wrap gap-2 mb-4">
+            @if(request('search'))
+                <span class="inline-flex items-center gap-2 bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full text-xs font-bold border border-gray-200 shadow-sm">
+                    🔍 {{ request('search') }}
+                    <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" class="hover:text-red-500 transition">✕</a>
+                </span>
+            @endif
+            @if(request('status_pelaporan'))
+                <span class="inline-flex items-center gap-2 bg-yellow-50 text-yellow-600 px-3 py-1.5 rounded-full text-xs font-bold border border-yellow-100 shadow-sm">
+                    Status: {{ ucfirst(request('status_pelaporan')) }}
+                    <a href="{{ request()->fullUrlWithQuery(['status_pelaporan' => null]) }}" class="hover:text-red-500 transition">✕</a>
+                </span>
+            @endif
+            @if(request('tingkat_kerusakan'))
+                <span class="inline-flex items-center gap-2 bg-red-50 text-red-600 px-3 py-1.5 rounded-full text-xs font-bold border border-red-100 shadow-sm">
+                    Kerusakan: {{ ucfirst(request('tingkat_kerusakan')) }}
+                    <a href="{{ request()->fullUrlWithQuery(['tingkat_kerusakan' => null]) }}" class="hover:text-red-500 transition">✕</a>
+                </span>
+            @endif
+            <a href="{{ url()->current() }}" class="text-gray-400 hover:text-gray-600 text-xs font-bold flex items-center ml-2 transition">Reset Semua</a>
         </div>
+        @endif
+
+        {{-- TABEL DATA (Ini kode tabel yang tidak diubah) --}}
+        <div class="bg-white overflow-hidden shadow-sm rounded-[30px] border border-[#e5edda]">
+            
+
+    <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
 
         <div class="bg-white overflow-hidden shadow-sm rounded-[30px] border border-[#e5edda]">
             <div class="overflow-x-auto">
@@ -140,8 +243,41 @@
                     </tbody>
                 </table>
             </div>
+            <div class="p-4 border-t border-gray-100 bg-white z-20 shrink-0">
+                <div class="pagination-matcha">
+                    {{ $pelaporans->appends(request()->query())->links() }}
+                </div>
+            </div>
         </div>
     </div>
+
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        .pagination-matcha nav a, 
+        .pagination-matcha nav span[aria-disabled="true"] span {
+            background-color: white !important; 
+            color: #588133 !important; 
+            border-radius: 10px;
+            border-color: #f3f4f6 !important; 
+        }
+
+        .pagination-matcha nav a:hover {
+            background-color: #f1f5e9 !important;
+        }
+
+        .pagination-matcha nav span[aria-current="page"] span {
+            background-color: #588133 !important;
+            border-color: #588133 !important;
+            color: white !important;
+            border-radius: 10px;
+        }
+
+        .table-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .table-scroll::-webkit-scrollbar-track { background: transparent; }
+        .table-scroll::-webkit-scrollbar-thumb { background-color: #e2e8f0; border-radius: 8px; }
+        .table-scroll::-webkit-scrollbar-thumb:hover { background-color: #cbd5e1; }
+    </style>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- Satu script untuk semua pesan sukses --}}
@@ -160,7 +296,7 @@
         });
     </script>
     @endif
-
+    
     <script>
     function konfirmasiUpdate(event, formElement) {
         event.preventDefault(); // Menahan form agar tidak langsung terkirim

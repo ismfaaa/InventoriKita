@@ -92,19 +92,28 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
+        
+        /* 1. Atur kotak yang BELUM diklik (Link dan Tombol Panah Pasif) */
+        .pagination-matcha nav a, 
+        .pagination-matcha nav span[aria-disabled="true"] span {
+            background-color: white !important; 
+            color: #588133 !important; 
+            border-radius: 12px;
+            /* Opsional: tambah border abu-abu tipis agar senada dengan tabel */
+            border-color: #f3f4f6 !important; 
+        }
 
+        /* 2. Efek saat disentuh mouse (Hover) */
+        .pagination-matcha nav a:hover {
+            background-color: #f1f5e9 !important;
+        }
+
+        /* 3. Atur kotak yang SEDANG AKTIF (Halaman saat ini) */
         .pagination-matcha nav span[aria-current="page"] span {
             background-color: #588133 !important;
             border-color: #588133 !important;
             color: white !important;
             border-radius: 12px;
-        }
-        .pagination-matcha nav a {
-            border-radius: 12px;
-            color: #588133 !important;
-        }
-        .pagination-matcha nav a:hover {
-            background-color: #f1f5e9 !important;
         }
     </style>
 </x-app-layout>

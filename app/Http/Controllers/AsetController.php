@@ -25,6 +25,7 @@ class AsetController extends Controller
         ->when($category, function ($query, $category) {
             return $query->where('kategori_id', $category);
         })
+        ->orderBy('created_at', 'desc')
         ->paginate(5); 
 
         return view('admin.inventaris.index', compact('asets', 'kategoris'));
