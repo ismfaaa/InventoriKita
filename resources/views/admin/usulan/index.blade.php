@@ -29,6 +29,17 @@
             </a>
         </div>
 
+            <div class="mb-6 relative">
+                <form action="{{ url()->current() }}" method="GET">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama pengusul atau nama aset..." class="block w-full pl-12 pr-4 py-3.5 border border-[#e5edda] bg-white rounded-2xl focus:ring-2 focus:ring-[#588133] focus:border-[#588133] text-sm shadow-sm transition-all">
+                </form>
+            </div>
+
         <div class="bg-white overflow-hidden shadow-sm rounded-[30px] border border-[#e5edda]">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">

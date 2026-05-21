@@ -7,21 +7,55 @@ use App\Models\Pengadaan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class PengadaanController extends Controller
 {
   
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $search = $request->query('search');
+
         if ($user->role === 'admin') {
-            $pengadaans = Pengadaan::with(['aset', 'user'])->latest()->paginate(5);
+            $pengadaans = Pengadaan::with(['aset', 'user'])
+                ->when($search, function ($query, $search) {
+                    return $query->where(function ($q) use ($search) {
+                        $q->whereHas('user', function ($userQuery) use ($search) {
+                            $userQuery->where('name', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('aset', function ($asetQuery) use ($search) {
+                            $asetQuery->where('nama_aset', 'like', '%' . $search . '%');
+                        })
+                        ->orWhere('estimasi_biaya', 'like', '%' . $search . '%')
+                        ->orWhere('tanggal_pengadaan', 'like', '%' . $search . '%');
+                    });
+                })
+                ->latest()
+                ->paginate(5);
+
             return view('admin.usulan.index', compact('pengadaans'));
         } 
         
         if ($user->role === 'stakeholder') {
-            $pengadaans = Pengadaan::with(['aset', 'user'])->latest()->paginate(5);
+            $pengadaans = Pengadaan::with(['aset', 'user'])
+                ->when($search, function ($query, $search) {
+                    return $query->where(function ($q) use ($search) {
+                        $q->whereHas('user', function ($userQuery) use ($search) {
+                            $userQuery->where('name', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('aset', function ($asetQuery) use ($search) {
+                            $asetQuery->where('nama_aset', 'like', '%' . $search . '%');
+                        })
+                        ->orWhere('estimasi_biaya', 'like', '%' . $search . '%')
+                        ->orWhere('tanggal_pengadaan', 'like', '%' . $search . '%');
+                    });
+                })
+                ->latest()
+                ->paginate(5);
+
             return view('stakeholder.pengadaan.index', compact('pengadaans'));
         }
+        
         else {
             abort(403, 'Unauthorized');
         }
@@ -59,7 +93,7 @@ class PengadaanController extends Controller
         $newStatus = $request->input('status');
 
         if (!in_array($newStatus, ['pending', 'selesai', 'disetujui', 'ditolak'])) {
-        return redirect()->back()->with('status_gagal', 'Status tidak valid');
+            return redirect()->back()->with('status_gagal', 'Status tidak valid');
         }
 
         if ($newStatus == 'disetujui' || $newStatus == 'ditolak') {
