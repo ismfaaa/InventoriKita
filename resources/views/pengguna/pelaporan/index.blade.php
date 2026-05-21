@@ -128,8 +128,41 @@
                     </tbody>
                 </table>
             </div>
+            <div class="p-4 border-t border-gray-100 bg-white z-20 shrink-0">
+                <div class="pagination-matcha">
+                    {{ $pelaporans->appends(request()->query())->links() }}
+                </div>
+            </div>
         </div>
     </div>
+
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        .pagination-matcha nav a, 
+        .pagination-matcha nav span[aria-disabled="true"] span {
+            background-color: white !important; 
+            color: #588133 !important; 
+            border-radius: 10px;
+            border-color: #f3f4f6 !important; 
+        }
+
+        .pagination-matcha nav a:hover {
+            background-color: #f1f5e9 !important;
+        }
+
+        .pagination-matcha nav span[aria-current="page"] span {
+            background-color: #588133 !important;
+            border-color: #588133 !important;
+            color: white !important;
+            border-radius: 10px;
+        }
+
+        .table-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .table-scroll::-webkit-scrollbar-track { background: transparent; }
+        .table-scroll::-webkit-scrollbar-thumb { background-color: #e2e8f0; border-radius: 8px; }
+        .table-scroll::-webkit-scrollbar-thumb:hover { background-color: #cbd5e1; }
+    </style>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
