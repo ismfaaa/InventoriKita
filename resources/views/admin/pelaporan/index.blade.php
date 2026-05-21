@@ -26,6 +26,8 @@
                         
                         @if(request('status_pelaporan')) <input type="hidden" name="status_pelaporan" value="{{ request('status_pelaporan') }}"> @endif
                         @if(request('tingkat_kerusakan')) <input type="hidden" name="tingkat_kerusakan" value="{{ request('tingkat_kerusakan') }}"> @endif
+                        @if(request('feedback')) <input type="hidden" name="feedback" value="{{ request('feedback') }}"> @endif
+                        @if(request('kategori_aset')) <input type="hidden" name="kategori_aset" value="{{ request('kategori_aset') }}"> @endif
                     </div>
                     
                     {{-- Tombol Filter --}}
@@ -88,15 +90,52 @@
                         </select>
                     </form>
                 </div>
+
+                <!-- Filter Feedback -->
+                <div>
+                    <label class="text-xs font-bold text-gray-700 mb-2 block">Feedback</label>
+                    <form method="GET" action="{{ url()->current() }}">
+                        @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+                        @if(request('status_pelaporan')) <input type="hidden" name="status_pelaporan" value="{{ request('status_pelaporan') }}"> @endif
+                        @if(request('tingkat_kerusakan')) <input type="hidden" name="tingkat_kerusakan" value="{{ request('tingkat_kerusakan') }}"> @endif
+
+                        <select name="feedback" onchange="this.form.submit()" class="w-full px-4 py-2 border border-[#e5edda] rounded-xl focus:ring-[#588133] focus:border-[#588133] text-sm cursor-pointer shadow-sm">
+                            <option value="">Semua Feedback</option>
+                            <option value="diperbaiki" {{ request('feedback') == 'diperbaiki' ? 'selected' : '' }}>Diperbaiki</option>
+                            <option value="diganti" {{ request('feedback') == 'diganti' ? 'selected' : '' }}>Diganti</option>
+                            <option value="dihilangkan" {{ request('feedback') == 'dihilangkan' ? 'selected' : '' }}>Dihilangkan</option>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Filter kategori -->
+                 <div>
+                    <label class="text-xs font-bold text-gray-700 mb-2 block">Kategori Aset</label>
+                    <form method="GET" action="{{ url()->current() }}">
+                        @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+                        @if(request('status_pelaporan')) <input type="hidden" name="status_pelaporan" value="{{ request('status_pelaporan') }}"> @endif
+                        @if(request('tingkat_kerusakan')) <input type="hidden" name="tingkat_kerusakan" value="{{ request('tingkat_kerusakan') }}"> @endif
+                        @if(request('feedback')) <input type="hidden" name="feedback" value="{{ request('feedback') }}"> @endif
+
+                        <select name="kategori_aset" onchange="this.form.submit()" class="w-full px-4 py-2 border border-[#e5edda] rounded-xl focus:ring-[#588133] focus:border-[#588133] text-sm cursor-pointer shadow-sm">
+                            <option value="">Semua Kategori</option>
+                            @foreach($asets->pluck('kategori')->whereNotNull()->unique('id') as $kategori)
+                                <option value="{{ $kategori->id }}" {{ request('kategori_aset') == $kategori->id ? 'selected' : '' }}>
+                                    {{ $kategori->nama_kategori }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </form>
+                 </div>
             </div>
         </div>
     </x-slot>
 
     {{-- KONTEN UTAMA --}}
-    <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         
         {{-- INDIKATOR FILTER AKTIF (Tampil kalau ada filter yg dipakai) --}}
-        @if(request('search') || request('status_pelaporan') || request('tingkat_kerusakan'))
+        @if(request('search') || request('status_pelaporan') || request('tingkat_kerusakan') || request('feedback') || request('kategori_aset'))
         <div class="flex flex-wrap gap-2 mb-4">
             @if(request('search'))
                 <span class="inline-flex items-center gap-2 bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full text-xs font-bold border border-gray-200 shadow-sm">
@@ -116,6 +155,23 @@
                     <a href="{{ request()->fullUrlWithQuery(['tingkat_kerusakan' => null]) }}" class="hover:text-red-500 transition">✕</a>
                 </span>
             @endif
+            @if(request('feedback'))
+                <span class="inline-flex items-center gap-2 bg-purple-50 text-purple-600 px-3 py-1.5 rounded-full text-xs font-bold border border-purple-100 shadow-sm">
+                    Feedback: {{ ucfirst(request('feedback')) }}
+                    <a href="{{ request()->fullUrlWithQuery(['feedback' => null]) }}" class="hover:text-red-500 transition">✕</a>
+                </span>
+            @endif
+            @if(request('kategori_aset'))
+                @php
+                    // Kita terjemahkan ID angka kembali menjadi nama kategori
+                    $kategoriAktif = $asets->pluck('kategori')->where('id', request('kategori_aset'))->first();
+                    $namaKategori = $kategoriAktif ? $kategoriAktif->nama_kategori : 'Filter Aktif';
+                @endphp
+                <span class="inline-flex items-center gap-2 bg-teal-50 text-teal-600 px-3 py-1.5 rounded-full text-xs font-bold border border-teal-100 shadow-sm">
+                    Kategori: {{ $namaKategori }}
+                    <a href="{{ request()->fullUrlWithQuery(['kategori_aset' => null]) }}" class="hover:text-red-500 transition">✕</a>
+                </span>
+            @endif
             <a href="{{ url()->current() }}" class="text-gray-400 hover:text-gray-600 text-xs font-bold flex items-center ml-2 transition">Reset Semua</a>
         </div>
         @endif
@@ -130,7 +186,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-[#f8faf2] text-[#588133] text-[11px] uppercase tracking-widest">
+                        <tr class="bg-[#729c4b] text-white text-[11px] uppercase tracking-widest">
                             <th class="p-5 font-black">Aset & Lokasi</th>
                             <th class="p-5 font-black">Tingkat Kerusakan</th>
                             <th class="p-5 font-black">Tanggal Lapor</th>

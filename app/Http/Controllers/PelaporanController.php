@@ -28,13 +28,12 @@ class PelaporanController extends Controller
                 $search = $request->get('search');
                 $query->where(function($q) use ($search, $user) {
                     
-                    // Semua role bisa mencari nama aset...
                     $q->whereHas('aset', function($asetQuery) use ($search) {
                         $asetQuery->where('nama_aset', 'like', '%' . $search . '%');
                     })
-                    // ...atau mencari berdasarkan lokasi
-                    ->orWhere('lokasi', 'like', '%' . $search . '%');
-                    
+                    ->orWhere('lokasi', 'like', '%' . $search . '%')
+                    ->orWhere('feedback', 'like', '%' . $search . '%'); // <--- TAMBAHKAN BARIS INI
+
                     // HANYA Admin dan Stakeholder yang bisa mencari nama pelapor
                     if (in_array($user->role, ['admin', 'stakeholder'])) {
                         $q->orWhereHas('user', function($userQuery) use ($search) {
@@ -54,7 +53,12 @@ class PelaporanController extends Controller
                 $query->where('tingkat_kerusakan', $request->get('tingkat_kerusakan'));
             }
 
-            // 7. PAGINATION
+            // 7. FITUR FDEEDBACK
+            if ($request->filled('feedback')) {
+                $query->where('feedback', $request->get('feedback'));
+            }
+
+            // 8. PAGINATION
             $pelaporans = $query->latest('created_at')->paginate(5);
             $asets = Aset::all(); // Dibutuhkan jika view pengguna ingin buat laporan baru
 
@@ -66,9 +70,9 @@ class PelaporanController extends Controller
 
         // 8. TERTUJU KEPADA VIEWS
         if ($user->role === 'admin') {
-            return view('admin.pelaporan.index', compact('pelaporans'));
+            return view('admin.pelaporan.index', compact('pelaporans', 'asets'));
         } elseif ($user->role === 'stakeholder') {
-            return view('stakeholder.pelaporan.index', compact('pelaporans'));
+            return view('stakeholder.pelaporan.index', compact('pelaporans', 'asets'));
         } 
         
 
