@@ -14,7 +14,7 @@
     </head>
     <body class="font-sans antialiased bg-[#f8faf2]">
         <div class="min-h-screen flex flex-col">
-            <<div class="sticky top-0 z-50 w-full shadow-sm">
+            <div class="sticky top-0 z-50 w-full shadow-sm">
                 
                 @include('layouts.navigation')
 
