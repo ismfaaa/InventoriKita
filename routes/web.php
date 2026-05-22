@@ -113,7 +113,7 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::get('/pengadaan/usulan/baru', [PengadaanController::class, 'create'])->name('pengadaan.create');
     Route::post('/pengadaan/simpan', [PengadaanController::class, 'store'])->name('pengadaan.store');
 
-    // ============================= MANAJEMEN FAQ =============================
+    // ============================= MANAJEMEN FAQ ================================
     Route::get('/admin/faq', [FaqController::class, 'adminIndex'])->name('admin.faq.index');
     Route::get('/admin/faq/create', [FaqController::class, 'create'])->name('admin.faq.create');
     Route::post('/admin/faq', [FaqController::class, 'store'])->name('admin.faq.store');
@@ -126,7 +126,7 @@ Route::middleware(['auth','admin'])->group(function () {
 Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
 
-// ============================= EKSPOR DATA =============================
+    // ============================= EKSPOR DATA ===================================
     Route::get('/export', [ExportController::class, 'index'])->name('export.index');
     Route::get('/export/pelaporan/pdf', [ExportController::class, 'exportPelaporanPdf'])->name('export.pelaporan.pdf');
     Route::get('/export/pengadaan/pdf', [ExportController::class, 'exportPengadaanPdf'])->name('export.pengadaan.pdf');

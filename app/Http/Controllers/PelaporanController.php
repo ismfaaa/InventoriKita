@@ -27,8 +27,8 @@ class PelaporanController extends Controller
             $query->where('kategori_id', $request->category);
         }
 
-        // Ambil data pelaporan dengan pagination (10 data per halaman)
-        $pelaporans = $query->paginate(10);
+        // Ambil data pelaporan dengan pagination (5 data per halaman)
+        $pelaporans = $query->paginate(5);
         
         // Ambil semua kategori untuk kebutuhan dropdown/filter di view index
         $kategoris = Kategori::all();
@@ -37,17 +37,13 @@ class PelaporanController extends Controller
         return view('stakeholder.pelaporan.index', compact('pelaporans', 'kategoris'));
     }
 
-    /**
-     * Menampilkan detail laporan beserta FEEDBACK yang di-paginate (Halaman Show)
-     */
+   
     public function show($id)
     {
         // 1. Ambil detail data pelaporan berdasarkan ID
         $laporan = Pelaporan::with('kategori')->findOrFail($id);
         
         // 2. AMBIL FEEDBACK DENGAN PAGINATION (Kunci Utama):
-        // Di-paginate 5 data per halaman agar card kanan di file Blade tidak memanjang ke bawah
-        // *Catatan: Jika nama fungsi relasi di model kamu bukan 'feedbacks' (misal: 'tanggapan'), ubah nama fungsinya di bawah ini.
         $feedbacks = $laporan->feedbacks()->latest()->paginate(5); 
 
         // 3. Lempar data laporan dan feedbacks ke view show

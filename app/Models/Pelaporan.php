@@ -26,6 +26,10 @@ class Pelaporan extends Model
         return $this->belongsTo(User::Class);
     }
 
+    public function kategori ()
+    {
+        return $this->belongsTo(Kategori::Class);
+    }
     public function aset ()
     {
         return $this->belongsTo(Aset::Class);
