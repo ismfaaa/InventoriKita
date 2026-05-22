@@ -77,7 +77,6 @@ class PengadaanController extends Controller
             abort(403, 'Unauthorized');
         }
     }
-
     /**
      * Menampilkan halaman formulir
      */
