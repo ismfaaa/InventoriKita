@@ -140,4 +140,33 @@ class ExportController extends Controller
     {
         return Excel::download(new AsetExport($request), 'data_aset_' . now()->format('Y-m-d') . '.csv');
     }
+
+
+    // Buat ekpor buku pedoman
+    public function pedoman()
+    {
+        return view('pages.pedoman');
+    }
+
+    public function downloadTestingFile()
+    {
+        $filePath = public_path('files/testingfile.pdf');
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File tidak ditemukan');
+        }
+
+        return response()->download($filePath, 'testingfile.pdf');
+    }
+
+
+
+
+
+
+
+
+
+
+
 }
