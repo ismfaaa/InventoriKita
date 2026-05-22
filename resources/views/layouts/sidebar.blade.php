@@ -17,7 +17,7 @@
                     <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Digital Logbook</a>
                     <!--<a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Dokumentasi Sistem</a> INI HAPUS AJA DULU KOMENYA-->
                     <a href="{{ route('faq') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">FAQ</a>
-                    <a href="{{ route('logbook') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Buku Pedoman</a>
+                    <a href="{{ route('pedoman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Buku Pedoman</a>
                 </div>
             </div>
         </div>

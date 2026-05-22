@@ -150,7 +150,7 @@ class ExportController extends Controller
 
     public function downloadTestingFile()
     {
-        $filePath = public_path('files/testingfile.pdf');
+        $filePath = base_path('testingfile.pdf');
 
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
