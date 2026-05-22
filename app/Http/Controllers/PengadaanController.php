@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class PengadaanController extends Controller
 {
-  
-    public function index(Request $request)
+  public function index(Request $request)
     {
         $user = Auth::user();
         $search = $request->query('search');
+        $status_pengadaan = $request->query('status_pengadaan');
+        $feedback_pengadaan = $request->query('feedback_pengadaan');
 
         if ($user->role === 'admin') {
             $pengadaans = Pengadaan::with(['aset', 'user'])
@@ -30,8 +31,16 @@ class PengadaanController extends Controller
                         ->orWhere('tanggal_pengadaan', 'like', '%' . $search . '%');
                     });
                 })
+                // Diubah menggunakan request()->filled() agar string kosong tidak merusak query utama
+                ->when($request->filled('status_pengadaan'), function ($query) use ($status_pengadaan) {
+                    return $query->where('status_pengadaan', $status_pengadaan);
+                })
+                ->when($request->filled('feedback_pengadaan'), function ($query) use ($feedback_pengadaan) {
+                    return $query->where('feedback_pengadaan', $feedback_pengadaan);
+                })
                 ->latest()
-                ->paginate(5);
+                ->paginate(5)
+                ->withQueryString();
 
             return view('admin.usulan.index', compact('pengadaans'));
         } 
@@ -50,8 +59,16 @@ class PengadaanController extends Controller
                         ->orWhere('tanggal_pengadaan', 'like', '%' . $search . '%');
                     });
                 })
+                // Diubah menggunakan request()->filled() agar string kosong tidak merusak query utama
+                ->when($request->filled('status_pengadaan'), function ($query) use ($status_pengadaan) {
+                    return $query->where('status_pengadaan', $status_pengadaan);
+                })
+                ->when($request->filled('feedback_pengadaan'), function ($query) use ($feedback_pengadaan) {
+                    return $query->where('feedback_pengadaan', $feedback_pengadaan);
+                })
                 ->latest()
-                ->paginate(5);
+                ->paginate(5)
+                ->withQueryString();
 
             return view('stakeholder.pengadaan.index', compact('pengadaans'));
         }
@@ -59,7 +76,6 @@ class PengadaanController extends Controller
         else {
             abort(403, 'Unauthorized');
         }
-
     }
     /**
      * Menampilkan halaman formulir

@@ -2,56 +2,104 @@
 
     @include('layouts.sidebar')
 
-    {{-- ================= HEADER: JUDUL & ALAT ================= --}}
     <x-slot name="header">
-        <div class="px-2 sm:px-6 lg:px-8 max-w-full mx-auto flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+        {{-- CONTAINER UTAMA: Inisialisasi Alpine.js untuk kontrol dropdown melayang --}}
+        <div x-data="{ showFilter: false }" class="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
             
-            <h3 class="font-bold text-2xl text-[#588133] leading-tight shrink-0">
-                {{ __('Daftar Usulan Pengadaan') }}
-            </h3>
-            
-            <div class="flex flex-wrap items-center gap-3">
-                {{-- PENCARIAN --}}
-                <div class="relative w-full sm:w-56 lg:w-64 h-[42px]">
-                    <form action="{{ route('pengadaan.index') }}" method="GET" class="h-full">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+            {{-- KIRI: Judul Halaman --}}
+            <h2 class="font-semibold text-xl text-[#588133] leading-tight shrink-0">
+                {{ __('Feedback Pengadaan') }}
+            </h2>
+
+            {{-- KANAN: Form Gabungan (Search & Filter) --}}
+            <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                
+                {{-- SATU FORM UTAMA: Menjamin fungsi search dan filter dropdown terkirim bersamaan --}}
+                <form id="filterForm" action="{{ url()->current() }}" method="GET" class="flex w-full sm:w-auto gap-2 m-0 relative">
+                    
+                    {{-- Input Search --}}
+                    <div class="relative w-full sm:w-56 lg:w-64">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
                         </span>
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari aset/pengusul..." 
-                            class="w-full h-full pl-9 pr-4 text-xs border border-gray-200 rounded-xl focus:ring-[#588133] focus:border-[#588133] bg-[#f1f5e9] shadow-sm transition-all" 
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pengusul atau aset..." 
+                            class="w-full pl-9 pr-4 py-2 border border-[#e5edda] bg-white rounded-xl focus:outline-none focus:ring-1 focus:ring-[#588133] focus:border-[#588133] text-sm shadow-sm transition-all" 
                             onkeydown="if(event.key === 'Enter') { this.form.submit(); return false; }">
-                    </form>
-                </div>
+                    </div>
+
+                    {{-- Tombol Pemicu Dropdown Melayang --}}
+                    <button type="button" @click="showFilter = !showFilter" 
+                        class="bg-white border border-[#e5edda] text-[#588133] hover:bg-[#f1f5e9] px-3 py-2 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">Filter</span>
+                    </button>
+
+                    {{-- PANEL DROPDOWN MELAYANG: Berada di dalam form agar input select terbaca saat submit --}}
+                    <div x-show="showFilter" @click.away="showFilter = false" 
+                         x-transition:enter="transition ease-out duration-200" 
+                         x-transition:enter-start="opacity-0 translate-y-[-10px] scale-95" 
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100" 
+                         x-transition:leave="transition ease-in duration-150" 
+                         x-transition:leave-start="opacity-100 translate-y-0 scale-100" 
+                         x-transition:leave-end="opacity-0 translate-y-[-10px] scale-95" 
+                         class="absolute right-0 top-full mt-2 w-full sm:w-[260px] p-4 bg-white border border-[#e5edda] rounded-2xl shadow-xl z-50 flex flex-col gap-3" 
+                         style="display: none;" x-cloak>
+
+                        {{-- Filter 2: Keputusan Tindakan --}}
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 mb-1 block">Tindakan</label>
+                            <select name="feedback_pengadaan" onchange="this.form.submit()" class="w-full px-3 py-2 border border-[#e5edda] rounded-xl focus:ring-[#588133] focus:border-[#588133] text-sm cursor-pointer shadow-sm bg-white text-gray-700">
+                                <option value="">Semua Tindakan</option>
+                                <option value="disetujui" {{ request('feedback_pengadaan') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                                <option value="ditolak" {{ request('feedback_pengadaan') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </x-slot>
 
-    {{-- ================= KONTEN UTAMA ================= --}}
-    <div class="py-8 px-2 sm:px-6 lg:px-8 max-w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    {{-- KONTEN UTAMA --}}
+    <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" x-data="{ openModal: false, selectedId: null }">
         
-        @if (session('status_berhasil'))
-            <div class="lg:col-span-12 p-4 bg-green-50 text-[#588133] border border-green-200 rounded-2xl font-medium text-sm flex items-center gap-2" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                {{ session('status_berhasil') }}
+        {{-- SUB-HEADER: Info Deskripsi Ringkas & Counter --}}
+        <div class="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
+            <!-- <div>
+                <h3 class="text-2xl font-bold text-gray-800">Daftar Feedback Pengadaan</h3>
+                <p class="text-sm text-gray-500">Kelola dan pantau feedback terkait pengadaan aset secara real-time.</p>
+            </div> -->
+            <div class="flex gap-2">
+                <span class="bg-[#f1f5e9] text-[#588133] px-4 py-2 rounded-2xl text-xs font-bold border border-[#e5edda]">
+                    Total Feedback: {{ count($pengadaans ?? []) }}
+                </span>
             </div>
         @endif
 
-        {{-- TABEL UTAMA PENGADAAN --}}
-        <section class="lg:col-span-12 bg-white shadow-sm sm:rounded-3xl border border-gray-100 flex flex-col max-h-[calc(100vh-12rem)] overflow-hidden">
-            <div class="flex-1 overflow-y-auto table-scroll relative">
-        <div class="mb-6 relative">
-            <form action="{{ url()->current() }}" method="GET">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-4">
-                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+        {{-- BUBBLE INDIKATOR FILTER AKTIF --}}
+        @if(request('search') || request('status_pengadaan') || request('feedback_pengadaan'))
+        <div class="flex flex-wrap gap-2 mb-6 items-center">
+            @if(request('search'))
+                <span class="inline-flex items-center gap-2 bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full text-xs font-bold border border-gray-200 shadow-sm">
+                    🔍 "{{ request('search') }}"
+                    <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" class="hover:text-red-500 transition font-black ml-1">✕</a>
                 </span>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama pengusul atau nama aset..." class="block w-full pl-12 pr-4 py-3.5 border border-[#e5edda] bg-white rounded-2xl focus:ring-2 focus:ring-[#588133] focus:border-[#588133] text-sm shadow-sm transition-all">
-            </form>
+            @endif
+            @if(request('feedback_pengadaan'))
+                <span class="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-bold border border-blue-100 shadow-sm">
+                    Feedback: {{ ucfirst(request('feedback_pengadaan')) }}
+                    <a href="{{ request()->fullUrlWithQuery(['feedback_pengadaan' => null]) }}" class="hover:text-red-500 transition font-black ml-1">✕</a>
+                </span>
+            @endif
+            <a href="{{ url()->current() }}" class="text-gray-400 hover:text-gray-600 text-xs font-bold flex items-center ml-2 transition">Reset Semua</a>
         </div>
+        @endif
 
+        {{-- STRUKTUR TABEL UTAMA --}}
         <div class="bg-white overflow-hidden shadow-sm rounded-[30px] border border-[#e5edda]">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -94,25 +142,42 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="6" class="p-12 text-center text-gray-400 text-sm">Belum ada data pengadaan.</td>
-                            </tr>
-                        @endempty
+                        <tr>
+                            <td colspan="5" class="p-20 text-center">
+                                <p class="text-gray-400 italic text-sm">Belum ada riwayat pengajuan pengadaan aset.</p>
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
-            {{-- ================= BAGIAN PAGINATION INDEX ================= --}}
-            <div class="p-4 border-t border-gray-100 bg-white z-20 shrink-0">
-                <div class="pagination-matcha">
-                    {{ $pengadaans->appends(request()->query())->links() }}
-                </div>
+        {{-- MODAL BOX --}}
+        <div x-show="openModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" x-cloak x-transition>
+            <div @click.away="openModal = false" class="bg-white rounded-[40px] max-w-md w-full p-8 shadow-2xl">
+                <h3 class="text-xl font-black text-gray-800 mb-6">Alasan Penolakan</h3>
+                
+                <form :action="'/stakeholder-feedback-pengadaan/' + selectedId + '/update-status'" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    
+                    <input type="hidden" name="status" value="ditolak">
+                    <textarea name="alasan" class="w-full border-none bg-[#f1f5e9] rounded-[25px] p-5 h-40 text-sm" placeholder="Tulis alasan..."></textarea>
+                    
+                    <div class="flex gap-4 mt-8">
+                        <button type="button" @click="openModal = false" class="flex-1 py-4 text-gray-500 font-bold text-sm">Batal</button>
+                        <button type="submit" class="flex-1 py-4 bg-red-500 text-white font-bold rounded-[20px] text-sm">Kirim</button>
+                    </div>
+                </form>
             </div>
-        </section>
+        </div>
 
+        {{-- MATCHA PAGINATION --}}
+        <div class="mt-2 mb-15 pagination-matcha">
+            {{ $pengadaans->appends(request()->query())->links() }}
+        </div> 
     </div>
 
-    {{-- ================= STYLE STICKY & MATCHA CUSTOM PAGINATION ================= --}}
     <style>
         [x-cloak] { display: none !important; }
         
@@ -120,7 +185,7 @@
         .pagination-matcha nav span[aria-disabled="true"] span {
             background-color: white !important; 
             color: #588133 !important; 
-            border-radius: 10px;
+            border-radius: 12px;
             border-color: #f3f4f6 !important; 
         }
 
