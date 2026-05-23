@@ -46,26 +46,26 @@
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Dari</label>
-                        <input type="date" name="tanggal_dari" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-[#588133] focus:ring-[#588133]">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Sampai</label>
-                        <input type="date" name="tanggal_sampai" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-[#588133] focus:ring-[#588133]">
+                    <div id="kategoriField" style="display: none;">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                        <select name="kategori_id" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-[#588133] focus:ring-[#588133]">
+                            <option value="">Semua Kategori</option>
+                            @foreach($kategoris as $kategori)
+                                <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
                 <div class="flex gap-4">
-                    <button type="submit" id="pdfBtn" class="bg-[#588133] hover:bg-[#466629] text-white px-6 py-3 rounded-xl font-bold transition-all">
+                    <button type="button" id="pdfBtn" onclick="exportData('pdf')" class="bg-[#588133] hover:bg-[#466629] text-white px-6 py-3 rounded-xl font-bold transition-all">
                         Ekspor PDF
                     </button>
-                    <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-bold transition-all" disabled>
-                        Ekspor Excel (lagi dibuat ea)
+                    <button type="button" id="excelBtn" onclick="exportData('excel')" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-bold transition-all">
+                        Ekspor Excel
                     </button>
-                    <button type="button" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold transition-all" disabled>
-                        Ekspor Word (lagi dibuat ea)
+                    <button type="button" id="csvBtn" onclick="exportData('csv')" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold transition-all">
+                        Ekspor CSV
                     </button>
                 </div>
             </form>
@@ -74,23 +74,49 @@
         <script>
             function updateForm() {
                 const jenisData = document.getElementById('jenisData').value;
-                const form = document.getElementById('exportForm');
                 const kerusakanField = document.getElementById('kerusakanField');
                 const statusField = document.getElementById('statusField');
+                const kategoriField = document.getElementById('kategoriField');
 
                 if (jenisData === 'pelaporan') {
-                    form.action = '{{ route("export.pelaporan.pdf") }}';
                     kerusakanField.style.display = 'block';
                     statusField.style.display = 'block';
+                    kategoriField.style.display = 'none';
                 } else if (jenisData === 'pengadaan') {
-                    form.action = '{{ route("export.pengadaan.pdf") }}';
                     kerusakanField.style.display = 'none';
                     statusField.style.display = 'block';
+                    kategoriField.style.display = 'none';
                 } else if (jenisData === 'aset') {
-                    form.action = '{{ route("export.aset.pdf") }}';
                     kerusakanField.style.display = 'none';
                     statusField.style.display = 'none';
+                    kategoriField.style.display = 'block';
                 }
+            }
+
+            function exportData(format) {
+                const jenisData = document.getElementById('jenisData').value;
+                const status = document.querySelector('select[name="status"]').value;
+                const tingkatKerusakan = document.querySelector('select[name="tingkat_kerusakan"]').value;
+                const kategoriId = document.querySelector('select[name="kategori_id"]').value;
+
+                // Buat URL dengan query parameters
+                let url = '';
+                const params = new URLSearchParams();
+
+                if (status) params.append('status', status);
+                if (tingkatKerusakan) params.append('tingkat_kerusakan', tingkatKerusakan);
+                if (kategoriId) params.append('kategori_id', kategoriId);
+
+                if (jenisData === 'pelaporan') {
+                    url = `/export/pelaporan/${format}`;
+                } else if (jenisData === 'pengadaan') {
+                    url = `/export/pengadaan/${format}`;
+                } else if (jenisData === 'aset') {
+                    url = `/export/aset/${format}`;
+                }
+
+                // Redirect dengan query string
+                window.location.href = url + (params.toString() ? '?' + params.toString() : '');
             }
 
             // Initialize

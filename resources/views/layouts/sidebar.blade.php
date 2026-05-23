@@ -15,13 +15,18 @@
                     <a href="{{ route('pengguna.peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Form Peminjaman Baru</a>
                     <a href="{{ route('pengguna.lapor.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Lapor Kerusakan Alat</a>
                     <a href="{{ route('pengguna.logbook.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Digital Logbook</a>
-                    <a href="{{ route('faq') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Pusat Bantuan dan FAQ</a>
+                    <!--<a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Dokumentasi Sistem</a> INI HAPUS AJA DULU KOMENYA-->
+                    <a href="{{ route('faq') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">FAQ</a>
+                    <a href="{{ route('pedoman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Buku Pedoman</a>
                 </div>
             </div>
         </div>
     </div>
     
     @elseif (auth()->user()->role === 'admin')
+    @php
+        $pendingPeminjaman = \App\Models\Peminjaman::where('status_peminjaman', 'pending')->count();
+    @endphp
     <div>
         <div x-data="{ showSidebar: false }" @open-sidebar.window="showSidebar = true">
             <div x-show="showSidebar" class="fixed inset-0 z-50 flex" role="dialog">
@@ -34,11 +39,19 @@
                     <div class="flex-1 overflow-y-auto p-4 space-y-2">
                         <a href="{{ route('admin.dashboard') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dashboard</a>
                         <a href="{{ route('inventaris.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Inventaris</a>
-                        <a href="{{ route('manajemen.peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Peminjaman</a>
+                        <a href="{{ route('manajemen.peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">
+                            <div class="flex items-center justify-between">
+                                <span>Manajemen Peminjaman</span>
+                                @if ($pendingPeminjaman > 0)
+                                    <span class="w-3 h-3 rounded-full bg-red-500 shadow-lg"></span>
+                                @endif
+                            </div>
+                        </a>
                         <a href="{{ route('manajemen.pelaporan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Pelaporan</a>
                         <a href="{{ route('pengadaan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Usulan Pengadaan</a>
                         <a href="{{ route('admin.faq.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Kelola FAQ</a>
                         <a href="{{ route('export.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Ekspor Data</a>
+                        <!-- a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dokumentasi Sistem</a> INI hAPUS AJA DULU KOMENNYA KALAU mAU-->
                     </div>
                 </div>
             </div>
@@ -59,8 +72,8 @@
                     <a href="{{ route('stakeholder.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dashboard</a>
                     <a href="{{ route('feedback.pelaporan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Feedback Pelaporan</a>
                     <a href="{{ route('feedback.pengadaan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Feedback Pengadaan</a>
-                    <!-- <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Lapor Kerusakan Alat</a>
-                    <a href="{{ route('export.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Ekspor Data</a> -->
+                    <a href="{{ route('export.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Ekspor Data</a>
+                    <a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dokumentasi Sistem</a>
                 </div>
             </div>
         </div>

@@ -61,6 +61,11 @@ Route::middleware(['auth','pengguna'])->group(function () {
     // ============================ FAQ ==================================
     Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
+    // ============================ DOKUMENTASI ==================================
+    Route::get('/dokumentasi', [App\Http\Controllers\DocumentationController::class, 'index'])->name('documentation.index');
+    Route::get('/dokumentasi/{documentation}', [App\Http\Controllers\DocumentationController::class, 'show'])->name('documentation.show');
+    Route::get('/dokumentasi/{documentation}/download', [App\Http\Controllers\DocumentationController::class, 'download'])->name('documentation.download');
+    // INI BISA DIHILANGKAN DULU TAPI MALAH ERROR JADI OPSIONAL DIUBAHNYA LEWAT ROUTE INI
 
 // ::::::::::::::::::::::::::::::::::: ADMIN :::::::::::::::::::::::::::::::::::
 
@@ -126,7 +131,43 @@ Route::middleware(['auth','admin'])->group(function () {
 Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
 
+// ============================= DOWNLOAD BUKU PEDOMAN ===============================
+Route::get('/logbook', function () {
+    $filePath = public_path('files/Buku_Pedoman_InventoriKita.pdf');
+    if (file_exists($filePath)) {
+        return response()->download($filePath, 'Buku_Pedoman_InventoriKita.pdf');
+    } else {
+        abort(404, 'File tidak ditemukan');
+    }
+})->name('logbook');
+    
+
+
+
+
+
 // ============================= EKSPOR DATA =============================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/export', [App\Http\Controllers\ExportController::class, 'index'])->name('export.index');
+    
+    // Pelaporan
+    Route::get('/export/pelaporan/pdf', [App\Http\Controllers\ExportController::class, 'exportPelaporanPdf'])->name('export.pelaporan.pdf');
+    Route::get('/export/pelaporan/excel', [App\Http\Controllers\ExportController::class, 'exportPelaporanExcel'])->name('export.pelaporan.excel');
+    Route::get('/export/pelaporan/csv', [App\Http\Controllers\ExportController::class, 'exportPelaporanCsv'])->name('export.pelaporan.csv');
+    
+    // Pengadaan
+    Route::get('/export/pengadaan/pdf', [App\Http\Controllers\ExportController::class, 'exportPengadaanPdf'])->name('export.pengadaan.pdf');
+    Route::get('/export/pengadaan/excel', [App\Http\Controllers\ExportController::class, 'exportPengadaanExcel'])->name('export.pengadaan.excel');
+    Route::get('/export/pengadaan/csv', [App\Http\Controllers\ExportController::class, 'exportPengadaanCsv'])->name('export.pengadaan.csv');
+    
+    // Aset
+    Route::get('/export/aset/pdf', [App\Http\Controllers\ExportController::class, 'exportAsetPdf'])->name('export.aset.pdf');
+    Route::get('/export/aset/excel', [App\Http\Controllers\ExportController::class, 'exportAsetExcel'])->name('export.aset.excel');
+    Route::get('/export/aset/csv', [App\Http\Controllers\ExportController::class, 'exportAsetCsv'])->name('export.aset.csv');
+
+    // Pedoman sederhana: download testingfile.pdf
+    Route::get('/pedoman', [App\Http\Controllers\ExportController::class, 'pedoman'])->name('pedoman.index');
+    Route::get('/pedoman/download', [App\Http\Controllers\ExportController::class, 'downloadTestingFile'])->name('pedoman.download');
     Route::get('/export', [ExportController::class, 'index'])->name('export.index');
     Route::get('/export/pelaporan/pdf', [ExportController::class, 'exportPelaporanPdf'])->name('export.pelaporan.pdf');
     Route::get('/export/pengadaan/pdf', [ExportController::class, 'exportPengadaanPdf'])->name('export.pengadaan.pdf');
