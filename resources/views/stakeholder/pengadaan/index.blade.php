@@ -69,17 +69,13 @@
         
         {{-- SUB-HEADER: Info Deskripsi Ringkas & Counter --}}
         <div class="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
-            <!-- <div>
-                <h3 class="text-2xl font-bold text-gray-800">Daftar Feedback Pengadaan</h3>
-                <p class="text-sm text-gray-500">Kelola dan pantau feedback terkait pengadaan aset secara real-time.</p>
-            </div> -->
             <div class="flex gap-2">
                 <span class="bg-[#f1f5e9] text-[#588133] px-4 py-2 rounded-2xl text-xs font-bold border border-[#e5edda]">
                     Total Feedback: {{ count($pengadaans ?? []) }}
                 </span>
             </div>
-        @endif
-
+        </div> {{-- <-- INI TAG PENUTUP YANG DITAMBAHKAN --}}
+        
         {{-- BUBBLE INDIKATOR FILTER AKTIF --}}
         @if(request('search') || request('status_pengadaan') || request('feedback_pengadaan'))
         <div class="flex flex-wrap gap-2 mb-6 items-center">
@@ -143,15 +139,15 @@
                             </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="p-20 text-center">
-                                <p class="text-gray-400 italic text-sm">Belum ada riwayat pengajuan pengadaan aset.</p>
+                            <td colspan="6" class="p-20 text-center"> <p class="text-gray-400 italic text-sm">Belum ada riwayat pengajuan pengadaan aset.</p>
                             </td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-
+        </div> 
+        
         {{-- MODAL BOX --}}
         <div x-show="openModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" x-cloak x-transition>
             <div @click.away="openModal = false" class="bg-white rounded-[40px] max-w-md w-full p-8 shadow-2xl">
