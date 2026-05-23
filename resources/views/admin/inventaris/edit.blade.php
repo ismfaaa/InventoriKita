@@ -1,7 +1,6 @@
-{{-- Ini adalah Modal Pop-up, dipanggil dari index.blade.php --}}
+
 <div x-show="showEditModal" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center" role="dialog">
     
-    {{-- Background Hitam Transparan --}}
     <div @click="showEditModal = false" class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
     
     {{-- Kotak Form Edit --}}
@@ -29,8 +28,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                    {{-- Ini diubah jadi Dropdown Kategori supaya logic-nya benar --}}
+                <div>                  
                     <label for="kategori_id" class="block font-medium text-sm text-gray-700 mb-2">Kategori <span class="text-red-500">*</span></label>
                     <select id="kategori_id" name="kategori_id" required 
                         class="w-full border-gray-300 rounded-xl shadow-sm focus:border-[#588133] focus:ring focus:ring-[#588133] focus:ring-opacity-50">

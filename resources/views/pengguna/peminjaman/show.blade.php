@@ -21,7 +21,7 @@
                 @if ($peminjamans->status_peminjaman === 'pending')
                     Permohonan kamu sedang diperiksa oleh admin. Tunggu maksimal 24 jam untuk pembaruan status.
                 @elseif ($peminjamans->status_peminjaman === 'disetujui')
-                    Permohonan Peminjaman kamu Disetujui, silahkan ambil barang di {{ $peminjamans->lokasi }}dan pastikan untuk mengembalikan tepat waktu.
+                    Permohonan Peminjaman kamu Disetujui, silahkan ambil Aset di {{ $peminjamans->lokasi }}dan pastikan untuk mengembalikan tepat waktu.
                 @elseif ($peminjamans->status_peminjaman === 'ditolak')
                     Permohonan Peminjaman kamu Ditolak karena aset sedang digunakan untuk keperluan lain. Silahkan ajukan peminjaman ulang di lain waktu.
                 @elseif ($peminjamans->status_peminjaman === 'selesai')
@@ -39,13 +39,18 @@
                         @if ($peminjamans->status_peminjaman === 'selesai')
                             <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-4">
                                 <p class="text-green-700 text-sm">
-                                    <span class="font-bold">✓ Terverifikasi:</span> Barang sudah diterima kembali oleh admin pada 
+                                    <span class="font-bold">✓ Terverifikasi:</span> Aset sudah diterima kembali oleh admin pada 
                                     {{ \Carbon\Carbon::parse($peminjamans->updated_at)->translatedFormat('d M Y, H:i') }} WIB.
                                 </p>
                             </div>
-                        @else
-                        
-                            <span class="text-gray-400 uppercase tracking-tighter font-bold">Ambil barang maksimal pada </span>
+                        @elseif ($peminjamans->status_peminjaamn === 'disetujui')
+                            <span class="text-gray-400 uppercase tracking-tighter font-bold">Kembalikan Aset sebelum</span>
+                            <span class="font-bold text-[#588133]">
+                                {{ \Carbon\Carbon::parse($peminjamans->tanggal_kembali)->translatedFormat('d M Y') }}
+                            </span>
+
+                        @elseif ($peminjamans->status_peminjaamn === 'pending')                   
+                            <span class="text-gray-400 uppercase tracking-tighter font-bold">Ambil Aset maksimal pada </span>
                             <span class="font-bold text-[#588133]">
                                 {{ \Carbon\Carbon::parse($peminjamans->tanggal_pinjam)->translatedFormat('d M Y') }}
                             </span>

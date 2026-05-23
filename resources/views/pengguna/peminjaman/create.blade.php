@@ -10,6 +10,11 @@
             <h3 class="text-2xl font-black text-gray-800 mb-2">Formulir Pinjaman</h3>
             <p class="text-sm text-gray-400 mb-10 italic">Lengkapi data untuk verifikasi 24 jam.</p>
 
+            @if ($errors->any())
+                <div class="bg-red-100 text-red-600 p-4 rounded-2xl mb-4">
+                    <ul> @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach </ul>
+                </div>
+            @endif
             <form action="{{ route('pengguna.peminjaman.store') }}" method="POST" class="space-y-6">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

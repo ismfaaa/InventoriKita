@@ -14,7 +14,7 @@
                     <a href="{{ route('pengguna.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Beranda</a>
                     <a href="{{ route('pengguna.peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Form Peminjaman Baru</a>
                     <a href="{{ route('pengguna.lapor.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Lapor Kerusakan Alat</a>
-                    <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Digital Logbook</a>
+                    <a href="{{ route('pengguna.logbook.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Digital Logbook</a>
                     <!--<a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Dokumentasi Sistem</a> INI HAPUS AJA DULU KOMENYA-->
                     <a href="{{ route('faq') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">FAQ</a>
                     <a href="{{ route('pedoman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Buku Pedoman</a>
@@ -49,6 +49,7 @@
                         </a>
                         <a href="{{ route('manajemen.pelaporan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Manajemen Pelaporan</a>
                         <a href="{{ route('pengadaan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Usulan Pengadaan</a>
+                        <a href="{{ route('admin.faq.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Kelola FAQ</a>
                         <a href="{{ route('export.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Ekspor Data</a>
                         <!-- a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dokumentasi Sistem</a> INI hAPUS AJA DULU KOMENNYA KALAU mAU-->
                     </div>
@@ -68,9 +69,9 @@
                     <button @click="showSidebar = false" class="text-gray-500 text-2xl">&times;</button>
                 </div>
                 <div class="flex-1 overflow-y-auto p-4 space-y-2">
-                    <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Form Peminjaman Baru</a>
-                    <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Form Pengembalian Alat</a>
-                    <a href="#" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Lapor Kerusakan Alat</a>
+                    <a href="{{ route('stakeholder.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dashboard</a>
+                    <a href="{{ route('feedback.pelaporan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Feedback Pelaporan</a>
+                    <a href="{{ route('feedback.pengadaan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Feedback Pengadaan</a>
                     <a href="{{ route('export.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Ekspor Data</a>
                     <a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dokumentasi Sistem</a>
                 </div>

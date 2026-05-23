@@ -1,13 +1,19 @@
 <x-app-layout>
-    @include('layouts.sidebar')
-    
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-[#588133] leading-tight">
-            {{ __('Pusat Keputusan Operasional') }}
-        </h2>
-    </x-slot>
+        @include('layouts.sidebar')
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h1 class="text-2xl font-bold text-[#588133] mb-4">Selamat Datang, {{ auth()->user()->name }}!</h1>
+                    <p class="text-gray-700">Ini adalah dashboard untuk stakeholder. Anda dapat memberikan feedback terkait pelaporan dan pengadaan aset.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+     <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        
+        @include('stakeholder.widget')
         <div class="mb-8">
             <h3 class="text-lg font-bold text-gray-800">Menunggu Persetujuan</h3>
             <p class="text-sm text-gray-500">Daftar inventaris yang memerlukan tindakan lanjut terkait kerusakan.</p>

@@ -2,128 +2,76 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Aset;
-use App\Models\Pelaporan;
+use App\Models\Pelaporan;  // Jika nama modelnya Laporan, silakan ganti menjadi App\Models\Laporan
+use App\Models\Kategori;   // Model kategori untuk kebutuhan filter data
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class PelaporanController extends Controller
 {
-    public function index()
+    /**
+     * Menampilkan semua daftar laporan (Halaman Index Stakeholder)
+     */
+    public function index(Request $request)
     {
-        $user = Auth::user();
+        // Query dasar mengambil data pelaporan terbaru beserta kategorinya
+        $query = Pelaporan::with('kategori')->latest();
 
-        if ($user->role === 'admin') {
-            $pelaporans = Pelaporan::with(['aset', 'user'])->get();
-            return view('admin.pelaporan.index', compact('pelaporans'));
-        } 
-        
-        elseif ($user->role === 'pengguna') {
-            $asets = Aset::all();
-            $pelaporans = Pelaporan::where('user_id', $user->id)->with('aset')->get();
-            return view('pengguna.pelaporan.index', compact('pelaporans', 'asets'));
-        } 
-        
-        else {
-            abort(403, 'Unauthorized');
+        // Fitur Pencarian laporan
+        if ($request->has('search') && $request->search != '') {
+            $query->where('judul', 'like', '%' . $request->search . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
         }
+
+        // Fitur Filter berdasarkan Kategori
+        if ($request->has('category') && $request->category != '') {
+            $query->where('kategori_id', $request->category);
+        }
+
+        // Ambil data pelaporan dengan pagination (10 data per halaman)
+        $pelaporans = $query->paginate(10);
+        
+        // Ambil semua kategori untuk kebutuhan dropdown/filter di view index
+        $kategoris = Kategori::all();
+
+        // Mengarah ke file index di dalam folder stakeholder/pelaporan
+        return view('stakeholder.pelaporan.index', compact('pelaporans', 'kategoris'));
     }
 
     /**
-     * Menampilkan form input laporan baru.
+     * Menampilkan detail laporan beserta FEEDBACK yang di-paginate (Halaman Show)
      */
-    public function create()
-    
+    public function show($id)
     {
-        $asets = Aset::all();
-        return view('pengguna.pelaporan.create', compact('asets'));
+        // 1. Ambil detail data pelaporan berdasarkan ID
+        $laporan = Pelaporan::with('kategori')->findOrFail($id);
+        
+        // 2. AMBIL FEEDBACK DENGAN PAGINATION (Kunci Utama):
+        // Di-paginate 5 data per halaman agar card kanan di file Blade tidak memanjang ke bawah
+        // *Catatan: Jika nama fungsi relasi di model kamu bukan 'feedbacks' (misal: 'tanggapan'), ubah nama fungsinya di bawah ini.
+        $feedbacks = $laporan->feedbacks()->latest()->paginate(5); 
+
+        // 3. Lempar data laporan dan feedbacks ke view show
+        return view('stakeholder.pelaporan.show', compact('laporan', 'feedbacks'));
     }
 
     /**
-     * Menyimpan data pelaporan ke database.
+     * Menyimpan feedback/tanggapan baru dari stakeholder/admin
      */
-    public function store(Request $request)
+    public function storeFeedback(Request $request, $laporanId)
     {
         $request->validate([
-            'aset_id'           => 'required|exists:asets,id',
-            'tingkat_kerusakan' => 'required|in:ringan,sedang,berat',
-            'lokasi'            => 'required|string|max:255',
-            'deskripsi'         => 'required|string',
-            'foto'              => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'isi_tanggapan' => 'required|string|max:1000',
         ]);
 
-    $laporanAda = Pelaporan::where('aset_id', $request->aset_id)
-        ->whereIn('status_pelaporan', ['diproses']) 
-        ->first();
-
-    if ($laporanAda) {
-        return redirect()->back()
-            ->withInput() 
-            ->with('error_kritis', 'Aset ini sudah dilaporkan sebelumnya dan sedang dalam penanganan.');
-    }
-
-        $data = $request->all();
-
-        if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('pelaporan', 'public');
-            $data['foto'] = $path;
-        }
-
-        $data['user_id'] = Auth::id();
-        $data['status_pelaporan'] = 'diproses';
-        $data['tanggal_pelaporan'] = now();
-
-        Pelaporan::create($data);
-
-        return redirect()->route('pengguna.lapor.index')->with('status_berhasil', 'Laporan kerusakan berhasil dikirim!');
-    }
-
-    public function updateStatus(Request $request, $id)
-    {
-        $request->validate([
-            'status_pelaporan' => 'required|in:diproses,verifikasi,feedback,selesai',
-            'feedback' => 'nullable|in:diperbaiki,diganti,dihilangkan',
+        $laporan = Pelaporan::findOrFail($laporanId);
+        
+        // Simpan feedback baru dengan relasi user yang sedang login
+        $laporan->feedbacks()->create([
+            'user_id' => auth()->id(),
+            'isi_tanggapan' => $request->isi_tanggapan,
         ]);
 
-        $laporan = Pelaporan::findOrFail($id);
-        $laporan->status_pelaporan = $request->status_pelaporan;
-
-        if ($request->has('feedback')) {
-            $laporan->feedback = $request->feedback;
-        }
-
-        $laporan->save();
-
-        return redirect()->route('manajemen.pelaporan.index')->with('success', 'Status laporan berhasil diperbarui!');
-    }
-
-    public function show(Pelaporan $pelaporan)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pelaporan $pelaporan)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Pelaporan $pelaporan)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Pelaporan $pelaporan)
-    {
-        //
+        return redirect()->route('pelaporan.show', $laporanId)
+                         ->with('status', 'Feedback atau tanggapan berhasil dikirim!');
     }
 }

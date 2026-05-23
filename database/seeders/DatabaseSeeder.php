@@ -17,9 +17,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Jalankan seeder dengan urutan yang tepat
+        $this->call([
+            UserSeeder::class,
+            KategoriSeeder::class,
+            AsetSeeder::class,
+            PelaporanSeeder::class,
         ]);
     }
 }
