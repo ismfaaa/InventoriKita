@@ -139,12 +139,8 @@ Route::get('/logbook', function () {
     } else {
         abort(404, 'File tidak ditemukan');
     }
-})->name('logbook');
-    
-
-
-
-
+})->name('logbook');    
+});
 
 // ============================= EKSPOR DATA =============================
 Route::middleware(['auth'])->group(function () {
