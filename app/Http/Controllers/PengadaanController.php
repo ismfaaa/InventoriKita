@@ -89,12 +89,16 @@ class PengadaanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'aset_id' => 'required|exists:asets,id',
+            'aset_id' => 'required_without:nama_aset|nullable|exists:asets,id',
+            'nama_aset' => 'required_without:aset_id|nullable|string|max:255',
+            'kuantitas' => 'required|numeric|min:1',
             'estimasi_biaya' => 'required|numeric',
         ]);
         Pengadaan::create([
             'user_id' => Auth::id(),
             'aset_id' => $request->aset_id,
+            'nama_aset' => $request->nama_aset,
+            'kuantitas' => $request->kuantitas,
             'estimasi_biaya' => $request->estimasi_biaya,
             'status_pengadaan' => 'pending', // Default
             'tanggal_pengadaan' => now(),
