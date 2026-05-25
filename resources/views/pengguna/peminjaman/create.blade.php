@@ -53,12 +53,38 @@
         {{-- Tanggal --}}
         <div>
             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Tgl Pengajuan</label>
-            <input type="date" name="tanggal_pinjam" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133]">
+            <input type="date" id="tanggal_pinjam" name="tanggal_pinjam" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133]">
         </div>
         <div>
             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Tgl Pengembalian</label>
-            <input type="date" name="tanggal_kembali" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133]">
+            <input type="date" id="tanggal_kembali" name="tanggal_kembali" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133]">
         </div>
+
+        <script>
+            const inputPinjam = document.getElementById('tanggal_pinjam');
+            const inputKembali = document.getElementById('tanggal_kembali');
+            const hariIni = new Date().toISOString().split('T')[0];
+
+            inputPinjam.min = hariIni;
+
+            inputPinjam.addEventListener('change', function() {
+                const tglTerpilih = new Date(this.value);
+
+                if (!isNaN(tglTerpilih)) {
+
+                    const minKembali = new Date(tglTerpilih);
+                    inputKembali.min = minKembali.toISOString().split('T')[0];
+
+                    const maxKembali = new Date(tglTerpilih);
+                    maxKembali.setDate(maxKembali.getDate() + 3);
+                    inputKembali.max = maxKembali.toISOString().split('T')[0];
+
+                    if (inputKembali.value && (inputKembali.value < inputKembali.min || inputKembali.value > inputKembali.max)) {
+                        inputKembali.value = '';
+                    }
+                }
+            });
+        </script>
 
         {{-- Input Status (Default & Tersembunyi) --}}
         <input type="hidden" name="user_id" value="{{ Auth::id() }}">
