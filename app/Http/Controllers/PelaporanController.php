@@ -2,76 +2,182 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pelaporan;  // Jika nama modelnya Laporan, silakan ganti menjadi App\Models\Laporan
-use App\Models\Kategori;   // Model kategori untuk kebutuhan filter data
+use App\Http\Controllers\Controller;
+use App\Models\Aset;
+use App\Models\Pelaporan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PelaporanController extends Controller
 {
-    /**
-     * Menampilkan semua daftar laporan (Halaman Index Stakeholder)
-     */
     public function index(Request $request)
     {
-        // Query dasar mengambil data pelaporan terbaru beserta kategorinya
-        $query = Pelaporan::with('kategori')->latest();
+        $user = Auth::user();
 
-        // Fitur Pencarian laporan
-        if ($request->has('search') && $request->search != '') {
-            $query->where('judul', 'like', '%' . $request->search . '%')
-                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
+        try {
+            // 2. Mulai query dasar (Load relasi aset dan user)
+            $query = Pelaporan::with(['aset', 'user']);
+
+            // 3. KUNCI DATA: Jika role pengguna, HANYA tampilkan laporannya sendiri
+            if ($user->role === 'pengguna') {
+                $query->where('user_id', $user->id);
+            }
+
+            // 4. FITUR SEARCH (Cari berdasarkan Aset, Lokasi, atau Nama Pelapor)
+            if ($request->filled('search')) {
+                $search = $request->get('search');
+                $query->where(function($q) use ($search, $user) {
+                    
+                    $q->whereHas('aset', function($asetQuery) use ($search) {
+                        $asetQuery->where('nama_aset', 'like', '%' . $search . '%');
+                    })
+                    ->orWhere('lokasi', 'like', '%' . $search . '%')
+                    ->orWhere('feedback', 'like', '%' . $search . '%'); // <--- TAMBAHKAN BARIS INI
+
+                    // HANYA Admin dan Stakeholder yang bisa mencari nama pelapor
+                    if (in_array($user->role, ['admin', 'stakeholder'])) {
+                        $q->orWhereHas('user', function($userQuery) use ($search) {
+                            $userQuery->where('name', 'like', '%' . $search . '%');
+                        });
+                    }
+                });
+            }
+
+            // 5. FITUR FILTER STATUS PELAPORAN
+            if ($request->filled('status_pelaporan')) {
+                $query->where('status_pelaporan', $request->get('status_pelaporan'));
+            }
+
+            // 6. FITUR FILTER TINGKAT KERUSAKAN
+            if ($request->filled('tingkat_kerusakan')) {
+                $query->where('tingkat_kerusakan', $request->get('tingkat_kerusakan'));
+            }
+
+            // 7. FITUR FDEEDBACK
+            if ($request->filled('feedback')) {
+                $query->where('feedback', $request->get('feedback'));
+            }
+
+            // 8. PAGINATION
+            $pelaporans = $query->latest('created_at')->paginate(5);
+            $asets = Aset::all(); // Dibutuhkan jika view pengguna ingin buat laporan baru
+
+        } catch (\Exception $e) {
+            // Jaring pengaman jika database error
+            $pelaporans = collect();
+            $asets = Aset::all();
         }
 
-        // Fitur Filter berdasarkan Kategori
-        if ($request->has('category') && $request->category != '') {
-            $query->where('kategori_id', $request->category);
-        }
-
-        // Ambil data pelaporan dengan pagination (10 data per halaman)
-        $pelaporans = $query->paginate(10);
+        // 8. TERTUJU KEPADA VIEWS
+        if ($user->role === 'admin') {
+            return view('admin.pelaporan.index', compact('pelaporans', 'asets'));
+        } elseif ($user->role === 'stakeholder') {
+            return view('stakeholder.pelaporan.index', compact('pelaporans', 'asets'));
+        } 
         
-        // Ambil semua kategori untuk kebutuhan dropdown/filter di view index
-        $kategoris = Kategori::all();
 
-        // Mengarah ke file index di dalam folder stakeholder/pelaporan
-        return view('stakeholder.pelaporan.index', compact('pelaporans', 'kategoris'));
+        return view('pengguna.pelaporan.index', compact('pelaporans', 'asets'));
     }
 
-    /**
-     * Menampilkan detail laporan beserta FEEDBACK yang di-paginate (Halaman Show)
-     */
-    public function show($id)
+
+    
+
+ 
+    public function create()
+    
     {
-        // 1. Ambil detail data pelaporan berdasarkan ID
-        $laporan = Pelaporan::with('kategori')->findOrFail($id);
-        
-        // 2. AMBIL FEEDBACK DENGAN PAGINATION (Kunci Utama):
-        // Di-paginate 5 data per halaman agar card kanan di file Blade tidak memanjang ke bawah
-        // *Catatan: Jika nama fungsi relasi di model kamu bukan 'feedbacks' (misal: 'tanggapan'), ubah nama fungsinya di bawah ini.
-        $feedbacks = $laporan->feedbacks()->latest()->paginate(5); 
-
-        // 3. Lempar data laporan dan feedbacks ke view show
-        return view('stakeholder.pelaporan.show', compact('laporan', 'feedbacks'));
+        $asets = Aset::all();
+        return view('pengguna.pelaporan.create', compact('asets'));
     }
 
-    /**
-     * Menyimpan feedback/tanggapan baru dari stakeholder/admin
-     */
-    public function storeFeedback(Request $request, $laporanId)
+  
+    public function store(Request $request)
     {
         $request->validate([
-            'isi_tanggapan' => 'required|string|max:1000',
+            'aset_id'           => 'required|exists:asets,id',
+            'tingkat_kerusakan' => 'required|in:ringan,sedang,berat',
+            'lokasi'            => 'required|string|max:255',
+            'deskripsi'         => 'required|string',
+            'foto'              => 'required|image|mimes:jpeg,png,jpg|max:10240',
         ]);
 
-        $laporan = Pelaporan::findOrFail($laporanId);
-        
-        // Simpan feedback baru dengan relasi user yang sedang login
-        $laporan->feedbacks()->create([
-            'user_id' => auth()->id(),
-            'isi_tanggapan' => $request->isi_tanggapan,
+    $laporanAda = Pelaporan::where('aset_id', $request->aset_id)
+        ->whereIn('status_pelaporan', ['diproses']) 
+        ->first();
+
+    if ($laporanAda) {
+        return redirect()->back()
+            ->withInput() 
+            ->with('error_kritis', 'Aset ini sudah dilaporkan sebelumnya dan sedang dalam penanganan.');
+    }
+
+        $data = $request->all();
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('pelaporan', 'public');
+            $data['foto'] = $path;
+        }
+
+        $data['user_id'] = Auth::id();
+        $data['status_pelaporan'] = 'diproses';
+        $data['tanggal_pelaporan'] = now();
+
+        Pelaporan::create($data);
+
+        return redirect()->route('pengguna.lapor.index')->with('status_berhasil', 'Laporan kerusakan berhasil dikirim!');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status_pelaporan' => 'required|in:diproses,verifikasi,feedback,selesai',
+            'feedback' => 'nullable|in:diperbaiki,diganti,dihilangkan',
         ]);
 
-        return redirect()->route('pelaporan.show', $laporanId)
-                         ->with('status', 'Feedback atau tanggapan berhasil dikirim!');
+        $laporan = Pelaporan::findOrFail($id);
+        $laporan->status_pelaporan = $request->status_pelaporan;
+
+        if ($request->has('feedback')) {
+            $laporan->feedback = $request->feedback;
+        }
+
+        $laporan->save();
+        $user = Auth::user();
+
+        if ($user->role === 'stakeholder') {
+            return redirect()->route('feedback.pelaporan.index')->with('success', 'Feedback berhasil diberikan!');
+        }
+        return redirect()->route('manajemen.pelaporan.index')->with('success', 'Status laporan berhasil diperbarui!');
+    }
+
+    public function show($id)
+    {
+        $laporan = Pelaporan::with(['aset', 'user'])->findOrFail($id);
+
+        return view('stakeholder.pelaporan.show', compact('laporan'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Pelaporan $pelaporan)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Pelaporan $pelaporan)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Pelaporan $pelaporan)
+    {
+        //
     }
 }

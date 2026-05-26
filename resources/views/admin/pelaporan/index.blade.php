@@ -176,7 +176,7 @@
         </div>
         @endif
 
-        {{-- TABEL DATA (Ini kode tabel yang tidak diubah) --}}
+        {{-- BACKGROUND TABEL DATA  --}}
         <div class="bg-white overflow-hidden shadow-sm rounded-[30px] border border-[#e5edda]">
             
 
@@ -336,7 +336,7 @@
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- Satu script untuk semua pesan sukses --}}
+    {{-- Satu script untuk semua pesan sukses. --}}
     @if(session('status_berhasil') || session('success'))
     
     <script>
