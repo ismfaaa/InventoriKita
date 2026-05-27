@@ -59,13 +59,34 @@ class PeminjamanController extends Controller
         
         // UNTUK PENGGUNA
         elseif ($user->role === 'pengguna') {
-            $asets = Aset::all();
-            $peminjamans = Peminjaman::where('user_id', $user->id)
-                                ->with('aset')
-                                ->latest()
-                                ->get();
-            return view('pengguna.peminjaman.index',compact('asets', 'peminjamans'));
-        } 
+        $query = Peminjaman::where('user_id', $user->id)->with(['aset', 'aset.kategori']);
+
+        // Logika Search
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->whereHas('aset', function($asetQuery) use ($search) {
+                $asetQuery->where('nama_aset', 'like', '%' . $search . '%');
+            });
+        }
+        
+        // Logika Filter Status
+        if ($request->filled('status')) {
+            $query->where('status_peminjaman', $request->get('status'));
+        }
+        
+        // Logika Filter Kategori
+        if ($request->filled('kategori')) {
+            $query->whereHas('aset', function($asetQuery) use ($request) {
+                $asetQuery->where('kategori_id', $request->get('kategori'));
+            });
+        }
+        
+        $peminjamans = $query->latest('created_at')->get();
+        $asets = Aset::all();
+        $kategoris = Kategori::all();
+        
+        return view('pengguna.peminjaman.index', compact('asets', 'peminjamans', 'kategoris'));
+        }
         
         else {
             abort(403, 'Unauthorized');

@@ -39,8 +39,8 @@
         </div>
 
         {{-- Filter Kategori --}}
-        <div class="py-8 px-0 max-w-7xl mx-auto">
-            <div class="flex gap-2 overflow-x-auto pb-4 mb-4 no-scrollbar">
+        <div class="py-4 px-0 max-w-7xl mx-auto">
+            <div class="flex gap-2 overflow-x-auto pb-1 mb-1 no-scrollbar">
                 <a href="{{ route('pengguna.index') }}" class="{{ !request('category') ? 'bg-[#588133] text-white border-[#588133]' : 'bg-white text-gray-600 border-gray-200' }} px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap hover:bg-[#588133] hover:text-white transition-colors duration-300 border">Semua</a>
                 @foreach ($kategoris as $kategori)
                     <a href="{{ route('pengguna.index', ['category' => $kategori->id, 'search' => request('search')]) }}" class="{{ request('category') == $kategori->id ? 'bg-[#588133] text-white border-[#588133]' : 'bg-white text-gray-600 border-gray-200' }} px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap hover:bg-[#588133] hover:text-white transition-colors duration-300 border">{{ $kategori->nama_kategori }}</a>
@@ -49,7 +49,7 @@
         </div>
 
         {{-- Grid Katalog --}}
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="py-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             @foreach ($asets as $aset)
             <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col h-full">
                 <div class="aspect-square overflow-hidden bg-gray-100 flex items-center justify-center relative">
