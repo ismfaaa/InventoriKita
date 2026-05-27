@@ -45,7 +45,7 @@
         </div>
 
         <div class="mt-6">
-            <x-primary-button class="w-full justify-center py-3 text-sm shadow-md">
+            <x-primary-button id="btnsubmit" class="w-full justify-center py-3 text-sm shadow-md">
                 {{ __('Daftar Sekarang') }}
             </x-primary-button>
         </div>
@@ -57,4 +57,7 @@
             </a>
         </div>
     </form>
+
+    
+
 </x-guest-layout>

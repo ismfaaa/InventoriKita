@@ -66,11 +66,10 @@
                     <div class="mt-4 flex gap-2">
                         <button class="flex-1 bg-[#f1f5e9] text-[#588133] py-2 rounded-xl text-[10px] font-bold hover:bg-gray-200 transition-all duration-300">Detail</button>
                         
-                        <button 
-                            @click="$dispatch('open-pinjam-modal', { id: {{ $aset->id }}, nama: '{{ $aset->nama_aset }}' })"
-                            class="flex-1 bg-[#588133] text-white py-2 rounded-xl text-[10px] font-bold text-center hover:bg-[#466629] transition-all duration-300 shadow-sm">
+                        <a href="{{ route('pengguna.peminjaman.create', ['id' => $aset->id]) }}" 
+                        class="flex-1 bg-[#588133] text-white py-2 rounded-xl text-[10px] font-bold text-center hover:bg-[#466629] transition-all duration-300 shadow-sm block">
                             Pinjam
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -133,4 +132,24 @@
             background-color: #f1f5e9 !important;
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('status_berhasil') || session('success'))
+    <script>
+        // Langsung jalankan saat halaman selesai dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('status_berhasil') ?? session('success') }}",
+                confirmButtonColor: '#588133',
+                customClass: {
+                    popup: 'rounded-[30px]',
+                    confirmButton: 'rounded-xl px-6 py-2'
+                }
+            });
+        });
+    </script>
+    @endif
 </x-app-layout>

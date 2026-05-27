@@ -30,8 +30,8 @@ Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita', [PenggunaController::class, 'index'])->name('pengguna.index');
     
     // ============================= PEMINJAMAN =============================
-    Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('pengguna.peminjaman.index');
-    Route::post('/Manajemen-peminjaman', [PeminjamanController::class, 'store'])->name('pengguna.peminjaman.store');
+    Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('pengguna.peminjaman.index');
+    Route::post('/peminjaman-baru', [PeminjamanController::class, 'store'])->name('pengguna.peminjaman.store');
 
     Route::get('/InventoriKita/peminjaman', function () {
         return view('pengguna.peminjaman.index');
