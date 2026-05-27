@@ -47,6 +47,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('pengguna.index', absolute: false));
+        return redirect(route('pengguna.index', absolute: false))->with('success', 'Akun kamu berhasil didaftarkan.');
     }
 }

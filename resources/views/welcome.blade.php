@@ -59,3 +59,20 @@
     </div>
 </body>
 </html>
+
+@if (session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('status_berhasil') ?? session('success') }}",
+                confirmButtonColor: '#588133',
+                customClass: {
+                    popup: 'rounded-[30px]',
+                    confirmButton: 'rounded-xl px-6 py-2'
+                }
+            });
+        });
+    </script>
+@endif

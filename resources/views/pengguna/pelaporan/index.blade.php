@@ -302,7 +302,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    {{-- Pesan Sukses Tetap Dipertahankan --}}
+    {{-- Pesan Sukses --}}
     @if(session('status_berhasil') || session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {

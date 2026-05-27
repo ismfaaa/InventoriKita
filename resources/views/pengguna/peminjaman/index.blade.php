@@ -33,44 +33,64 @@
                     </tr>
                 </thead>
                  <tbody class="divide-y divide-gray-50">
-    @forelse ($peminjamans as $index => $item)
-        <tr class="hover:bg-gray-50 transition-colors">
-            <td class="p-6 font-bold text-gray-400 text-xs">{{ $index + 1 }}</td>
-            <td class="p-6">
-                <div class="flex flex-col">
-                    <span class="font-bold text-gray-800">{{ $item->aset->nama_aset ?? 'Aset Tidak Ditemukan' }}</span>
-                    <span class="text-[10px] text-gray-400 uppercase tracking-tighter">ID: {{ $item->aset_id }}</span>
-                </div>
-            </td>
-            <td class="p-6 text-sm text-gray-500">
-                {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d M Y') }}
-            </td>
-            <td class="p-6">
-                @if($item->status_peminjaman == 'pending')
-                    <span class="px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full text-[10px] font-black uppercase">Pending</span>
-                @elseif($item->status_peminjaman == 'disetujui')
-                    <span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-[10px] font-black uppercase">Disetujui</span>
-                @elseif($item->status_peminjaman == 'ditolak')
-                    <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-[10px] font-black uppercase">Ditolak</span>
-                @else
-                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-[10px] font-black uppercase">{{ $item->status_peminjaman }}</span>
-                @endif
-            </td>
-            <td class="p-6">
-                <a href="{{ route('pengguna.peminjaman.show', $item->id) }}" class="text-[#588133] font-bold text-xs hover:underline decoration-2">Detail</a>
-            </td>
-        </tr>
-    @empty
-        <tr>
-            <td colspan="5" class="p-10 text-center text-gray-400 italic">
-                Belum ada riwayat peminjaman.
-            </td>
-        </tr>
-    @endforelse
-</tbody>
-                
+                    @forelse ($peminjamans as $index => $item)
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="p-6 font-bold text-gray-400 text-xs">{{ $index + 1 }}</td>
+                            <td class="p-6">
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-gray-800">{{ $item->aset->nama_aset ?? 'Aset Tidak Ditemukan' }}</span>
+                                    <span class="text-[10px] text-gray-400 uppercase tracking-tighter">ID: {{ $item->aset_id }}</span>
+                                </div>
+                            </td>
+                            <td class="p-6 text-sm text-gray-500">
+                                {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d M Y') }}
+                            </td>
+                            <td class="p-6">
+                                @if($item->status_peminjaman == 'pending')
+                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full text-[10px] font-black uppercase">Pending</span>
+                                @elseif($item->status_peminjaman == 'disetujui')
+                                    <span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-[10px] font-black uppercase">Disetujui</span>
+                                @elseif($item->status_peminjaman == 'ditolak')
+                                    <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full text-[10px] font-black uppercase">Ditolak</span>
+                                @else
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-[10px] font-black uppercase">{{ $item->status_peminjaman }}</span>
+                                @endif
+                            </td>
+                            <td class="p-6">
+                                <a href="{{ route('pengguna.peminjaman.show', $item->id) }}" class="text-[#588133] font-bold text-xs hover:underline decoration-2">Detail</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="p-10 text-center text-gray-400 italic">
+                                Belum ada riwayat peminjaman.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+                                
             
             </table>
         </div>
     </div>
+
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('status_berhasil') || session('success'))
+    <script>
+        // Langsung jalankan saat halaman selesai dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('status_berhasil') ?? session('success') }}",
+                confirmButtonColor: '#588133',
+                customClass: {
+                    popup: 'rounded-[30px]',
+                    confirmButton: 'rounded-xl px-6 py-2'
+                }
+            });
+        });
+    </script>
+    @endif
 </x-app-layout>
