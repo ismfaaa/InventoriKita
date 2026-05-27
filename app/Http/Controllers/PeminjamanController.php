@@ -81,7 +81,7 @@ class PeminjamanController extends Controller
             });
         }
         
-        $peminjamans = $query->latest('created_at')->get();
+        $peminjamans = $query->latest('created_at')->paginate(10);
         $asets = Aset::all();
         $kategoris = Kategori::all();
         

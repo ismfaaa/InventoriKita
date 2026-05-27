@@ -175,7 +175,40 @@
                 </tbody>
             </table>
         </div>
+        </div>
         
+        {{-- PAGINATION --}}
+        @if($peminjamans->hasPages())
+        <div class="mt-6 flex justify-center px-6">
+            <nav class="flex items-center gap-2">
+                @if($peminjamans->onFirstPage())
+                    <span class="px-4 py-2.5 bg-gray-100 text-gray-400 rounded-[15px] text-sm font-bold cursor-not-allowed">← Sebelumnya</span>
+                @else
+                    <a href="{{ $peminjamans->previousPageUrl() }}" class="px-4 py-2.5 bg-[#588133] hover:bg-[#466629] text-white rounded-[15px] text-sm font-bold transition-all">← Sebelumnya</a>
+                @endif
+
+                <div class="flex gap-1">
+                    @foreach($peminjamans->getUrlRange(1, $peminjamans->lastPage()) as $page => $url)
+                        @if($page == $peminjamans->currentPage())
+                            <span class="px-3.5 py-2.5 bg-[#588133] text-white rounded-[15px] text-sm font-bold">{{ $page }}</span>
+                        @else
+                            <a href="{{ $url }}" class="px-3.5 py-2.5 bg-gray-100 hover:bg-[#f1f5e9] text-[#588133] rounded-[15px] text-sm font-bold transition-all">{{ $page }}</a>
+                        @endif
+                    @endforeach
+                </div>
+
+                @if($peminjamans->hasMorePages())
+                    <a href="{{ $peminjamans->nextPageUrl() }}" class="px-4 py-2.5 bg-[#588133] hover:bg-[#466629] text-white rounded-[15px] text-sm font-bold transition-all">Selanjutnya →</a>
+                @else
+                    <span class="px-4 py-2.5 bg-gray-100 text-gray-400 rounded-[15px] text-sm font-bold cursor-not-allowed">Selanjutnya →</span>
+                @endif
+            </nav>
+        </div>
+
+        <div class="mt-4 text-center text-sm text-gray-500">
+            Menampilkan {{ $peminjamans->firstItem() ?? 0 }} - {{ $peminjamans->lastItem() ?? 0 }} dari {{ $peminjamans->total() }} data
+        </div>
+        @endif
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
