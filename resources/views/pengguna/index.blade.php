@@ -5,7 +5,11 @@
         <div class="bg-gradient-to-br from-[#588133] to-[#99AF69] rounded-3xl p-6 text-white shadow-lg mb-8">
             <h3 class="text-xl font-bold">Halo, {{ Auth::user()->name }}! </h3>
             <p class="opacity-90 text-sm">Dashboard Real-time</p>
-            <div class="grid grid-cols-2 gap-4 mt-6">
+            <div class="grid grid-cols-3 gap-4 mt-6">
+                <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
+                    <p class="text-xs uppercase font-bold opacity-80">Semua Barang</p>
+                    <p class="text-2xl font-black">{{ $stats->kuantitas ?? 0 }}</p>
+                </div>
                 <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
                     <p class="text-xs uppercase font-bold opacity-80">Barang Tersedia</p>
                     <p class="text-2xl font-black">{{ $stats->barang_tersedia ?? 0 }}</p>

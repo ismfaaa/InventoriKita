@@ -24,7 +24,15 @@
             <div class="bg-gradient-to-br from-[#588133] to-[#99AF69] rounded-3xl p-6 text-white shadow-lg mb-8">
                 <h3 class="text-xl font-bold">Manajemen Dashboard Real-time</h3>
                 
-                <div class="grid grid-cols-2 gap-4 mt-6">
+                <div class="grid grid-cols-3 gap-4 mt-6">
+                     <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
+                        <p class="text-xs uppercase font-bold opacity-80">Semua Barang</p>
+                        <input type="number" name="kuantitas" 
+                               value="{{ $stats->kuantitas }}" 
+                               min="0"
+                               oninput="if(this.value < 0) this.value = 0;"
+                               class="bg-transparent text-3xl font-bold opacity-80 w-full focus:outline-none border-b-2 border-white/30 focus:border-white">
+                    </div>
                     <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
                         <p class="text-xs uppercase font-bold opacity-80">Barang Tersedia</p>
                         <input type="number" name="barang_tersedia" 
@@ -33,7 +41,6 @@
                                oninput="if(this.value < 0) this.value = 0;"
                                class="bg-transparent text-3xl font-bold opacity-80 w-full focus:outline-none border-b-2 border-white/30 focus:border-white">
                     </div>
-
                     <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
                         <p class="text-xs uppercase font-bold opacity-80">Sedang Dipinjam</p>
                         <input type="number" name="sedang_dipinjam" 
