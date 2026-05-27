@@ -7,13 +7,20 @@
         @csrf
         @method('patch')
 
+        {{-- BAGIAN FOTO YANG SUDAH DIPERBAIKI --}}
         <div>
-            <x-input-label for="avatar" :value="__('Foto Profil')" />
+            <x-input-label for="foto" :value="__('Foto Profil')" />
             <div class="flex items-center gap-4 mt-2">
-                <img src="{{ $user->avatar ? asset('storage/'.$user->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" class="w-16 h-16 rounded-full object-cover">
-                <input type="file" name="avatar" class="text-sm">
+                {{-- Ubah $user->avatar menjadi $user->foto --}}
+                <img src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" 
+                     class="w-16 h-16 rounded-full object-cover border-2 border-[#588133]">
+                
+                {{-- Ubah name="avatar" menjadi name="foto" --}}
+                <input type="file" name="foto" id="foto" accept="image/png, image/jpeg, image/jpg" 
+                       class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#f1f5e9] file:text-[#588133] hover:file:bg-[#e5edda]">
             </div>
-            <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+            {{-- Ubah error message target ke foto --}}
+            <x-input-error class="mt-2" :messages="$errors->get('foto')" />
         </div>
 
         <div>
@@ -29,7 +36,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>Simpan</x-primary-button>
+            <x-primary-button class="bg-[#588133] hover:bg-[#4a6d2b]">Simpan</x-primary-button>
             @if (session('status') === 'profile-updated') <p class="text-sm text-gray-600">Tersimpan.</p> @endif
         </div>
     </form>
