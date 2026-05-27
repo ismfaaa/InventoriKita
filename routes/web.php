@@ -95,6 +95,7 @@ Route::middleware(['auth','admin'])->group(function () {
         \Illuminate\Support\Facades\DB::table('dashboard_stats')->updateOrInsert(
             ['id' => 1],
             [
+                'kuantitas' => $request->kuantitas,
                 'barang_tersedia' => $request->barang_tersedia,
                 'sedang_dipinjam' => $request->sedang_dipinjam,
                 'updated_at' => now(),
