@@ -148,15 +148,15 @@ class ExportController extends Controller
         return view('pages.pedoman');
     }
 
-    public function downloadTestingFile()
+    public function downloadBukuPedoman()
     {
-        $filePath = base_path('testingfile.pdf');
+        $filePath = public_path('files/ManualBook_InventoriKita.pdf');
 
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan');
         }
 
-        return response()->download($filePath, 'testingfile.pdf');
+        return response()->download($filePath, 'ManualBook_InventoriKita.pdf');
     }
 
 
