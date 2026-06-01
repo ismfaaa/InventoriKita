@@ -12,4 +12,36 @@
             </div>
         </div>
     </div>
+
+
+    @if(session('status_berhasil') || session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('status_berhasil') ?? session('success') }}",
+                confirmButtonColor: '#588133',
+                customClass: {
+                    popup: 'rounded-[30px]',
+                    confirmButton: 'rounded-xl px-6 py-2'
+                }
+            });
+        });
+
+        @if(session('error'))
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "{{ session('error') }}",
+                confirmButtonColor: '#ef4444'
+                });
+            });
+
+        @endif
+
+        
+    </script>
+    @endif
 </x-app-layout>

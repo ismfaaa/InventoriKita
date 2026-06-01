@@ -5,7 +5,11 @@
         <div class="bg-gradient-to-br from-[#588133] to-[#99AF69] rounded-3xl p-6 text-white shadow-lg mb-8">
             <h3 class="text-xl font-bold">Halo, {{ Auth::user()->name }}! </h3>
             <p class="opacity-90 text-sm">Dashboard Real-time</p>
-            <div class="grid grid-cols-2 gap-4 mt-6">
+            <div class="grid grid-cols-3 gap-4 mt-6">
+                <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
+                    <p class="text-xs uppercase font-bold opacity-80">Semua Barang</p>
+                    <p class="text-2xl font-black">{{ $stats->kuantitas ?? 0 }}</p>
+                </div>
                 <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4">
                     <p class="text-xs uppercase font-bold opacity-80">Barang Tersedia</p>
                     <p class="text-2xl font-black">{{ $stats->barang_tersedia ?? 0 }}</p>
@@ -35,8 +39,8 @@
         </div>
 
         {{-- Filter Kategori --}}
-        <div class="py-8 px-0 max-w-7xl mx-auto">
-            <div class="flex gap-2 overflow-x-auto pb-4 mb-4 no-scrollbar">
+        <div class="py-4 px-0 max-w-7xl mx-auto">
+            <div class="flex gap-2 overflow-x-auto pb-1 mb-1 no-scrollbar">
                 <a href="{{ route('pengguna.index') }}" class="{{ !request('category') ? 'bg-[#588133] text-white border-[#588133]' : 'bg-white text-gray-600 border-gray-200' }} px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap hover:bg-[#588133] hover:text-white transition-colors duration-300 border">Semua</a>
                 @foreach ($kategoris as $kategori)
                     <a href="{{ route('pengguna.index', ['category' => $kategori->id, 'search' => request('search')]) }}" class="{{ request('category') == $kategori->id ? 'bg-[#588133] text-white border-[#588133]' : 'bg-white text-gray-600 border-gray-200' }} px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap hover:bg-[#588133] hover:text-white transition-colors duration-300 border">{{ $kategori->nama_kategori }}</a>
@@ -45,7 +49,7 @@
         </div>
 
         {{-- Grid Katalog --}}
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="py-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             @foreach ($asets as $aset)
             <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col h-full">
                 <div class="aspect-square overflow-hidden bg-gray-100 flex items-center justify-center relative">
@@ -62,11 +66,10 @@
                     <div class="mt-4 flex gap-2">
                         <button class="flex-1 bg-[#f1f5e9] text-[#588133] py-2 rounded-xl text-[10px] font-bold hover:bg-gray-200 transition-all duration-300">Detail</button>
                         
-                        <button 
-                            @click="$dispatch('open-pinjam-modal', { id: {{ $aset->id }}, nama: '{{ $aset->nama_aset }}' })"
-                            class="flex-1 bg-[#588133] text-white py-2 rounded-xl text-[10px] font-bold text-center hover:bg-[#466629] transition-all duration-300 shadow-sm">
+                        <a href="{{ route('pengguna.peminjaman.create', ['id' => $aset->id]) }}" 
+                        class="flex-1 bg-[#588133] text-white py-2 rounded-xl text-[10px] font-bold text-center hover:bg-[#466629] transition-all duration-300 shadow-sm block">
                             Pinjam
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -129,4 +132,24 @@
             background-color: #f1f5e9 !important;
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('status_berhasil') || session('success'))
+    <script>
+        // Langsung jalankan saat halaman selesai dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('status_berhasil') ?? session('success') }}",
+                confirmButtonColor: '#588133',
+                customClass: {
+                    popup: 'rounded-[30px]',
+                    confirmButton: 'rounded-xl px-6 py-2'
+                }
+            });
+        });
+    </script>
+    @endif
 </x-app-layout>

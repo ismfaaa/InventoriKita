@@ -33,13 +33,15 @@ class AdminController extends Controller
     public function updateStats(Request $request)
     {
         $request->validate([
+            'kuantitas' => 'required|integer|min:0',
             'barang_tersedia' => 'required|integer|min:0',
             'sedang_dipinjam' => 'required|integer|min:0',
         ]);
-
+        
         DB::table('dashboard_stats')->updateOrInsert(
             ['id' => 1],
             [
+                'kuantitas' => $request->kuantitas,
                 'barang_tersedia' => $request->barang_tersedia,
                 'sedang_dipinjam' => $request->sedang_dipinjam,
                 'updated_at' => now(),

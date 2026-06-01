@@ -4,11 +4,15 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\StakeholderController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AsetController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\PengadaanController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\WidgetController;
+use App\Http\Controllers\LogbookController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,8 +30,8 @@ Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita', [PenggunaController::class, 'index'])->name('pengguna.index');
     
     // ============================= PEMINJAMAN =============================
-    Route::get('/Manajemen-peminjaman', [PeminjamanController::class, 'index'])->name('pengguna.peminjaman.index');
-    Route::post('/Manajemen-peminjaman', [PeminjamanController::class, 'store'])->name('pengguna.peminjaman.store');
+    Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('pengguna.peminjaman.index');
+    Route::post('/peminjaman-baru', [PeminjamanController::class, 'store'])->name('pengguna.peminjaman.store');
 
     Route::get('/InventoriKita/peminjaman', function () {
         return view('pengguna.peminjaman.index');
@@ -47,15 +51,15 @@ Route::middleware(['auth','pengguna'])->group(function () {
     Route::get('/InventoriKita/lapor-kerusakan', [PelaporanController::class, 'index'])->name('pengguna.lapor.index');
     Route::get('/InventoriKita/lapor-kerusakan/baru', [PelaporanController::class, 'create'])->name('pengguna.lapor.create');
     Route::post('/InventoriKita/lapor-kerusakan/simpan', [PelaporanController::class, 'store'])->name('pengguna.lapor.store');
+    //============================= DIGITAL LOGBOOK =============================
+    Route::get('/InventoriKita/Digital-Logbook', [LogbookController::class, 'index'])->name('pengguna.logbook.index');
 
 }); 
 
 // :::::::::::::::::::::::::::::::::::::: PAGES :::::::::::::::::::::::::::::::
 
     // ============================ FAQ ==================================
-    Route::get('/faq', function () {
-        return view('pages.faq');
-    })->name('faq');
+    Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
     // ============================ DOKUMENTASI ==================================
     Route::get('/dokumentasi', [App\Http\Controllers\DocumentationController::class, 'index'])->name('documentation.index');
@@ -91,6 +95,7 @@ Route::middleware(['auth','admin'])->group(function () {
         \Illuminate\Support\Facades\DB::table('dashboard_stats')->updateOrInsert(
             ['id' => 1],
             [
+                'kuantitas' => $request->kuantitas,
                 'barang_tersedia' => $request->barang_tersedia,
                 'sedang_dipinjam' => $request->sedang_dipinjam,
                 'updated_at' => now(),
@@ -109,18 +114,23 @@ Route::middleware(['auth','admin'])->group(function () {
     Route::patch('/Manajemen-pelaporan/{id}/update-status', [PelaporanController::class, 'updateStatus'])->name('admin.pelaporan.updateStatus');
     Route::get('/Manajemen-pelaporan/{id}', [PelaporanController::class, 'show'])->name('manajemen.pelaporan.show');
     
-});
-// ============================= USULAN PENGADAAN =============================
-Route::middleware(['auth', 'admin'])->group(function () {
+    // ============================= USULAN PENGADAAN =============================
     Route::get('/pengadaan/usulan', [PengadaanController::class, 'index'])->name('pengadaan.index');
     Route::get('/pengadaan/usulan/baru', [PengadaanController::class, 'create'])->name('pengadaan.create');
     Route::post('/pengadaan/simpan', [PengadaanController::class, 'store'])->name('pengadaan.store');
+
+    // ============================= MANAJEMEN FAQ =============================
+    Route::get('/admin/faq', [FaqController::class, 'adminIndex'])->name('admin.faq.index');
+    Route::get('/admin/faq/create', [FaqController::class, 'create'])->name('admin.faq.create');
+    Route::post('/admin/faq', [FaqController::class, 'store'])->name('admin.faq.store');
+    Route::get('/admin/faq/{faq}/edit', [FaqController::class, 'edit'])->name('admin.faq.edit');
+    Route::put('/admin/faq/{faq}', [FaqController::class, 'update'])->name('admin.faq.update');
+    Route::delete('/admin/faq/{faq}', [FaqController::class, 'destroy'])->name('admin.faq.destroy');
 });
 
 // :::::::::::::::::::::::::::::: STAKEHOLDER :::::::::::::::::::::::::::::::::::::::
 Route::middleware(['auth','stakeholder'])->group(function () {
     Route::get('/stakeholder', [StakeholderController::class, 'index'])->name('stakeholder.index');
-});
 
 // ============================= DOWNLOAD BUKU PEDOMAN ===============================
 Route::get('/logbook', function () {
@@ -130,12 +140,8 @@ Route::get('/logbook', function () {
     } else {
         abort(404, 'File tidak ditemukan');
     }
-})->name('logbook');
-    
-
-
-
-
+})->name('logbook');    
+});
 
 // ============================= EKSPOR DATA =============================
 Route::middleware(['auth'])->group(function () {
@@ -159,6 +165,21 @@ Route::middleware(['auth'])->group(function () {
     // Pedoman sederhana: download ManualBook_InventoriKita.pdf
     Route::get('/pedoman', [App\Http\Controllers\ExportController::class, 'pedoman'])->name('pedoman.index');
     Route::get('/pedoman/download', [App\Http\Controllers\ExportController::class, 'downloadBukuPedoman'])->name('pedoman.download');
+//     Route::get('/pedoman/download', [App\Http\Controllers\ExportController::class, 'downloadTestingFile'])->name('pedoman.download');
+    Route::get('/export', [ExportController::class, 'index'])->name('export.index');
+    Route::get('/export/pelaporan/pdf', [ExportController::class, 'exportPelaporanPdf'])->name('export.pelaporan.pdf');
+    Route::get('/export/pengadaan/pdf', [ExportController::class, 'exportPengadaanPdf'])->name('export.pengadaan.pdf');
+    Route::get('/export/aset/pdf', [ExportController::class, 'exportAsetPdf'])->name('export.aset.pdf');
+
+    // ============================= FEEDBACK PELAPORAN =============================
+    Route::get('/stakeholder-feedback-pelaporan', [PelaporanController::class, 'index'])->name('feedback.pelaporan.index');
+    Route::get('/stakeholder-feedback-pelaporan/{id}', [PelaporanController::class, 'show'])->name('stakeholder.pelaporan.show');
+    Route::patch('/stakeholder-feedback-pelaporan/{id}/update-status', [PelaporanController::class, 'updateStatus'])->name('feedback.pelaporan.updateStatus');
+
+    // ============================= FEEDBACK PENGADAAN =============================
+    Route::get('/stakeholder-feedback-pengadaan', [PengadaanController::class, 'index'])->name('feedback.pengadaan.index');
+    Route::patch('/stakeholder-feedback-pengadaan/{id}/update-status', [PengadaanController::class, 'updateStatus'])->name('feedback.pengadaan.updateStatus');
+
 });
 
 require __DIR__.'/auth.php';

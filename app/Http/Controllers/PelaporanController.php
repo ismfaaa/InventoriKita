@@ -10,29 +10,79 @@ use Illuminate\Support\Facades\Auth;
 
 class PelaporanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            $pelaporans = Pelaporan::with(['aset', 'user'])->get();
-            return view('admin.pelaporan.index', compact('pelaporans'));
-        } 
-        
-        elseif ($user->role === 'pengguna') {
+        try {
+            // 2. Mulai query dasar (Load relasi aset dan user)
+            $query = Pelaporan::with(['aset', 'user']);
+
+            // 3. KUNCI DATA: Jika role pengguna, HANYA tampilkan laporannya sendiri
+            if ($user->role === 'pengguna') {
+                $query->where('user_id', $user->id);
+            }
+
+            // 4. FITUR SEARCH (Cari berdasarkan Aset, Lokasi, atau Nama Pelapor)
+            if ($request->filled('search')) {
+                $search = $request->get('search');
+                $query->where(function($q) use ($search, $user) {
+                    
+                    $q->whereHas('aset', function($asetQuery) use ($search) {
+                        $asetQuery->where('nama_aset', 'like', '%' . $search . '%');
+                    })
+                    ->orWhere('lokasi', 'like', '%' . $search . '%')
+                    ->orWhere('feedback', 'like', '%' . $search . '%'); // <--- TAMBAHKAN BARIS INI
+
+                    // HANYA Admin dan Stakeholder yang bisa mencari nama pelapor
+                    if (in_array($user->role, ['admin', 'stakeholder'])) {
+                        $q->orWhereHas('user', function($userQuery) use ($search) {
+                            $userQuery->where('name', 'like', '%' . $search . '%');
+                        });
+                    }
+                });
+            }
+
+            // 5. FITUR FILTER STATUS PELAPORAN
+            if ($request->filled('status_pelaporan')) {
+                $query->where('status_pelaporan', $request->get('status_pelaporan'));
+            }
+
+            // 6. FITUR FILTER TINGKAT KERUSAKAN
+            if ($request->filled('tingkat_kerusakan')) {
+                $query->where('tingkat_kerusakan', $request->get('tingkat_kerusakan'));
+            }
+
+            // 7. FITUR FDEEDBACK
+            if ($request->filled('feedback')) {
+                $query->where('feedback', $request->get('feedback'));
+            }
+
+            // 8. PAGINATION
+            $pelaporans = $query->latest('created_at')->paginate(5);
+            $asets = Aset::all(); // Dibutuhkan jika view pengguna ingin buat laporan baru
+
+        } catch (\Exception $e) {
+            // Jaring pengaman jika database error
+            $pelaporans = collect();
             $asets = Aset::all();
-            $pelaporans = Pelaporan::where('user_id', $user->id)->with('aset')->get();
-            return view('pengguna.pelaporan.index', compact('pelaporans', 'asets'));
+        }
+
+        // 8. TERTUJU KEPADA VIEWS
+        if ($user->role === 'admin') {
+            return view('admin.pelaporan.index', compact('pelaporans', 'asets'));
+        } elseif ($user->role === 'stakeholder') {
+            return view('stakeholder.pelaporan.index', compact('pelaporans', 'asets'));
         } 
         
-        else {
-            abort(403, 'Unauthorized');
-        }
+
+        return view('pengguna.pelaporan.index', compact('pelaporans', 'asets'));
     }
 
-    /**
-     * Menampilkan form input laporan baru.
-     */
+
+    
+
+ 
     public function create()
     
     {
@@ -40,9 +90,7 @@ class PelaporanController extends Controller
         return view('pengguna.pelaporan.create', compact('asets'));
     }
 
-    /**
-     * Menyimpan data pelaporan ke database.
-     */
+  
     public function store(Request $request)
     {
         $request->validate([
@@ -50,7 +98,7 @@ class PelaporanController extends Controller
             'tingkat_kerusakan' => 'required|in:ringan,sedang,berat',
             'lokasi'            => 'required|string|max:255',
             'deskripsi'         => 'required|string',
-            'foto'              => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'foto'              => 'required|image|mimes:jpeg,png,jpg|max:10240',
         ]);
 
     $laporanAda = Pelaporan::where('aset_id', $request->aset_id)
@@ -94,13 +142,19 @@ class PelaporanController extends Controller
         }
 
         $laporan->save();
+        $user = Auth::user();
 
+        if ($user->role === 'stakeholder') {
+            return redirect()->route('feedback.pelaporan.index')->with('success', 'Feedback berhasil diberikan!');
+        }
         return redirect()->route('manajemen.pelaporan.index')->with('success', 'Status laporan berhasil diperbarui!');
     }
 
-    public function show(Pelaporan $pelaporan)
+    public function show($id)
     {
-        //
+        $laporan = Pelaporan::with(['aset', 'user'])->findOrFail($id);
+
+        return view('stakeholder.pelaporan.show', compact('laporan'));
     }
 
     /**

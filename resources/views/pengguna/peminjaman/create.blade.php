@@ -10,6 +10,11 @@
             <h3 class="text-2xl font-black text-gray-800 mb-2">Formulir Pinjaman</h3>
             <p class="text-sm text-gray-400 mb-10 italic">Lengkapi data untuk verifikasi 24 jam.</p>
 
+            @if ($errors->any())
+                <div class="bg-red-100 text-red-600 p-4 rounded-2xl mb-4">
+                    <ul> @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach </ul>
+                </div>
+            @endif
             <form action="{{ route('pengguna.peminjaman.store') }}" method="POST" class="space-y-6">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -48,12 +53,38 @@
         {{-- Tanggal --}}
         <div>
             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Tgl Pengajuan</label>
-            <input type="date" name="tanggal_pinjam" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133]">
+            <input type="date" id="tanggal_pinjam" name="tanggal_pinjam" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133]">
         </div>
         <div>
             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-2">Tgl Pengembalian</label>
-            <input type="date" name="tanggal_kembali" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133]">
+            <input type="date" id="tanggal_kembali" name="tanggal_kembali" required class="w-full mt-2 border-none bg-[#f1f5e9] rounded-2xl py-4 px-6 text-sm focus:ring-2 focus:ring-[#588133]">
         </div>
+
+        <script>
+            const inputPinjam = document.getElementById('tanggal_pinjam');
+            const inputKembali = document.getElementById('tanggal_kembali');
+            const hariIni = new Date().toISOString().split('T')[0];
+
+            inputPinjam.min = hariIni;
+
+            inputPinjam.addEventListener('change', function() {
+                const tglTerpilih = new Date(this.value);
+
+                if (!isNaN(tglTerpilih)) {
+
+                    const minKembali = new Date(tglTerpilih);
+                    inputKembali.min = minKembali.toISOString().split('T')[0];
+
+                    const maxKembali = new Date(tglTerpilih);
+                    maxKembali.setDate(maxKembali.getDate() + 3);
+                    inputKembali.max = maxKembali.toISOString().split('T')[0];
+
+                    if (inputKembali.value && (inputKembali.value < inputKembali.min || inputKembali.value > inputKembali.max)) {
+                        inputKembali.value = '';
+                    }
+                }
+            });
+        </script>
 
         {{-- Input Status (Default & Tersembunyi) --}}
         <input type="hidden" name="user_id" value="{{ Auth::id() }}">

@@ -59,4 +59,17 @@
             </a>
         </div>
     </form>
+
+    <script>
+        @if(session('success'))
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                confirmButtonColor: '#588133'
+            });
+        });
+        @endif
+    </script>
 </x-guest-layout>

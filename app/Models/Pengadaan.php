@@ -12,6 +12,8 @@ class Pengadaan extends Model
     protected $fillable = [
         'user_id',
         'aset_id',
+        'nama_aset',
+        'kuantitas',
         'status_pengadaan',
         'feedback_pengadaan',
         'estimasi_biaya',
