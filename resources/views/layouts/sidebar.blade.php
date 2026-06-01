@@ -12,7 +12,7 @@
                 </div>
                 <div class="flex-1 overflow-y-auto p-4 space-y-2">
                     <a href="{{ route('pengguna.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Beranda</a>
-                    <a href="{{ route('pengguna.peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Form Peminjaman Baru</a>
+                    <a href="{{ route('pengguna.peminjaman.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Peminjaman Alat</a>
                     <a href="{{ route('pengguna.lapor.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Lapor Kerusakan Alat</a>
                     <a href="{{ route('pengguna.logbook.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Digital Logbook</a>
                     <!--<a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium transition-all">Dokumentasi Sistem</a> INI HAPUS AJA DULU KOMENYA-->

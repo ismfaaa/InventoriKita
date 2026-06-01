@@ -56,23 +56,25 @@
 
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Upload Bukti Foto</label>
-                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-[#e5edda] border-dashed rounded-2xl hover:border-[#588133] transition-all">
-                    <div class="space-y-1 text-center">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <div class="flex text-sm text-gray-600">
-                            <label class="relative cursor-pointer bg-white rounded-md font-bold text-[#588133] hover:text-[#466629]">
-                                <span>Unggah file</span>
-                                <input name="foto" type="file" class="sr-only" required>
-                                @error('foto') 
-                                    <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span> 
-                                @enderror
-                            </label>
+                    <div class="w-full max-w-xl border-2 border-dashed border-green-600 rounded-2xl p-6 flex flex-col items-center justify-center bg-white">
+                        <div class="mb-2">
+                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 002-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         </div>
-                        <p class="text-xs text-gray-500">PNG, JPG, JPEG hingga 10MB</p>
+
+                        <img id="preview-foto" src="#" alt="Preview Foto" class="hidden w-32 h-32 object-cover rounded-xl mb-3 shadow">
+
+                        <label class="relative cursor-pointer bg-white rounded-md font-bold text-[#588133] hover:text-[#466629] block text-center">
+                            <span>Unggah file</span>
+                            <input id="input-foto" name="foto" type="file" class="sr-only" accept="image/*" required>
+                        </label>
+
+                        <p id="nama-file" class="text-gray-400 text-sm mt-1 text-center">PNG, JPG, JPEG hingga 10MB</p>
+
+                        @error('foto') 
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span> 
+                        @enderror
                     </div>
-                </div>
+    
             </div>
 
             <button type="submit" class="w-full bg-[#588133] hover:bg-[#466629] text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:scale-[1.02]">
@@ -101,4 +103,34 @@
             });
         @endif
     </script>
+    <script>
+    const inputFoto = document.getElementById('input-foto');
+    const previewFoto = document.getElementById('preview-foto');
+    const teksNamaFile = document.getElementById('nama-file');
+    const teksDefault = "PNG, JPG, JPEG hingga 10MB";
+
+    inputFoto.addEventListener('change', function() {
+        const file = this.files[0];
+
+        if (file) {
+            teksNamaFile.textContent = file.name;
+            teksNamaFile.classList.remove('text-gray-400');
+            teksNamaFile.classList.add('text-gray-700', 'font-medium'); 
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewFoto.src = e.target.result;
+                previewFoto.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            previewFoto.src = "#";
+            previewFoto.classList.add('hidden');
+            
+            teksNamaFile.textContent = teksDefault;
+            teksNamaFile.classList.remove('text-gray-700', 'font-medium');
+            teksNamaFile.classList.add('text-gray-400');
+        }
+    });
+</script>
 </x-app-layout>
