@@ -162,9 +162,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/export/aset/excel', [App\Http\Controllers\ExportController::class, 'exportAsetExcel'])->name('export.aset.excel');
     Route::get('/export/aset/csv', [App\Http\Controllers\ExportController::class, 'exportAsetCsv'])->name('export.aset.csv');
 
-    // Pedoman sederhana: download testingfile.pdf
+    // Pedoman sederhana: download ManualBook_InventoriKita.pdf
     Route::get('/pedoman', [App\Http\Controllers\ExportController::class, 'pedoman'])->name('pedoman.index');
-    Route::get('/pedoman/download', [App\Http\Controllers\ExportController::class, 'downloadTestingFile'])->name('pedoman.download');
+    Route::get('/pedoman/download', [App\Http\Controllers\ExportController::class, 'downloadBukuPedoman'])->name('pedoman.download');
+//     Route::get('/pedoman/download', [App\Http\Controllers\ExportController::class, 'downloadTestingFile'])->name('pedoman.download');
     Route::get('/export', [ExportController::class, 'index'])->name('export.index');
     Route::get('/export/pelaporan/pdf', [ExportController::class, 'exportPelaporanPdf'])->name('export.pelaporan.pdf');
     Route::get('/export/pengadaan/pdf', [ExportController::class, 'exportPengadaanPdf'])->name('export.pengadaan.pdf');
