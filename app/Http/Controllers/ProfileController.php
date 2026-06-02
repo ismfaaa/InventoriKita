@@ -32,18 +32,20 @@ class ProfileController extends Controller
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
-        // Logika Upload Foto
+
         if ($request->hasFile('foto')) {
 
-        // Hapus foto lama dari storage 
-        if ($request->user()->foto) {
-            Storage::disk('public')->delete($request->user()->foto);
-        }
-        // Simpan foto baru ke folder 'profile-photos' di disk public
-        $path = $request->file('foto')->store('profile-photos', 'public');
-        
-        // Masukkan path gambar ke dalam database user
-        $request->user()->foto = $path;
+            if ($request->user()->foto) {
+                Storage::disk('public')->delete('profile-photos/' . $request->user()->foto);
+            }
+            
+            $file = $request->file('foto');
+    
+            $nama_foto = $file->hashName();
+            
+            $file->storeAs('profile-photos', $nama_foto, 'public');
+            
+            $request->user()->foto = $nama_foto;
         }
 
         $request->user()->save();
