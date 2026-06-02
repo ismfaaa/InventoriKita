@@ -11,7 +11,7 @@
         <div>
             <x-input-label for="foto" :value="__('Foto Profil')" />
             <div class="flex items-center gap-4 mt-2">
-                <img src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" 
+                <img src="{{ $user->foto ? asset('storage/profile-photos/'.$user->foto) : 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" 
                      class="w-16 h-16 rounded-full object-cover border-2 border-[#588133]">
                 <input type="file" name="foto" id="foto" accept="image/png, image/jpeg, image/jpg" 
                        class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#f1f5e9] file:text-[#588133] hover:file:bg-[#e5edda]">

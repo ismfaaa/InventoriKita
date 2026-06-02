@@ -31,15 +31,29 @@
             <div class="flex items-center">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-[#588133] focus:outline-none transition ease-in-out duration-150">
-                            <div class="font-semibold">{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
+                        <button class="inline-flex items-center px-3 py-1.5 border-b border-[#e5edda]-300 text-sm leading-4 font-medium rounded-full text-gray-700 bg-white-50 hover:text-[#588133] hover:bg-white focus:outline-none transition ease-in-out duration-150 shadow-sm">
+            
+                            <div class="flex-shrink-0 w-8 h-8 mr-2.5">
+                                @if(Auth::user()->foto)
+                                    <img src="{{ asset('storage/profile-photos/' . Auth::user()->foto) }}" 
+                                        class="w-full h-full rounded-full object-cover border-b border-[#e5edda]-300"
+                                        alt="Profile">
+                                @else
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=002d72&color=e5edda" 
+                                        class="w-full h-full rounded-full object-cover"
+                                        alt="Avatar">
+                                @endif
                             </div>
+                            
+                            <span class="font-semibold truncate max-w-[120px]">{{ Auth::user()->name }}</span>
+
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
                         </button>
+                          
                     </x-slot>
 
                     <x-slot name="content">
