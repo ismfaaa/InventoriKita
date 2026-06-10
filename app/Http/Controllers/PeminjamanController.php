@@ -47,7 +47,7 @@ class PeminjamanController extends Controller
                     });
                 }
                 
-                $peminjamans = $query->latest('created_at')->paginate(10);
+                $peminjamans = $query->latest('created_at')->paginate(5);
                 $kategoris = Kategori::all();
             } catch (\Exception $e) {
                 $peminjamans = collect(); 

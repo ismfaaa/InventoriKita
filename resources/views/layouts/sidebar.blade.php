@@ -51,7 +51,7 @@
                         <a href="{{ route('pengadaan.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Usulan Pengadaan</a>
                         <a href="{{ route('admin.faq.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Kelola FAQ</a>
                         <a href="{{ route('export.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Ekspor Data</a>
-                        <a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dokumentasi Sistem</a> INI hAPUS AJA DULU KOMENNYA KALAU mAU
+                        <!-- <a href="{{ route('documentation.index') }}" class="block p-3 rounded-xl hover:bg-[#f1f5e9] text-gray-700 font-medium">Dokumentasi Sistem</a> INI hAPUS AJA DULU KOMENNYA KALAU mAU -->
                     </div>
                 </div>
             </div>
