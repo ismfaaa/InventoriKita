@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link rel="icon" href="{{ asset('img/Logo InventoriKita_20260606_203943_0000.png') }}" type="image/png">
 
         <title>{{ config('app.name', 'InventoriKita') }}</title>
 
