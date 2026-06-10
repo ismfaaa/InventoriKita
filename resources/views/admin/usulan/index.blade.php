@@ -61,7 +61,7 @@
                 </a>
             </div>
 
-            {{-- MENU FILTER DROPDOWN (Melayang / Pop-up) --}}
+            {{-- MENU FILTER DROPDOWN --}}
             <div x-show="showFilter" 
                  @click.away="showFilter = false"
                  x-transition:enter="transition ease-out duration-200"
@@ -147,9 +147,20 @@
                         @forelse($pengadaans as $index => $item)
                         <tr class="hover:bg-[#fcfdfa] transition-colors">
                             <td class="p-5 font-bold">{{ $index + 1 }}</td>
+                            
+                            {{-- KOLOM ASET / BARANG YANG SUDAH DIPERBAIKI VARIABELNYA --}}
                             <td class="p-5 text-sm text-gray-600">
-                                <span class="font-semibold block">{{ $item->aset->nama_aset ?? 'Aset Tidak Ditemukan' }}</span>
+                                <span class="font-semibold block">
+                                    @if($item->aset_id)
+                                        {{-- Jika ada aset_id, ambil dari relasi katalog --}}
+                                        {{ $item->aset->nama_aset ?? 'Aset Tidak Ditemukan' }}
+                                    @else
+                                        {{-- Jika manual (aset_id kosong), ambil tulisan tangan dari string nama_aset --}}
+                                        {{ $item->nama_aset }}
+                                    @endif
+                                </span>
                             </td>
+
                             <td class="p-5 text-center">
                                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-green-50 rounded-lg">
                                     <svg class="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -165,14 +176,13 @@
                             <td class="p-5 text-center">
                                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-yellow-50 rounded-lg">
                                     <svg class="w-3 h-3 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                    <span class="text-sm font-semibold text-gray-700">{{ $item->feedback_pengadaan }}</span>
+                                    <span class="text-sm font-semibold text-gray-700">{{ $item->feedback_pengadaan ?? '-' }}</span>
                                 </div>
                             </td>
                             <td class="p-5 text-center">
                                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-green-50 rounded-lg">
                                     <svg class="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                    <span class="text-sm font-semibold text-gray-700">
-                                    {{ $item->status_pengadaan }}</span>
+                                    <span class="text-sm font-semibold text-gray-700">{{ $item->status_pengadaan }}</span>
                                 </div>
                             </td>
                         </tr>
@@ -185,7 +195,7 @@
                 </table>
             </div>
         </div>
-         <div class="mt-2 mb-15 pagination-matcha">
+        <div class="mt-2 mb-15 pagination-matcha">
             {{ $pengadaans->appends(request()->query())->links() }}
         </div>         
     </div>
@@ -194,22 +204,18 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
         
-        /* 1. Atur kotak yang BELUM diklik (Link dan Tombol Panah Pasif) */
         .pagination-matcha nav a, 
         .pagination-matcha nav span[aria-disabled="true"] span {
             background-color: white !important; 
             color: #588133 !important; 
             border-radius: 12px;
-            /* Opsional: tambah border abu-abu tipis agar senada dengan tabel */
             border-color: #f3f4f6 !important; 
         }
 
-        /* 2. Efek saat disentuh mouse (Hover) */
         .pagination-matcha nav a:hover {
             background-color: #f1f5e9 !important;
         }
 
-        /* 3. Atur kotak yang SEDANG AKTIF (Halaman saat ini) */
         .pagination-matcha nav span[aria-current="page"] span {
             background-color: #588133 !important;
             border-color: #588133 !important;
