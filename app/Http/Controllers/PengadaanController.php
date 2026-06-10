@@ -93,27 +93,23 @@ class PengadaanController extends Controller
             'estimasi_biaya' => 'required|numeric',
         ]);
 
-        // 1. Tampung nilai input ke dalam variabel default
         $asetId = $request->aset_id;
         $namaAset = $request->nama_aset;
 
-        // 2. LOGIKA PINTAR: Jika user memilih dari katalog (aset_id terisi)
+
         if ($request->filled('aset_id')) {
             $asetKatalog = \App\Models\Aset::find($request->aset_id);
             if ($asetKatalog) {
-                // Ambil nama asli dari katalog untuk mengisi kolom nama_aset di database
                 $namaAset = $asetKatalog->nama_aset; 
             }
         } else {
-            // JIKA USER MENGISI MANUAL: Biarkan aset_id bernilai null
             $asetId = null;
         }
 
-        // 3. Simpan data yang sudah diproses ke database
         Pengadaan::create([
             'user_id' => Auth::id(),
-            'aset_id' => $asetId,             // Menggunakan variabel yang bisa bernilai null jika manual
-            'nama_aset' => $namaAset,         // Menggunakan variabel yang dijamin selalu terisi teks nama barang
+            'aset_id' => $asetId,             
+            'nama_aset' => $namaAset,        
             'kuantitas' => $request->kuantitas,
             'estimasi_biaya' => $request->estimasi_biaya,
             'status_pengadaan' => 'pending', // Default

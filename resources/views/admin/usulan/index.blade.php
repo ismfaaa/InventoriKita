@@ -27,7 +27,6 @@
                 <p class="text-sm text-gray-500 mt-1">Status verifikasi dalam 24 jam</p>
             </div>
 
-            {{-- KANAN: Form Search, Filter, & Tombol Buat Usulan --}}
             <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
                 
                 <form method="GET" action="{{ url()->current() }}" class="flex w-full sm:w-auto gap-2 m-0">
@@ -148,14 +147,11 @@
                         <tr class="hover:bg-[#fcfdfa] transition-colors">
                             <td class="p-5 font-bold">{{ $index + 1 }}</td>
                             
-                            {{-- KOLOM ASET / BARANG YANG SUDAH DIPERBAIKI VARIABELNYA --}}
                             <td class="p-5 text-sm text-gray-600">
                                 <span class="font-semibold block">
                                     @if($item->aset_id)
-                                        {{-- Jika ada aset_id, ambil dari relasi katalog --}}
                                         {{ $item->aset->nama_aset ?? 'Aset Tidak Ditemukan' }}
                                     @else
-                                        {{-- Jika manual (aset_id kosong), ambil tulisan tangan dari string nama_aset --}}
                                         {{ $item->nama_aset }}
                                     @endif
                                 </span>
