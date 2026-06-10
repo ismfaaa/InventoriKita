@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>InventoriKita - Welcome</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="icon" href="{{ asset('img/Logo InventoriKita_20260606_203943_0000.png') }}" type="image/png">
 </head>
 <body class="antialiased bg-[#f1f5e9] font-sans">
     <div class="relative flex items-center justify-center min-h-screen p-4">
