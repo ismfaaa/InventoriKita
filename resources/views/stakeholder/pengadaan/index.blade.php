@@ -3,21 +3,15 @@
     @include('layouts.sidebar')
 
     <x-slot name="header">
-        {{-- CONTAINER UTAMA: Inisialisasi Alpine.js untuk kontrol dropdown melayang --}}
         <div x-data="{ showFilter: false }" class="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
             
-            {{-- KIRI: Judul Halaman --}}
             <h2 class="font-semibold text-xl text-[#588133] leading-tight shrink-0">
                 {{ __('Feedback Pengadaan') }}
             </h2>
 
-            {{-- KANAN: Form Gabungan (Search & Filter) --}}
             <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
-                
-                {{-- SATU FORM UTAMA: Menjamin fungsi search dan filter dropdown terkirim bersamaan --}}
                 <form id="filterForm" action="{{ url()->current() }}" method="GET" class="flex w-full sm:w-auto gap-2 m-0 relative">
                     
-                    {{-- Input Search --}}
                     <div class="relative w-full sm:w-56 lg:w-64">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,7 +23,6 @@
                             onkeydown="if(event.key === 'Enter') { this.form.submit(); return false; }">
                     </div>
 
-                    {{-- Tombol Pemicu Dropdown Melayang --}}
                     <button type="button" @click="showFilter = !showFilter" 
                         class="bg-white border border-[#e5edda] text-[#588133] hover:bg-[#f1f5e9] px-3 py-2 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,7 +31,6 @@
                         <span class="hidden sm:inline">Filter</span>
                     </button>
 
-                    {{-- PANEL DROPDOWN MELAYANG: Berada di dalam form agar input select terbaca saat submit --}}
                     <div x-show="showFilter" @click.away="showFilter = false" 
                          x-transition:enter="transition ease-out duration-200" 
                          x-transition:enter-start="opacity-0 translate-y-[-10px] scale-95" 
@@ -49,7 +41,6 @@
                          class="absolute right-0 top-full mt-2 w-full sm:w-[260px] p-4 bg-white border border-[#e5edda] rounded-2xl shadow-xl z-50 flex flex-col gap-3" 
                          style="display: none;" x-cloak>
 
-                        {{-- Filter 2: Keputusan Tindakan --}}
                         <div>
                             <label class="text-xs font-bold text-gray-700 mb-1 block">Tindakan</label>
                             <select name="feedback_pengadaan" onchange="this.form.submit()" class="w-full px-3 py-2 border border-[#e5edda] rounded-xl focus:ring-[#588133] focus:border-[#588133] text-sm cursor-pointer shadow-sm bg-white text-gray-700">
@@ -64,19 +55,16 @@
         </div>
     </x-slot>
 
-    {{-- KONTEN UTAMA --}}
     <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" x-data="{ openModal: false, selectedId: null }">
         
-        {{-- SUB-HEADER: Info Deskripsi Ringkas & Counter --}}
         <div class="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
             <div class="flex gap-2">
                 <span class="bg-[#f1f5e9] text-[#588133] px-4 py-2 rounded-2xl text-xs font-bold border border-[#e5edda]">
                     Total Feedback: {{ count($pengadaans ?? []) }}
                 </span>
             </div>
-        </div> {{-- <-- INI TAG PENUTUP YANG DITAMBAHKAN --}}
+        </div>
         
-        {{-- BUBBLE INDIKATOR FILTER AKTIF --}}
         @if(request('search') || request('status_pengadaan') || request('feedback_pengadaan'))
         <div class="flex flex-wrap gap-2 mb-6 items-center">
             @if(request('search'))
@@ -95,7 +83,6 @@
         </div>
         @endif
 
-        {{-- STRUKTUR TABEL UTAMA --}}
         <div class="bg-white overflow-hidden shadow-sm rounded-[30px] border border-[#e5edda]">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -107,6 +94,7 @@
                             <th class="bg-[#729c4b] p-4 font-bold text-center text-sm">Estimasi Biaya</th>
                             <th class="bg-[#729c4b] p-4 font-bold text-center text-sm">Status</th>
                             <th class="bg-[#729c4b] p-4 font-bold text-center text-sm">Tanggal</th>
+                            <th class="bg-[#729c4b] p-4 font-bold text-center text-sm">Tindakan</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
@@ -136,10 +124,35 @@
                                 <td class="p-4 text-center text-sm text-gray-500">
                                     {{ $pengadaan->created_at->format('d M Y') }}
                                 </td>
+                                
+                                {{-- KOLOM TINDAKAN BARU --}}
+                                <td class="p-4 text-center">
+                                    @if($pengadaan->status_pengadaan === 'pending')
+                                        <div class="flex items-center justify-center gap-2">
+                                            {{-- Tombol Approve (Ceklis) --}}
+                                            <form action="{{ route('feedback.pengadaan.updateStatus', $pengadaan->id) }}" method="POST" class="m-0">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="disetujui">
+                                                <button type="submit" class="w-9 h-9 flex items-center justify-center bg-[#588133] text-white rounded-[12px] hover:bg-[#4a6d2b] transition shadow-sm" title="Setujui">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                </button>
+                                            </form>
+
+                                            {{-- Tombol Reject (Silang) - Memicu Pop Up --}}
+                                            <button type="button" @click="openModal = true; selectedId = {{ $pengadaan->id }}" class="w-9 h-9 flex items-center justify-center bg-white border border-[#ff6b6b] text-[#ff6b6b] rounded-[12px] hover:bg-[#fff0f0] transition shadow-sm" title="Tolak">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            </button>
+                                        </div>
+                                    @else
+                                        <span class="text-gray-400 text-xs">-</span>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="p-20 text-center"> <p class="text-gray-400 italic text-sm">Belum ada riwayat pengajuan pengadaan aset.</p>
+                            <td colspan="7" class="p-20 text-center"> 
+                                <p class="text-gray-400 italic text-sm">Belum ada riwayat pengajuan pengadaan aset.</p>
                             </td>
                         </tr>
                         @endforelse
@@ -158,11 +171,11 @@
                     @method('PATCH')
                     
                     <input type="hidden" name="status" value="ditolak">
-                    <textarea name="alasan" class="w-full border-none bg-[#f1f5e9] rounded-[25px] p-5 h-40 text-sm" placeholder="Tulis alasan..."></textarea>
+                    <textarea name="alasan" class="w-full border-none bg-[#f1f5e9] rounded-[25px] p-5 h-40 text-sm focus:ring-[#588133]" placeholder="Tulis alasan..." required></textarea>
                     
                     <div class="flex gap-4 mt-8">
-                        <button type="button" @click="openModal = false" class="flex-1 py-4 text-gray-500 font-bold text-sm">Batal</button>
-                        <button type="submit" class="flex-1 py-4 bg-red-500 text-white font-bold rounded-[20px] text-sm">Kirim</button>
+                        <button type="button" @click="openModal = false" class="flex-1 py-4 text-gray-500 font-bold text-sm hover:bg-gray-50 rounded-[20px] transition">Batal</button>
+                        <button type="submit" class="flex-1 py-4 bg-[#ff6b6b] text-white font-bold rounded-[20px] text-sm hover:bg-[#ff5252] transition shadow-md">Kirim</button>
                     </div>
                 </form>
             </div>
