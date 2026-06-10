@@ -31,7 +31,6 @@ class PengadaanController extends Controller
                         ->orWhere('tanggal_pengadaan', 'like', '%' . $search . '%');
                     });
                 })
-                // Diubah menggunakan request()->filled() agar string kosong tidak merusak query utama
                 ->when($request->filled('status_pengadaan'), function ($query) use ($status_pengadaan) {
                     return $query->where('status_pengadaan', $status_pengadaan);
                 })
@@ -59,7 +58,6 @@ class PengadaanController extends Controller
                         ->orWhere('tanggal_pengadaan', 'like', '%' . $search . '%');
                     });
                 })
-                // Diubah menggunakan request()->filled() agar string kosong tidak merusak query utama
                 ->when($request->filled('status_pengadaan'), function ($query) use ($status_pengadaan) {
                     return $query->where('status_pengadaan', $status_pengadaan);
                 })
@@ -94,10 +92,24 @@ class PengadaanController extends Controller
             'kuantitas' => 'required|numeric|min:1',
             'estimasi_biaya' => 'required|numeric',
         ]);
+
+        $asetId = $request->aset_id;
+        $namaAset = $request->nama_aset;
+
+
+        if ($request->filled('aset_id')) {
+            $asetKatalog = \App\Models\Aset::find($request->aset_id);
+            if ($asetKatalog) {
+                $namaAset = $asetKatalog->nama_aset; 
+            }
+        } else {
+            $asetId = null;
+        }
+
         Pengadaan::create([
             'user_id' => Auth::id(),
-            'aset_id' => $request->aset_id,
-            'nama_aset' => $request->nama_aset,
+            'aset_id' => $asetId,             
+            'nama_aset' => $namaAset,        
             'kuantitas' => $request->kuantitas,
             'estimasi_biaya' => $request->estimasi_biaya,
             'status_pengadaan' => 'pending', // Default

@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'InventoriKita') }}</title>
-        <link rel="icon" href="{{ asset('img/Logo InventoriKita_20260606_203943_0000.png') }}" type="image/png">
+        <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
